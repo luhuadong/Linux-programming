@@ -1,0 +1,254 @@
+'\" t
+.\"     Title: pam_tally
+.\"    Author: [see the "AUTHOR" section]
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 04/01/2016
+.\"    Manual: Linux-PAM Manual
+.\"    Source: Linux-PAM Manual
+.\"  Language: English
+.\"
+.TH "PAM_TALLY" "8" "04/01/2016" "Linux-PAM Manual" "Linux\-PAM Manual"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+pam_tally \- The login counter (tallying) module
+.SH "SYNOPSIS"
+.HP \w'\fBpam_tally\&.so\fR\ 'u
+\fBpam_tally\&.so\fR [file=\fI/path/to/counter\fR] [onerr=[\fIfail\fR|\fIsucceed\fR]] [magic_root] [even_deny_root_account] [deny=\fIn\fR] [lock_time=\fIn\fR] [unlock_time=\fIn\fR] [per_user] [no_lock_time] [no_reset] [audit] [silent] [no_log_info]
+.HP \w'\fBpam_tally\fR\ 'u
+\fBpam_tally\fR [\-\-file\ \fI/path/to/counter\fR] [\-\-user\ \fIusername\fR] [\-\-reset[=\fIn\fR]] [\-\-quiet]
+.SH "DESCRIPTION"
+.PP
+This module maintains a count of attempted accesses, can reset count on success, can deny access if too many attempts fail\&.
+.PP
+pam_tally has several limitations, which are solved with pam_tally2\&. For this reason pam_tally is deprecated and will be removed in a future release\&.
+.PP
+pam_tally comes in two parts:
+\fBpam_tally\&.so\fR
+and
+\fBpam_tally\fR\&. The former is the PAM module and the latter, a stand\-alone program\&.
+\fBpam_tally\fR
+is an (optional) application which can be used to interrogate and manipulate the counter file\&. It can display user counts, set individual counts, or clear all counts\&. Setting artificially high counts may be useful for blocking users without changing their passwords\&. For example, one might find it useful to clear all counts every midnight from a cron job\&. The
+\fBfaillog\fR(8)
+command can be used instead of pam_tally to to maintain the counter file\&.
+.PP
+Normally, failed attempts to access
+\fIroot\fR
+will
+\fBnot\fR
+cause the root account to become blocked, to prevent denial\-of\-service: if your users aren\*(Aqt given shell accounts and root may only login via
+\fBsu\fR
+or at the machine console (not telnet/rsh, etc), this is safe\&.
+.SH "OPTIONS"
+.PP
+GLOBAL OPTIONS
+.RS 4
+This can be used for
+\fIauth\fR
+and
+\fIaccount\fR
+module types\&.
+.PP
+\fBonerr=[\fR\fB\fIfail\fR\fR\fB|\fR\fB\fIsucceed\fR\fR\fB]\fR
+.RS 4
+If something weird happens (like unable to open the file), return with
+\fBPAM_SUCCESS\fR
+if
+\fBonerr=\fR\fB\fIsucceed\fR\fR
+is given, else with the corresponding PAM error code\&.
+.RE
+.PP
+\fBfile=\fR\fB\fI/path/to/counter\fR\fR
+.RS 4
+File where to keep counts\&. Default is
+/var/log/faillog\&.
+.RE
+.PP
+\fBaudit\fR
+.RS 4
+Will log the user name into the system log if the user is not found\&.
+.RE
+.PP
+\fBsilent\fR
+.RS 4
+Don\*(Aqt print informative messages\&.
+.RE
+.PP
+\fBno_log_info\fR
+.RS 4
+Don\*(Aqt log informative messages via
+\fBsyslog\fR(3)\&.
+.RE
+.RE
+.PP
+AUTH OPTIONS
+.RS 4
+Authentication phase first checks if user should be denied access and if not it increments attempted login counter\&. Then on call to
+\fBpam_setcred\fR(3)
+it resets the attempts counter\&.
+.PP
+\fBdeny=\fR\fB\fIn\fR\fR
+.RS 4
+Deny access if tally for this user exceeds
+\fIn\fR\&.
+.RE
+.PP
+\fBlock_time=\fR\fB\fIn\fR\fR
+.RS 4
+Always deny for
+\fIn\fR
+seconds after failed attempt\&.
+.RE
+.PP
+\fBunlock_time=\fR\fB\fIn\fR\fR
+.RS 4
+Allow access after
+\fIn\fR
+seconds after failed attempt\&. If this option is used the user will be locked out for the specified amount of time after he exceeded his maximum allowed attempts\&. Otherwise the account is locked until the lock is removed by a manual intervention of the system administrator\&.
+.RE
+.PP
+\fBmagic_root\fR
+.RS 4
+If the module is invoked by a user with uid=0 the counter is not incremented\&. The sysadmin should use this for user launched services, like
+\fBsu\fR, otherwise this argument should be omitted\&.
+.RE
+.PP
+\fBno_lock_time\fR
+.RS 4
+Do not use the \&.fail_locktime field in
+/var/log/faillog
+for this user\&.
+.RE
+.PP
+\fBno_reset\fR
+.RS 4
+Don\*(Aqt reset count on successful entry, only decrement\&.
+.RE
+.PP
+\fBeven_deny_root_account\fR
+.RS 4
+Root account can become unavailable\&.
+.RE
+.PP
+\fBper_user\fR
+.RS 4
+If
+/var/log/faillog
+contains a non\-zero \&.fail_max/\&.fail_locktime field for this user then use it instead of
+\fBdeny=\fR\fB\fIn\fR\fR/
+\fBlock_time=\fR\fB\fIn\fR\fR
+parameter\&.
+.RE
+.PP
+\fBno_lock_time\fR
+.RS 4
+Don\*(Aqt use \&.fail_locktime filed in
+/var/log/faillog
+for this user\&.
+.RE
+.RE
+.PP
+ACCOUNT OPTIONS
+.RS 4
+Account phase resets attempts counter if the user is
+\fBnot\fR
+magic root\&. This phase can be used optionally for services which don\*(Aqt call
+\fBpam_setcred\fR(3)
+correctly or if the reset should be done regardless of the failure of the account phase of other modules\&.
+.PP
+\fBmagic_root\fR
+.RS 4
+If the module is invoked by a user with uid=0 the counter is not incremented\&. The sysadmin should use this for user launched services, like
+\fBsu\fR, otherwise this argument should be omitted\&.
+.RE
+.PP
+\fBno_reset\fR
+.RS 4
+Don\*(Aqt reset count on successful entry, only decrement\&.
+.RE
+.RE
+.SH "MODULE TYPES PROVIDED"
+.PP
+The
+\fBauth\fR
+and
+\fBaccount\fR
+module types are provided\&.
+.SH "RETURN VALUES"
+.PP
+PAM_AUTH_ERR
+.RS 4
+A invalid option was given, the module was not able to retrieve the user name, no valid counter file was found, or too many failed logins\&.
+.RE
+.PP
+PAM_SUCCESS
+.RS 4
+Everything was successful\&.
+.RE
+.PP
+PAM_USER_UNKNOWN
+.RS 4
+User not known\&.
+.RE
+.SH "EXAMPLES"
+.PP
+Add the following line to
+/etc/pam\&.d/login
+to lock the account after too many failed logins\&. The number of allowed fails is specified by
+/var/log/faillog
+and needs to be set with pam_tally or
+\fBfaillog\fR(8)
+before\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+auth     required       pam_securetty\&.so
+auth     required       pam_tally\&.so per_user
+auth     required       pam_env\&.so
+auth     required       pam_unix\&.so
+auth     required       pam_nologin\&.so
+account  required       pam_unix\&.so
+password required       pam_unix\&.so
+session  required       pam_limits\&.so
+session  required       pam_unix\&.so
+session  required       pam_lastlog\&.so nowtmp
+session  optional       pam_mail\&.so standard
+    
+.fi
+.if n \{\
+.RE
+.\}
+.SH "FILES"
+.PP
+/var/log/faillog
+.RS 4
+failure logging file
+.RE
+.SH "SEE ALSO"
+.PP
+\fBfaillog\fR(8),
+\fBpam.conf\fR(5),
+\fBpam.d\fR(5),
+\fBpam\fR(8)
+.SH "AUTHOR"
+.PP
+pam_tally was written by Tim Baverstock and Tomas Mraz\&.

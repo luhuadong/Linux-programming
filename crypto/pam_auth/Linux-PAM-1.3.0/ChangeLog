@@ -1,0 +1,1663 @@
+2016-04-28  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Updated translations from Zanata.
+	* po/*.po: Updated translations from Zanata.
+
+2016-04-19  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_wheel: Correct the documentation of the root_only option.
+	* modules/pam_wheel/pam_wheel.8.xml: Correct the documentation of the
+	root_only option.
+
+	pam_unix: Document that MD5 password hash is used to store old passwords.
+	modules/pam_unix/pam_unix.8.xml: Document that the MD5 password hash is used
+	to store the old passwords when remember option is set.
+
+2016-04-14  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Project registered at Zanata (fedora.zanata.org) for translations.
+	* zanata.xml: Configuration file for zanata client.
+	* po/LINGUAS: Update languages as supported by Zanata.
+	* po/Linux-PAM.pot: Updated from sources.
+	* po/*.po: Updated from sources.
+
+2016-04-06  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_unix: Use pam_get_authtok() instead of direct pam_prompt() calls.
+	We have to drop support for not_set_pass option which is not much useful
+	anyway. Instead we get proper support for authtok_type option.
+
+	* modules/pam_unix/pam_unix.8.xml: Removed not_set_pass option, added authtok_ty
+	pe
+	option.
+	* modules/pam_unix/pam_unix_auth.c (pam_sm_authenticate): Replace _unix_read_pas
+	sword()
+	call with equivalent pam_get_authtok() call.
+	* modules/pam_unix/pam_unix_passwd.c (pam_sm_chauthtok): Likewise and also drop
+	support for not_set_pass.
+	* modules/pam_unix/support.c (_unix_read_password): Remove.
+	* modules/pam_unix/support.h: Remove UNIX_NOT_SET_PASS add UNIX_AUTHTOK_TYPE.
+
+	pam_get_authtok(): Add authtok_type support to current password prompt.
+	* libpam/pam_get_authtok.c (pam_get_authtok_internal): When changing password,
+	use different prompt for current password allowing for authtok_type to be
+	displayed to the user.
+
+2016-04-04  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_unix: Make password expiration messages more user-friendly.
+	* modules/pam_unix/pam_unix_acct.c (pam_sm_acct_mgmt): Make password
+	expiration messages more user-friendly.
+
+2016-04-04  Thorsten Kukuk  <kukuk@thkukuk.de>
+
+	innetgr may not be there so make sure that when innetgr is not present then we inform about it and not use it. [ticket#46]
+	* modules/pam_group/pam_group.c: ditto
+	* modules/pam_succeed_if/pam_succeed_if.c: ditto
+	* modules/pam_time/pam_time.c: ditto
+
+	build: fix build when crypt() is not part of crypt_libs [ticket#46]
+	* configure.ac: Don't set empty -l option in crypt check
+
+	build: use $host_cpu for lib64 directory handling [ticket#46]
+	* configure.ac: use $host_cpu for lib64 directory handling.
+
+2016-04-01  Dmitry V. Levin  <ldv@altlinux.org>
+
+	Fix whitespace issues.
+	Remove blank lines at EOF introduced by commit
+	a684595c0bbd88df71285f43fb27630e3829121e,
+	making the project free of warnings reported by
+	git diff --check 4b825dc642cb6eb9a060e54bf8d69288fbee4904 HEAD
+
+	* libpam/pam_dynamic.c: Remove blank line at EOF.
+	* modules/pam_echo/pam_echo.c: Likewise.
+	* modules/pam_keyinit/pam_keyinit.c: Likewise.
+	* modules/pam_mkhomedir/pam_mkhomedir.c: Likewise.
+	* modules/pam_pwhistory/pam_pwhistory.c: Likewise.
+	* modules/pam_rhosts/pam_rhosts.c: Likewise.
+	* modules/pam_sepermit/pam_sepermit.c: Likewise.
+	* modules/pam_stress/pam_stress.c: Likewise.
+
+2016-04-01  Thorsten Kukuk  <kukuk@thkukuk.de>
+
+	Use TI-RPC functions if we compile and link against libtirpc. The old SunRPC functions don't work with IPv6.
+	* configure.ac: Set and restore CPPFLAGS
+	* modules/pam_unix/pam_unix_passwd.c: Replace getrpcport with
+	  rpcb_getaddr if available.
+
+2016-03-29  Thorsten Kukuk  <kukuk@thkukuk.de>
+
+	PAM_EXTERN isn't needed anymore, but don't remove it to not break lot of external code using it.
+	* libpam/include/security/pam_modules.h: Readd PAM_EXTERN for compatibility
+
+	Remove "--enable-static-modules" option and support from  Linux-PAM. It was never official supported and was broken since years.
+	* configure.ac: Remove --enable-static-modules option.
+	* doc/man/pam_sm_acct_mgmt.3.xml: Remove PAM_EXTERN.
+	* doc/man/pam_sm_authenticate.3.xml: Likewise.
+	* doc/man/pam_sm_chauthtok.3.xml: Likewise.
+	* doc/man/pam_sm_close_session.3.xml: Likewise.
+	* doc/man/pam_sm_open_session.3.xml: Likewise.
+	* doc/man/pam_sm_setcred.3.xml: Likewise.
+	* libpam/Makefile.am: Remove STATIC_MODULES cases.
+	* libpam/include/security/pam_modules.h: Remove PAM_STATIC parts.
+	* libpam/pam_dynamic.c: Likewise.
+	* libpam/pam_handlers.c: Likewise.
+	* libpam/pam_private.h: Likewise.
+	* libpam/pam_static.c: Remove file.
+	* libpam/pam_static_modules.h: Remove header file.
+	* modules/pam_access/pam_access.c: Remove PAM_EXTERN and PAM_STATIC parts.
+	* modules/pam_cracklib/pam_cracklib.c: Likewise.
+	* modules/pam_debug/pam_debug.c: Likewise.
+	* modules/pam_deny/pam_deny.c: Likewise.
+	* modules/pam_echo/pam_echo.c: Likewise.
+	* modules/pam_env/pam_env.c: Likewise.
+	* modules/pam_exec/pam_exec.c: Likewise.
+	* modules/pam_faildelay/pam_faildelay.c: Likewise.
+	* modules/pam_filter/pam_filter.c: Likewise.
+	* modules/pam_ftp/pam_ftp.c: Likewise.
+	* modules/pam_group/pam_group.c: Likewise.
+	* modules/pam_issue/pam_issue.c: Likewise.
+	* modules/pam_keyinit/pam_keyinit.c: Likewise.
+	* modules/pam_lastlog/pam_lastlog.c: Likewise.
+	* modules/pam_limits/pam_limits.c: Likewise.
+	* modules/pam_listfile/pam_listfile.c: Likewise.
+	* modules/pam_localuser/pam_localuser.c: Likewise.
+	* modules/pam_loginuid/pam_loginuid.c: Likewise.
+	* modules/pam_mail/pam_mail.c: Likewise.
+	* modules/pam_mkhomedir/pam_mkhomedir.c: Likewise.
+	* modules/pam_motd/pam_motd.c: Likewise.
+	* modules/pam_namespace/pam_namespace.c: Likewise.
+	* modules/pam_nologin/pam_nologin.c: Likewise.
+	* modules/pam_permit/pam_permit.c: Likewise.
+	* modules/pam_pwhistory/pam_pwhistory.c: Likewise.
+	* modules/pam_rhosts/pam_rhosts.c: Likewise.
+	* modules/pam_rootok/pam_rootok.c: Likewise.
+	* modules/pam_securetty/pam_securetty.c: Likewise.
+	* modules/pam_selinux/pam_selinux.c: Likewise.
+	* modules/pam_sepermit/pam_sepermit.c: Likewise.
+	* modules/pam_shells/pam_shells.c: Likewise.
+	* modules/pam_stress/pam_stress.c: Likewise.
+	* modules/pam_succeed_if/pam_succeed_if.c: Likewise.
+	* modules/pam_tally/pam_tally.c: Likewise.
+	* modules/pam_tally2/pam_tally2.c: Likewise.
+	* modules/pam_time/pam_time.c: Likewise.
+	* modules/pam_timestamp/pam_timestamp.c: Likewise.
+	* modules/pam_tty_audit/pam_tty_audit.c: Likewise.
+	* modules/pam_umask/pam_umask.c: Likewise.
+	* modules/pam_userdb/pam_userdb.c: Likewise.
+	* modules/pam_warn/pam_warn.c: Likewise.
+	* modules/pam_wheel/pam_wheel.c: Likewise.
+	* modules/pam_xauth/pam_xauth.c: Likewise.
+	* modules/pam_unix/Makefile.am: Remove STATIC_MODULES part.
+	* modules/pam_unix/pam_unix_acct.c: Remove PAM_STATIC part.
+	* modules/pam_unix/pam_unix_auth.c: Likewise.
+	* modules/pam_unix/pam_unix_passwd.c: Likewise.
+	* modules/pam_unix/pam_unix_sess.c: Likewise.
+	* modules/pam_unix/pam_unix_static.c: Removed.
+	* modules/pam_unix/pam_unix_static.h: Removed.
+	* po/POTFILES.in: Remove removed files.
+	* tests/tst-dlopen.c: Remove PAM_STATIC part.
+
+2016-03-24  Thorsten Kukuk  <kukuk@thkukuk.de>
+
+	Fix check for libtirpc and enhance check for libnsl to include new libnsl.
+	* configure.ac: fix setting of CFLAGS/LIBS, enhance libnsl check
+	* modules/pam_unix/Makefile.am: replace NIS_* with TIRPC_* and NSL_*
+
+2016-03-23  Thorsten Kukuk  <kukuk@thkukuk.de>
+
+	Remove YP dependencies from pam_access, they were never used and such not needed.
+	* modules/pam_access/Makefile.am: Remove NIS_CFLAGS and NIS_LIBS
+	* modules/pam_access/pam_access.c: Remove yp_get_default_domain case,
+	  it will never be used.
+
+2016-03-04  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Add checks for localtime() returning NULL.
+	* modules/pam_lastlog/pam_lastlog.c (last_login_read): Check for localtime_r
+	returning NULL.
+	* modules/pam_tally2/pam_tally2.c (print_one): Check for localtime returning
+	NULL.
+
+	pam_unix: Silence warnings and fix a minor bug.
+	Fixes a minor bug in behavior when is_selinux_enabled()
+	returned negative value.
+
+	* modules/pam_unix/passverify.c: Add parentheses to SELINUX_ENABLED macro.
+	(unix_update_shadow): Safe cast forwho to non-const char *.
+	* modules/pam_unix/support.c: Remove unused SELINUX_ENABLED macro.
+
+2016-02-17  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_env: Document the /etc/environment file.
+	* modules/pam_env/Makefile.am: Add the environment.5 soelim stub.
+	* modules/pam_env/pam_env.8.xml: Add environ(7) reference.
+	* modules/pam_env/pam_env.conf.5.xml: Add environment alias name.
+	Add a paragraph about /etc/environment. Add environ(7) reference.
+
+	pam_unix: Add no_pass_expiry option to ignore password expiration.
+	* modules/pam_unix/pam_unix.8.xml: Document the no_pass_expiry option.
+	* modules/pam_unix/pam_unix_acct.c (pam_sm_acct_mgmt): If no_pass_expiry
+	is on and return value data is not set to PAM_SUCCESS then ignore
+	PAM_NEW_AUTHTOK_REQD and PAM_AUTHTOK_EXPIRED returns.
+	* modules/pam_unix/pam_unix_auth.c (pam_sm_authenticate): Always set the
+	return value data.
+	(pam_sm_setcred): Test for likeauth option and use the return value data
+	only if set.
+	* modules/pam_unix/support.h: Add the no_pass_expiry option.
+
+2016-01-25  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_unix: Change the salt length for new hashes to 16 characters.
+	* modules/pam_unix/passverify.c (create_password_hash): Change the
+	salt length for new hashes to 16 characters.
+
+2015-12-17  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Relax the conditions for fatal failure on auditing.
+	The PAM library calls will not fail anymore for any uid if the return
+	value from the libaudit call is -EPERM.
+
+	* libpam/pam_audit.c (_pam_audit_writelog): Remove check for uid != 0.
+
+2015-12-16  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_tally2: Optionally log the tally count when checking.
+	* modules/pam_tally2/pam_tally2.c (tally_parse_args): Add debug option.
+	(tally_check): Always log the tally count with debug option.
+
+2015-10-02  Jakub Hrozek  <jakub.hrozek@posteo.se>
+
+	Docfix: pam handle is const in pam_syslog() and pam_vsyslog()
+	* doc/man/pam_syslog.3.xml: Add const to pam handle in pam_syslog() and pam_vsyslog().
+
+2015-09-24  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_loginuid: Add syslog message if required auditd is not detected.
+	* modules/pam_loginuid/pam_loginuid.c (_pam_loginuid): Add syslog message
+	if required auditd is not detected.
+
+2015-09-04  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Allow links to be used instead of w3m for documentation regeneration.
+	* configure.ac: If w3m is not found check for links.
+
+	Add missing space in pam_misc_setenv man page.
+	* doc/man/pam_misc_setenv.3.xml: Add a missing space.
+
+2015-08-12  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_rootok: use rootok permission instead of passwd permission in SELinux check.
+	* modules/pam_rootok/pam_rootok.c (selinux_check_root): Use rootok instead of
+	passwd permission.
+
+2015-08-05  Amarnath Valluri  <amarnath.valluri@intel.com>
+
+	pam_timestamp: Avoid leaking file descriptor.
+	* modules/pam_timestamp/hmacsha1.c(hmac_key_create):
+	    close 'keyfd' when failed to own it.
+
+2015-06-22  Thorsten Kukuk  <kukuk@thkukuk.de>
+
+	Release version 1.2.1.
+	Security fix: CVE-2015-3238
+
+	If the process executing pam_sm_authenticate or pam_sm_chauthtok method
+	of pam_unix is not privileged enough to check the password, e.g.
+	if selinux is enabled, the _unix_run_helper_binary function is called.
+	When a long enough password is supplied (16 pages or more, i.e. 65536+
+	bytes on a system with 4K pages), this helper function hangs
+	indefinitely, blocked in the write(2) call while writing to a blocking
+	pipe that has a limited capacity.
+	With this fix, the verifiable password length will be limited to
+	PAM_MAX_RESP_SIZE bytes (i.e. 512 bytes) for pam_exec and pam_unix.
+
+	* NEWS: Update
+	* configure.ac: Bump version
+	* modules/pam_exec/pam_exec.8.xml: document limitation of password length
+	* modules/pam_exec/pam_exec.c: limit password length to PAM_MAX_RESP_SIZE
+	* modules/pam_unix/pam_unix.8.xml: document limitation of password length
+	* modules/pam_unix/pam_unix_passwd.c: limit password length
+	* modules/pam_unix/passverify.c: Likewise
+	* modules/pam_unix/passverify.h: Likewise
+	* modules/pam_unix/support.c: Likewise
+
+2015-04-27  Thorsten Kukuk  <kukuk@thkukuk.de>
+
+	Update NEWS file.
+
+	Release version 1.2.0.
+	* NEWS: Update
+	* configure.ac: Bump version
+	* libpam/Makefile.am: Bump version of libpam
+	* libpam_misc/Makefile.am: Bump version of libpam_misc
+	* po/*: Regenerate po files
+
+	Fix some grammatical errors in documentation. Patch by Louis Sautier.
+	* doc/adg/Linux-PAM_ADG.xml: Fix gramatical errors.
+	* doc/man/pam.3.xml: Likewise.
+	* doc/man/pam_acct_mgmt.3.xml: Likewise.
+	* doc/man/pam_chauthtok.3.xml: Likewise.
+	* doc/man/pam_sm_chauthtok.3.xml: Likewise.
+	* modules/pam_limits/limits.conf.5.xml: Likewise.
+	* modules/pam_mail/pam_mail.8.xml: Likewise.
+	* modules/pam_rhosts/pam_rhosts.c: Likewise.
+	* modules/pam_shells/pam_shells.8.xml: Likewise.
+	* modules/pam_tally/pam_tally.8.xml: Likewise.
+	* modules/pam_tally2/pam_tally2.8.xml: Likewise.
+	* modules/pam_unix/pam_unix.8.xml: Likewise.
+
+2015-04-23  Thorsten Kukuk  <kukuk@thkukuk.de>
+
+	Add "quiet" option to pam_unix to suppress informential info messages from session.
+	* modules/pam_unix/pam_unix.8.xml: Document new option.
+	* modules/pam_unix/support.h: Add quiet option.
+	* modules/pam_unix/pam_unix_sess.c: Don't print LOG_INFO messages if
+	 'quiet' option is set.
+
+2015-04-07  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Use crypt_r if available in pam_userdb and in pam_unix.
+	* modules/pam_unix/passverify.c (create_password_hash): Call crypt_r()
+	instead of crypt() if available.
+	* modules/pam_userdb/pam_userdb.c (user_lookup): Call crypt_r()
+	instead of crypt() if available.
+
+2015-03-25  Thorsten Kukuk  <kukuk@thkukuk.de>
+
+	Support alternative "vendor configuration" files as fallback to /etc (Ticket#34, patch from ay Sievers <kay@vrfy.org>)
+	* doc/man/pam.8.xml: document additonal config directory
+	* libpam/pam_handlers.c: add /usr/lib/pam.d as config file fallback directory
+	* libpam/pam_private.h: adjust defines
+
+	pam_env: expand @{HOME} and @{SHELL} and enhance documentation (Ticket#24 and #29)
+	* modules/pam_env/pam_env.c: Replace @{HOME} and @{SHELL} with passwd entries
+	* modules/pam_env/pam_env.conf.5.xml: Document @{HOME} and @{SHELL}
+	* modules/pam_env/pam_env.8.xml: Enhance documentation
+
+2015-03-24  Thorsten Kukuk  <kukuk@thkukuk.de>
+
+	Clarify pam_access docs re PAM service names and X $DISPLAY value testing. (Ticket #39)
+	* modules/pam_access/access.conf.5.xml
+	* modules/pam_access/pam_access.8.xml
+
+	Don't use sudo directory, the timestamp format is different (Ticket#32)
+	* modules/pam_timestamp/pam_timestamp.c: Change default timestamp directory.
+
+	Enhance group.conf examples (Ticket#35)
+	* modules/pam_group/group.conf.5.xml: Enhance example by logic group entry.
+
+	Document timestampdir option (Ticket#33)
+	* modules/pam_timestamp/pam_timestamp.8.xml: Add timestampdir option.
+
+	Adjust documentation (Ticket#36)
+	* libpam/pam_delay.c: Change 25% in comment to 50% as used in code.
+	* doc/man/pam_fail_delay.3.xml: Change 25% to 50%
+
+2015-02-18  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Updated translations from Transifex.
+	* po/*.po: Updated translations from Transifex.
+
+2015-01-07  Dmitry V. Levin  <ldv@altlinux.org>
+
+	build: raise gettext version requirement.
+	Raise gettext requirement to the latest oldstable version 0.18.3.
+	This fixes the following automake warning:
+
+	configure.ac:581: warning: The 'AM_PROG_MKDIR_P' macro is deprecated, and its use is discouraged.
+	configure.ac:581: You should use the Autoconf-provided 'AC_PROG_MKDIR_P' macro instead,
+	configure.ac:581: and use '$(MKDIR_P)' instead of '$(mkdir_p)'in your Makefile.am files.
+
+	* configure.ac (AM_GNU_GETTEXT_VERSION): Raise from 0.15 to 0.18.3.
+	* po/Makevars: Update from gettext-0.18.3.
+
+2015-01-07  Ronny Chevalier  <chevalier.ronny@gmail.com>
+
+	build: adjust automake warning flags.
+	Enable all automake warning flags except for the portability issues,
+	since non portable features are used among the makefiles.
+
+	* configure.ac (AM_INIT_AUTOMAKE): Add -Wall -Wno-portability.
+
+2015-01-07  Dmitry V. Levin  <ldv@altlinux.org>
+
+	build: rename configure.in to configure.ac.
+	This fixes the following automake warning:
+	aclocal: warning: autoconf input should be named 'configure.ac', not 'configure.in'
+
+	* configure.in: Rename to configure.ac.
+
+	Remove unmodified GNU gettext files installed by autopoint.
+	These files are part of GNU gettext; we have not modified them, they are
+	installed by autopoint which is called by autoreconf, so they had to be
+	removed from this repository along with ABOUT-NLS, config.rpath, and
+	mkinstalldirs files that were removed by commit
+	Linux-PAM-1_1_5-7-g542ec8b.
+
+	* po/Makefile.in.in: Remove.
+	* po/Rules-quot: Likewise.
+	* po/boldquot.sed: Likewise.
+	* po/en@boldquot.header: Likewise.
+	* po/en@quot.header: Likewise.
+	* po/insert-header.sin: Likewise.
+	* po/quot.sed: Likewise.
+	* po/remove-potcdate.sin: Likewise.
+	* po/.gitignore: Ignore these files.
+
+2015-01-06  Ronny Chevalier  <chevalier.ronny@gmail.com>
+
+	Update .gitignore.
+	* .gitignore: Ignore *.log and *.trs files.
+
+2015-01-02  Luke Shumaker  <lukeshu@sbcglobal.net>
+
+	libpam: Only print "Password change aborted" when it's true.
+	pam_get_authtok() may be used any time that a password needs to be entered,
+	unlike pam_get_authtok_{no,}verify(), which may only be used when
+	changing a password; yet when the user aborts, it prints "Password change
+	aborted." whether or not that was the operation being performed.
+
+	This bug was non-obvious because none of the modules distributed with
+	Linux-PAM use it for anything but changing passwords; pam_unix has its
+	own utility function that it uses instead.  As an example, the
+	nss-pam-ldapd package uses it in pam_sm_authenticate().
+
+	libpam/pam_get_authtok.c (pam_get_authtok_internal): check that the
+	password is trying to be changed before printing a message about the
+	password change being aborted.
+
+2014-12-10  Dmitry V. Levin  <ldv@altlinux.org>
+
+	build: extend cross compiling check to cover CPPFLAGS (ticket #21)
+	Use BUILD_CPPFLAGS variable to override CPPFLAGS where necessary in
+	case of cross compiling, in addition to CC_FOR_BUILD, BUILD_CFLAGS,
+	and BUILD_LDFLAGS variables introduced earlier to override CC,
+	CFLAGS, and LDFLAGS, respectively.
+
+	* configure.in (BUILD_CPPFLAGS): Define.
+	* doc/specs/Makefile.am (CPPFLAGS): Define to @BUILD_CPPFLAGS@.
+
+2014-12-09  Dmitry V. Levin  <ldv@altlinux.org>
+
+	Do not use yywrap (ticket #42)
+	Our scanners do not really use yywrap.  Explicitly disable yywrap
+	so that no references to yywrap will be generated and no LEXLIB
+	would be needed.
+
+	* conf/pam_conv1/Makefile.am (pam_conv1_LDADD): Remove.
+	* conf/pam_conv1/pam_conv_l.l: Enable noyywrap option.
+	* doc/specs/Makefile.am (padout_LDADD): Remove.
+	* doc/specs/parse_l.l: Enable noyywrap option.
+
+2014-12-09  Kyle Manna  <kyle@kylemanna.com>
+
+	doc: fix a trivial typo in pam_authenticate return values (ticket #38)
+	* doc/man/pam_authenticate.3.xml: Fix a typo in PAM_AUTHINFO_UNAVAIL.
+
+2014-12-09  Ronny Chevalier  <chevalier.ronny@gmail.com>
+
+	doc: fix typo in pam_authenticate.3.xml.
+	* doc/man/pam_authenticate.3.xml: Fix typo.
+
+2014-10-17  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_succeed_if: Fix copy&paste error in rhost and tty values.
+	modules/pam_succeed_if/pam_succeed_if.c (evaluate): Use PAM_RHOST
+	and PAM_TTY properly for the rhost and tty values.
+
+	pam_succeed_if: Use long long type for numeric values.
+	The currently used long with additional conversion to int is
+	too small for uids and gids.
+
+	modules/pam_succeed_if/pam_succeed_if.c (evaluate_num): Replace
+	strtol() with strtoll() and int with long long in the parameters
+	of comparison functions.
+
+2014-09-05  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Add grantor field to audit records of libpam.
+	The grantor field gives audit trail of PAM modules which granted access
+	for successful return from libpam calls. In case of failed return
+	the grantor field is set to '?'.
+	libpam/pam_account.c (pam_acct_mgmt): Remove _pam_auditlog() call.
+	libpam/pam_auth.c (pam_authenticate, pam_setcred): Likewise.
+	libpam/pam_password.c (pam_chauthtok): Likewise.
+	libpam/pam_session.c (pam_open_session, pam_close_session): Likewise.
+	libpam/pam_audit.c (_pam_audit_writelog): Add grantors parameter,
+	add grantor= field to the message if grantors is set.
+	(_pam_list_grantors): New function creating the string with grantors list.
+	(_pam_auditlog): Add struct handler pointer parameter, call _pam_list_grantors()
+	to list the grantors from the handler list.
+	(_pam_audit_end): Add NULL handler parameter to _pam_auditlog() call.
+	(pam_modutil_audit_write): Add NULL grantors parameter to _pam_audit_writelog().
+	libpam/pam_dispatch.c (_pam_dispatch_aux): Set h->grantor where appropriate.
+	(_pam_clear_grantors): New function to clear grantor field of handler.
+	(_pam_dispatch): Call _pam_clear_grantors() before executing the stack.
+	Call _pam_auditlog() when appropriate.
+	libpam/pam_handlers.c (extract_modulename): Do not allow empty module name
+	or just "?" to avoid confusing audit trail.
+	(_pam_add_handler): Test for NULL return from extract_modulename().
+	Clear grantor field of handler.
+	libpam/pam_private.h: Add grantor field to struct handler, add handler pointer
+	parameter to _pam_auditlog().
+
+2014-08-26  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_mkhomedir: Drop superfluous stat() call.
+	modules/pam_mkhomedir/mkhomedir_helper.c (create_homedir): Drop superfluous
+	stat() call.
+
+	pam_exec: Do not depend on open() returning STDOUT_FILENO.
+	modules/pam_exec/pam_exec.c (call_exec): Move the descriptor to
+	STDOUT_FILENO if needed.
+
+2014-08-25  Robin Hack  <rhack@redhat.com>
+
+	pam_keyinit: Check return value of setregid.
+	modules/pam_keyinit/pam_keyinit.c (pam_sm_open_session): Log if setregid() fails.
+
+	pam_filter: Avoid leaking descriptors when fork() fails.
+	modules/pam_filter/pam_filter.c (set_filter): Close descriptors when fork() fails.
+
+2014-08-14  Robin Hack  <rhack@redhat.com>
+
+	pam_echo: Avoid leaking file descriptor.
+	modules/pam_echo/pam_echo.c (pam_echo): Close fd in error cases.
+
+2014-08-13  Robin Hack  <rhack@redhat.com>
+
+	pam_tty_audit: Silence Coverity reporting uninitialized use.
+	modules/pam_tty_audit/pam_tty_audit.c (nl_recv): Initialize also
+	msg_flags.
+
+2014-08-13  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_tally2: Avoid uninitialized use of fileinfo.
+	Problem found by Robin Hack <rhack@redhat.com>.
+	modules/pam_tally2/pam_tally2.c (get_tally): Do not depend on file size
+	just try to read it.
+
+	pam_access: Avoid uninitialized access of line.
+	* modules/pam_access/pam_access.c (login_access): Reorder condition
+	so line is not accessed when uninitialized.
+
+2014-08-05  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_lastlog: Properly clean up last_login structure before use.
+	modules/pam_lastlog/pam_lastlog.c (last_login_write): Properly clean up last_login
+	structure before use.
+
+2014-07-21  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Make pam_pwhistory and pam_unix tolerant of corrupted opasswd file.
+	* modules/pam_pwhistory/opasswd.c (parse_entry): Test for missing fields
+	in opasswd entry and return error.
+	* modules/pam_unix/passverify.c (save_old_password): Test for missing fields
+	in opasswd entry and skip it.
+
+2014-07-01  Dmitry V. Levin  <ldv@altlinux.org>
+
+	doc: add missing build dependencies for soelim stubs.
+	* doc/man/Makefile.am [ENABLE_REGENERATE_MAN]: Add dependencies for
+	pam_verror.3, pam_vinfo.3, pam_vprompt.3, and pam_vsyslog.3 soelim stubs.
+
+2014-06-23  Dmitry V. Levin  <ldv@altlinux.org>
+
+	doc: fix install in case of out of tree build (ticket #31)
+	* doc/adg/Makefile.am (install-data-local, releasedocs): Fall back
+	to srcdir if documentation files haven't been found in builddir.
+	(releasedocs): Treat missing documentation files as an error.
+	* doc/mwg/Makefile.am: Likewise.
+	* doc/sag/Makefile.am: Likewise.
+
+2014-06-19  Dmitry V. Levin  <ldv@altlinux.org>
+
+	doc: fix installation of adg-*.html and mwg-*.html files (ticket #31)
+	Fix a typo due to which sag-*.html files might be installed instead of
+	adg-*.html and mwg-*.html files.
+
+	* doc/adg/Makefile.am (install-data-local): Install adg-*.html instead
+	of sag-*.html.
+	* doc/mwg/Makefile.am (install-data-local): Install mwg-*.html instead
+	of sag-*.html.
+
+	Patch-by: Mike Frysinger <vapier@gentoo.org>
+
+2014-06-19  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_limits: nofile refers to file descriptors not files.
+	modules/pam_limits/limits.conf.5.xml: Correct documentation of nofile limit.
+	modules/pam_limits/limits.conf: Likewise.
+
+	pam_limits: clarify documentation of maxlogins and maxsyslogins limits.
+	modules/pam_limits/limits.conf.5.xml: clarify documentation of
+	maxlogins and maxsyslogins limits.
+
+	pam_unix: Check for NULL return from Goodcrypt_md5().
+	modules/pam_unix/pam_unix_passwd.c (check_old_password): Check for
+	NULL return from Goodcrypt_md5().
+
+	pam_unix: check for NULL return from malloc()
+	* modules/pam_unix/md5_crypt.c (crypt_md5): Check for NULL return from malloc().
+
+2014-05-22  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_loginuid: Document one more possible case of PAM_IGNORE return.
+	modules/pam_loginuid/pam_loginuid.8.xml: Document one more possible case
+	of PAM_IGNORE return value.
+
+	pam_loginuid: Document other possible return values.
+	modules/pam_loginuid/pam_loginuid.8.xml: Document the possible return
+	values.
+
+2014-03-26  Dmitry V. Levin  <ldv@altlinux.org>
+
+	pam_timestamp: fix potential directory traversal issue (ticket #27)
+	pam_timestamp uses values of PAM_RUSER and PAM_TTY as components of
+	the timestamp pathname it creates, so extra care should be taken to
+	avoid potential directory traversal issues.
+
+	* modules/pam_timestamp/pam_timestamp.c (check_tty): Treat
+	"." and ".." tty values as invalid.
+	(get_ruser): Treat "." and ".." ruser values, as well as any ruser
+	value containing '/', as invalid.
+
+	Fixes CVE-2014-2583.
+
+	Reported-by: Sebastian Krahmer <krahmer@suse.de>
+
+2014-03-20  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_userdb: document that .db suffix should not be used.
+	modules/pam_userdb/pam_userdb.8.xml: Document that .db suffix
+	should not be used and correct the example.
+
+2014-03-11  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_selinux: canonicalize user name.
+	SELinux expects canonical user name for example without domain component.
+
+	* modules/pam_selinux/pam_selinux.c (compute_exec_context): Canonicalize user name with pam_modutil_getpwnam().
+
+2014-01-28  Dmitry V. Levin  <ldv@altlinux.org>
+
+	Change tarball name back to "Linux-PAM"
+	As a side effect of commit Linux-PAM-1_1_8-11-g3fa23ce, tarball name
+	changed accidentally from "Linux-PAM" to "linux-pam".
+	This change brings it back to "Linux-PAM".
+
+	* configure.in (AC_INIT): Explicitly specify TARNAME argument.
+
+2014-01-27  Dmitry V. Levin  <ldv@altlinux.org>
+
+	Introduce pam_modutil_sanitize_helper_fds.
+	This change introduces pam_modutil_sanitize_helper_fds - a new function
+	that redirects standard descriptors and closes all other descriptors.
+
+	pam_modutil_sanitize_helper_fds supports three types of input and output
+	redirection:
+	- PAM_MODUTIL_IGNORE_FD: do not redirect at all.
+	- PAM_MODUTIL_PIPE_FD: redirect to a pipe.  For stdin, it is implemented
+	  by creating a pipe, closing its write end, and redirecting stdin to
+	  its read end.  Likewise, for stdout/stderr it is implemented by
+	  creating a pipe, closing its read end, and redirecting to its write
+	  end.  Unlike stdin redirection, stdout/stderr redirection to a pipe
+	  has a side effect that a process writing to such descriptor should be
+	  prepared to handle SIGPIPE appropriately.
+	- PAM_MODUTIL_NULL_FD: redirect to /dev/null.  For stdin, it is
+	  implemented via PAM_MODUTIL_PIPE_FD because there is no functional
+	  difference.  For stdout/stderr, it is classic redirection to
+	  /dev/null.
+
+	PAM_MODUTIL_PIPE_FD is usually more suitable due to linux kernel
+	security restrictions, but when the helper process might be writing to
+	the corresponding descriptor and termination of the helper process by
+	SIGPIPE is not desirable, one should choose PAM_MODUTIL_NULL_FD.
+
+	* libpam/pam_modutil_sanitize.c: New file.
+	* libpam/Makefile.am (libpam_la_SOURCES): Add it.
+	* libpam/include/security/pam_modutil.h (pam_modutil_redirect_fd,
+	pam_modutil_sanitize_helper_fds): New declarations.
+	* libpam/libpam.map (LIBPAM_MODUTIL_1.1.9): New interface.
+	* modules/pam_exec/pam_exec.c (call_exec): Use
+	pam_modutil_sanitize_helper_fds.
+	* modules/pam_mkhomedir/pam_mkhomedir.c (create_homedir): Likewise.
+	* modules/pam_unix/pam_unix_acct.c (_unix_run_verify_binary): Likewise.
+	* modules/pam_unix/pam_unix_passwd.c (_unix_run_update_binary):
+	Likewise.
+	* modules/pam_unix/support.c (_unix_run_helper_binary): Likewise.
+	* modules/pam_xauth/pam_xauth.c (run_coprocess): Likewise.
+	* modules/pam_unix/support.h (MAX_FD_NO): Remove.
+
+	pam_xauth: avoid potential SIGPIPE when writing to xauth process.
+	Similar issue in pam_unix was fixed by commit Linux-PAM-0-73~8.
+
+	* modules/pam_xauth/pam_xauth.c (run_coprocess): In the parent process,
+	close the read end of input pipe after writing to its write end.
+
+	pam_loginuid: log significant loginuid write errors.
+	* modules/pam_loginuid/pam_loginuid.c (set_loginuid): Log those errors
+	during /proc/self/loginuid update that are not ignored.
+
+	Fix gratuitous use of strdup and x_strdup.
+	There is no need to copy strings passed as arguments to execve,
+	the only potentially noticeable effect of using strdup/x_strdup
+	would be a malformed argument list in case of memory allocation error.
+
+	Also, x_strdup, being a thin wrapper around strdup, is of no benefit
+	when its argument is known to be non-NULL, and should not be used in
+	such cases.
+
+	* modules/pam_cracklib/pam_cracklib.c (password_check): Use strdup
+	instead of x_strdup, the latter is of no benefit in this case.
+	* modules/pam_ftp/pam_ftp.c (lookup): Likewise.
+	* modules/pam_userdb/pam_userdb.c (user_lookup): Likewise.
+	* modules/pam_userdb/pam_userdb.h (x_strdup): Remove.
+	* modules/pam_mkhomedir/pam_mkhomedir.c (create_homedir): Do not use
+	x_strdup for strings passed as arguments to execve.
+	* modules/pam_unix/pam_unix_acct.c (_unix_run_verify_binary): Likewise.
+	* modules/pam_unix/pam_unix_passwd.c (_unix_run_update_binary): Likewise.
+	* modules/pam_unix/support.c (_unix_run_helper_binary): Likewise.
+	(_unix_verify_password): Use strdup instead of x_strdup, the latter
+	is of no benefit in this case.
+	* modules/pam_xauth/pam_xauth.c (run_coprocess): Do not use strdup for
+	strings passed as arguments to execv.
+
+	pam_userdb: fix password hash comparison.
+	Starting with commit Linux-PAM-0-77-28-g0b3e583 that introduced hashed
+	passwords support in pam_userdb, hashes are compared case-insensitively.
+	This bug leads to accepting hashes for completely different passwords in
+	addition to those that should be accepted.
+
+	Additionally, commit Linux-PAM-1_1_6-13-ge2a8187 that added support for
+	modern password hashes with different lengths and settings, did not
+	update the hash comparison accordingly, which leads to accepting
+	computed hashes longer than stored hashes when the latter is a prefix
+	of the former.
+
+	* modules/pam_userdb/pam_userdb.c (user_lookup): Reject the computed
+	hash whose length differs from the stored hash length.
+	Compare computed and stored hashes case-sensitively.
+	Fixes CVE-2013-7041.
+
+	Bug-Debian: http://bugs.debian.org/731368
+
+2014-01-24  Dmitry V. Levin  <ldv@altlinux.org>
+
+	pam_xauth: log fatal errors preventing xauth process execution.
+	* modules/pam_xauth/pam_xauth.c (run_coprocess): Log errors from pipe()
+	and fork() calls.
+
+2014-01-22  Dmitry V. Levin  <ldv@altlinux.org>
+
+	pam_loginuid: cleanup loginuid buffer initialization.
+	* modules/pam_loginuid/pam_loginuid.c (set_loginuid): Move loginuid
+	buffer initialization closer to its first use.
+
+	libpam_misc: fix an inconsistency in handling memory allocation errors.
+	When misc_conv fails to allocate memory for pam_response array, it
+	returns PAM_CONV_ERR.  However, when read_string fails to allocate
+	memory for a response string, it loses the response string and silently
+	ignores the error, with net result as if EOF has been read.
+
+	* libpam_misc/misc_conv.c (read_string): Use strdup instead of x_strdup,
+	the latter is of no benefit in this case.
+	Do not ignore potential memory allocation errors returned by strdup,
+	forward them to misc_conv.
+
+2014-01-20  Dmitry V. Levin  <ldv@altlinux.org>
+
+	pam_limits: fix utmp->ut_user handling.
+	ut_user member of struct utmp is a string that is not necessarily
+	null-terminated, so extra care should be taken when using it.
+
+	* modules/pam_limits/pam_limits.c (check_logins): Convert ut->UT_USER to
+	a null-terminated string and consistently use it where a null-terminated
+	string is expected.
+
+	pam_mkhomedir: check and create home directory for the same user (ticket #22)
+	Before pam_mkhomedir helper was introduced in commit
+	7b14630ef39e71f603aeca0c47edf2f384717176, pam_mkhomedir was checking for
+	existance and creating the same directory - the home directory of the
+	user NAME returned by pam_get_item(PAM_USER).
+
+	The change in behaviour accidentally introduced along with
+	mkhomedir_helper is not consistent: while the module still checks for
+	getpwnam(NAME)->pw_dir, the directory created by mkhomedir_helper is
+	getpwnam(getpwnam(NAME)->pw_name)->pw_dir, which is not necessarily
+	the same as the directory being checked.
+
+	This change brings check and creation back in sync, both handling
+	getpwnam(NAME)->pw_dir.
+
+	* modules/pam_mkhomedir/pam_mkhomedir.c (create_homedir): Replace
+	"struct passwd *" argument with user's name and home directory.
+	Pass user's name to MKHOMEDIR_HELPER.
+	(pam_sm_open_session): Update create_homedir call.
+
+2014-01-20  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_limits: detect and ignore stale utmp entries.
+	Original idea by Christopher Hailey
+
+	* modules/pam_limits/pam_limits.c (check_logins): Use kill() to
+	detect if pid of the utmp entry is still running and ignore the entry
+	if it is not.
+
+2014-01-19  Stéphane Graber  <stgraber@ubuntu.com>
+
+	pam_loginuid: Always return PAM_IGNORE in userns.
+	The previous patch to support user namespaces works fine with containers
+	that are started from a desktop/terminal session but fails when dealing
+	with containers that were started from a remote session such as ssh.
+
+	I haven't looked at the exact reason for that in the kernel but on the
+	userspace side of things, the difference is that containers started from
+	an ssh session will happily let pam open /proc/self/loginuid read-write,
+	will let it read its content but will then fail with EPERM when trying
+	to write to it.
+
+	So to make the userns support bullet proof, this commit moves the userns
+	check earlier in the function (which means a small performance impact as
+	it'll now happen everytime on kernels that have userns support) and will
+	set rc = PAM_IGNORE instead of rc = PAM_ERROR.
+
+	The rest of the code is still executed in the event that PAM is run on a
+	future kernel where we have some kind of audit namespace that includes a
+	working loginuid.
+
+2014-01-15  Steve Langasek  <vorlon@debian.org>
+
+	pam_namespace: don't use bashisms in default namespace.init script.
+	* modules/pam_namespace/pam_namespace.c: call setuid() before execing the
+	namespace init script, so that scripts run with maximum privilege regardless
+	of the shell implementation.
+	* modules/pam_namespace/namespace.init: drop the '-p' bashism from the
+	shebang line
+
+	This is not a POSIX standard option, it's a bashism.  The bash manpage says
+	that it's used to prevent the effective user id from being reset to the real
+	user id on startup, and to ignore certain unsafe variables from the
+	environment.
+
+	In the case of pam_namespace, the -p is not necessary for environment
+	sanitizing because the PAM module (properly) sanitizes the environment
+	before execing the script.
+
+	The stated reason given in CVS history for passing -p is to "preserve euid
+	when called from setuid apps (su, newrole)."  This should be done more
+	portably, by calling setuid() before spawning the shell.
+
+	Bug-Debian: http://bugs.debian.org/624842
+	Bug-Ubuntu: https://bugs.launchpad.net/bugs/1081323
+
+2014-01-10  Stéphane Graber  <stgraber@ubuntu.com>
+
+	pam_loginuid: Ignore failure in user namespaces.
+	When running pam_loginuid in a container using the user namespaces, even
+	uid 0 isn't allowed to set the loginuid property.
+
+	This change catches the EACCES from opening loginuid, checks if the user
+	is in the host namespace (by comparing the uid_map with the host's one)
+	and only if that's the case, sets rc to 1.
+
+	Should uid_map not exist or be unreadable for some reason, it'll be
+	assumed that the process is running on the host's namespace.
+
+	The initial reason behind this change was failure to ssh into an
+	unprivileged container (using a 3.13 kernel and current LXC) when using
+	a standard pam profile for sshd (which requires success from
+	pam_loginuid).
+
+	I believe this solution doesn't have any drawback and will allow people
+	to use unprivileged containers normally. An alternative would be to have
+	all distros set pam_loginuid as optional but that'd be bad for any of
+	the other potential failure case which people may care about.
+
+	There has also been some discussions to get some of the audit features
+	tied with the user namespaces but currently none of that has been merged
+	upstream and the currently proposed implementation doesn't cover
+	loginuid (nor is it clear how this should even work when loginuid is set
+	as immutable after initial write).
+
+2014-01-10  Dmitry V. Levin  <ldv@altlinux.org>
+
+	pam_loginuid: return PAM_IGNORE when /proc/self/loginuid does not exist.
+	When /proc/self/loginuid does not exist, return PAM_IGNORE instead of
+	PAM_SUCCESS, so that we can distinguish between "loginuid set
+	successfully" and "loginuid not set, but this is expected".
+
+	Suggested by Steve Langasek.
+
+	* modules/pam_loginuid/pam_loginuid.c (set_loginuid): Change return
+	code semantics: return PAM_SUCCESS on success, PAM_IGNORE when loginuid
+	does not exist, PAM_SESSION_ERR in case of any other error.
+	(_pam_loginuid): Forward the PAM error code returned by set_loginuid.
+
+2013-11-20  Dmitry V. Levin  <ldv@altlinux.org>
+
+	pam_access: fix debug level logging (ticket #19)
+	* modules/pam_access/pam_access.c (group_match): Log the group token
+	passed to the function, not an uninitialized data on the stack.
+
+	pam_warn: log flags passed to the module (ticket #25)
+	* modules/pam_warn/pam_warn.c (log_items): Take "flags" argument and
+	log it using pam_syslog.
+	(pam_sm_authenticate, pam_sm_setcred, pam_sm_chauthtok,
+	pam_sm_acct_mgmt, pam_sm_open_session, pam_sm_close_session): Pass
+	"flags" argument to log_items.
+
+	Modernize AM_INIT_AUTOMAKE invocation.
+	Before this change, automake complained that two- and three-arguments
+	forms of AM_INIT_AUTOMAKE are deprecated.
+
+	* configure.in: Pass PACKAGE and VERSION arguments to AC_INIT instead
+	of AM_INIT_AUTOMAKE.
+
+	Fix autoconf warnings.
+	Before this change, autoconf complained that AC_COMPILE_IFELSE
+	and AC_RUN_IFELSE was called before AC_USE_SYSTEM_EXTENSIONS.
+
+	* configure.in: Call AC_USE_SYSTEM_EXTENSIONS before LT_INIT.
+
+	pam_securetty: check return value of fgets.
+	Checking return value of fgets not only silences the warning from glibc
+	but also leads to a cleaner code.
+
+	* modules/pam_securetty/pam_securetty.c (securetty_perform_check):
+	Check return value of fgets.
+
+	pam_lastlog: fix format string.
+	gcc -Wformat justly complains:
+	format '%d' expects argument of type 'int', but argument 5 has type 'time_t'
+
+	* modules/pam_lastlog/pam_lastlog.c (pam_sm_authenticate): Fix format
+	string.
+
+2013-11-20  Darren Tucker  <dtucker@zip.com.au>
+
+	If the correct loginuid is set already, skip writing it.
+	modules/pam_loginuid/pam_loginuid.c (set_loginuid): Read the current loginuid
+	and skip writing if already correctly set.
+
+2013-11-11  Thorsten Kukuk  <kukuk@thkukuk.de>
+
+		Always ask for old password if changing NIS account.
+		* modules/pam_unix/pam_unix_passwd.c (pam_sm_chauthtok): ask
+		for old password if NIS account.
+
+2013-11-08  Thorsten Kukuk  <kukuk@thkukuk.de>
+
+	Allow DES as compatibility option for /etc/login.defs.
+	* modules/pam_unix/support.h: Add UNIX_DES
+
+2013-10-14  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Docfix: pam_prompt() and pam_vprompt() return int.
+	doc/man/pam_prompt.3.xml: pam_prompt() and pam_vprompt() return int.
+
+	Make pam_tty_audit work with old kernels not supporting log_passwd.
+	modules/pam_tty_audit/pam_tty_audit.c(nl_recv): Pad result with zeros
+	if message is short from older kernel.
+
+2013-09-25  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Fix pam_tty_audit log_passwd support and regression.
+	modules/pam_tty_audit/pam_tty_audit.c: Add missing "config.h" include.
+	(pam_sm_open_session): Always copy the old status as initialization of new.
+
+2013-09-19  Thorsten Kukuk  <kukuk@thkukuk.de>
+
+	Release version 1.1.8.
+
+2013-09-16  Thorsten Kukuk  <kukuk@thkukuk.de>
+
+	Check return value of setuid to remove glibc warnings.
+	* modules/pam_unix/pam_unix_acct.c: Check setuid return value.
+	* modules/pam_unix/support.c: Likewise.
+
+2013-09-13  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Write to *rounds only if non-NULL.
+	modules/pam_unix/support.c(_set_ctrl): Write to *rounds only if non-NULL.
+
+	Add missing ')'
+	modules/pam_unix/pam_unix_passwd.c: Add missing ')'..
+
+2013-09-11  Thorsten Kukuk  <kukuk@thkukuk.de>
+
+	Release version 1.1.7.
+
+2013-09-11  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Updated translations from Transifex.
+	po/*.po: Updated translations from Transifex.
+
+2013-09-04  Thorsten Kukuk  <kukuk@thkukuk.de>
+
+	Extend pam_exec by stdout and type= options (ticket #8):
+	* modules/pam_exec/pam_exec.c: Add stdout and type= option
+	* modules/pam_exec/pam_exec.8.xml: Document new options
+
+2013-08-30  Thorsten Kukuk  <kukuk@thkukuk.de>
+
+	Fix compile error.
+	* modules/pam_unix/pam_unix_acct.c: fix last change
+
+2013-08-29  Thorsten Kukuk  <kukuk@thkukuk.de>
+
+	Restart waitpid if it returns with EINTR (ticket #17)
+	* modules/pam_unix/pam_unix_acct.c: run waitpid in a while loop.
+	* modules/pam_unix/pam_unix_passwd.c: Likewise.
+	* modules/pam_unix/support.c: Likewise.
+
+2013-08-28  Thorsten Kukuk  <kukuk@thkukuk.de>
+
+	misc_conv.3: Fix documentation of misc_conv.
+	doc/man/misc_conv.3.xml: Fix return value of misc_conv
+
+2013-08-23  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Apply the exclusive check in pam_sepermit only when loginuid not set.
+	* modules/pam_sepermit/pam_sepermit.c(get_loginuid): Read loginuid from
+	/proc
+	(sepermit_match): Apply the exclusive check only when loginuid not set.
+
+2013-08-22  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Updated translations from Transifex.
+	* po/*.po: Updated translations from Transifex.
+
+2013-07-02  Dmitry V. Levin  <ldv@altlinux.org>
+
+	pam_rootok: fix linking in --enable-audit mode.
+	pam_rootok.c explicitly uses functions from libaudit, so the module has
+	to be linked with the library.
+
+	* modules/pam_rootok/Makefile.am (pam_rootok_la_LIBADD): Add @LIBAUDIT@.
+
+2013-07-01  Richard Guy Briggs  <rgb@redhat.com>
+
+	pam_tty_audit: fix a typo that crept in during patch review.
+	* modules/pam_tty_audit/pam_tty_audit.c (pam_sm_open_session): Replace
+	all occurrences of HAVE_AUDIT_TTY_STATUS_LOG_PASSWD with
+	HAVE_STRUCT_AUDIT_TTY_STATUS_LOG_PASSWD.
+	* configure.in (HAVE_AUDIT_TTY_STATUS_LOG_PASSWD): Remove.
+
+2013-06-21  Richard Guy Briggs  <rgb@redhat.com>
+
+	pam_tty_audit: add an option to control logging of passwords: log_passwd
+	Most commands are entered one line at a time and processed as complete lines
+	in non-canonical mode.  Commands that interactively require a password, enter
+	canonical mode with echo set to off to do this.  This feature (icanon and
+	!echo) can be used to avoid logging passwords by audit while still logging the
+	rest of the command.  Adding a member to the struct audit_tty_status passed in
+	by pam_tty_audit allows control of logging passwords per task.
+
+	* configure.in: autoconf bits to conditionally add support at compile time
+	depending on struct audit_tty_status kernel header version.
+	* modules/pam_tty_audit/pam_tty_audit.8.xml: Document new pam_tty_audit module
+	log_passwd option.
+	* modules/pam_tty_audit/pam_tty_audit.c: (pam_sm_open_session): Added
+	"log_passwd" option parsing.
+
+2013-06-20  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Man page fix - unix_update runs in the permissive mode as well.
+	modules/pam_unix/unix_update.8.xml: unix_update helper runs in the
+	permissive mode as well.
+
+2013-06-18  Thorsten Kukuk  <kukuk@orinoco.thkukuk.de>
+
+	Use hash from /etc/login.defs as default if no other one is specified as argument.
+	* modules/pam_unix/support.c: Add search_key, call from __set_ctrl
+	* modules/pam_unix/support.h: Add define for /etc/login.defs
+	* modules/pam_unix/pam_unix.8.xml: Document new behavior.
+	* modules/pam_umask/pam_umask.c: Add missing NULL pointer check
+
+2013-04-12  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_access: better not change the default function used to get domain name.
+	modules/pam_access/pam_access.c (netgroup_match): As we did not use
+	yp_get_default_domain() in the 1.1 branch due to typo in ifdef
+	we should use it only as fallback.
+
+2013-03-28  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Fix strict aliasing issue in MD5 implementations.
+	modules/pam_namespace/md5.c (MD5Final): Use memcpy instead of assignment.
+	modules/pam_unix/md5.c (MD5Final): Use memcpy instead of assignment.
+
+2013-03-22  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_lastlog: Do not fail on short read if btmp is corrupted.
+	modules/pam_lastlog/pam_lastlog.c (last_login_failed): Just warn, not fail
+	on short read or read error.
+
+	pam_rootok: Allow proper logging of the user AVC if access disallowed by SELinux
+	modules/pam_rootok/pam_rootok.c (log_callback, selinux_check_root): New functions.
+	(check_for_root): Use the selinux_check_root() instead of checkPasswdAccess.
+
+2013-02-08  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Add checks for crypt() returning NULL.
+	modules/pam_pwhistory/opasswd.c (compare_password): Add check for crypt() NULL return.
+	modules/pam_unix/bigcrypt.c (bigcrypt): Likewise.
+
+2013-02-07  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_userdb: Allow also modern password hashes supported by crypt().
+	modules/pam_userdb/pam_userdb.c (user_lookup): Allow password hashes
+	longer than 13 characters and long salt.
+
+2013-01-18  Walter de Jong  <walter.dejong@surfsara.nl>
+
+	pam_access: fix typo in ifdef.
+	modules/pam_access/pam_access.c (netgroup_match): Fix typo
+	in #ifdef HAVE_YP_GET_DEFAULT_DOMAIN.
+
+2012-12-20  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_cracklib: Mention checks that are not run for root.
+	modules/pam_cracklib/pam_cracklib.8.xml: Add note about checks
+	when run as root.
+
+	Update also the POT file.
+	po/Linux-PAM.pot: Update to reflect current sources.
+
+2012-12-12  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Updated translations from Transifex, added new languages.
+	po/LINGUAS: Added new languages.
+	po/*.po: Updated translations from Transifex including new languages.
+
+2012-11-30  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_selinux: Drop obsolete and unsupported manual context selection.
+	modules/pam_selinux/pam_selinux.c (manual_context): Drop function.
+	(compute_exec_context): Drop manual_context() call.
+
+2012-11-23  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_limits: fix grammatical mistake.
+	modules/pam_limits/limits.conf: Fix grammatical mistake.
+
+2012-11-13  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Reflect the enforce_for_root semantics change in pam_pwhistory xtest.
+	xtests/tst-pam_pwhistory1.pamd: Use enforce_for_root as the test is
+	running with real uid == 0.
+
+2012-10-10  Dmitry V. Levin  <ldv@altlinux.org>
+
+	pam_unix: fix build in --enable-selinux mode.
+	glibc's <sys/wait.h> starting with commit
+	http://sourceware.org/git/?p=glibc.git;a=commitdiff;h=glibc-2.15-231-gd94a467
+	does not include <sys/resource.h> for POSIX 2008 conformance reasons, so
+	when pam is being built with SELinux support enabled, pam_unix_passwd.c
+	uses getrlimit(2) and therefore should include <sys/resource.h> without
+	relying on other headers.
+
+	* modules/pam_unix/pam_unix_passwd.c: Include <sys/resource.h>.
+
+	Reported-by: Guido Trentalancia <guido@trentalancia.com>
+	Reported-by: "Jory A. Pratt" <anarchy@gentoo.org>
+	Reported-by: Diego Elio Pettenò <flameeyes@flameeyes.eu>
+
+2012-10-10  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_namespace: add mntopts flag for tmpfs mount options.
+	modules/pam_namespace/pam_namespace.h: Add mount_opts member to polydir
+	structure.
+	modules/pam_namespace/pam_namespace.c (del_polydir): Free the mount_opts.
+	(parse_method): Parse the mntopts flag.
+	(ns_setup): Pass the mount_opts to mount().
+	modules/pam_namespace/namespace.conf.5.xml: Document the mntopts flag.
+
+2012-09-06  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_selinux, pam_tally2: Add tty and rhost to audit data.
+	modules/pam_selinux/pam_selinux.c (send_audit_message): Obtain tty and
+	rhost from PAM items and pass them to audit.
+	modules/pam_tally2/pam_tally2.c (tally_check): Obtain tty and
+	rhost from PAM items and pass them to audit.
+	(main): Obtain tty name of stdin and pass it to audit.
+
+	Update configure.in to use more recent interfaces.
+	configure.in: Use LT_INIT instead of AC_PROG_LIBTOOL and AS_HELP_STRING instead
+	of AC_HELP_STRING.
+
+2012-08-17  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Add missing $(DESTDIR) when making directories on install.
+	modules/pam_namespace/Makefile.am: Add missing $(DESTDIR) when making
+	$(namespaceddir) on install.
+	modules/pam_sepermit/Makefile.am: Add missing $(DESTDIR) when making
+	$(sepermitlockdir) on install.
+
+2012-08-17  Thorsten Kukuk  <kukuk@orinoco.thkukuk.de>
+
+	release version 1.1.6.
+	configure.in: Bump version to 1.1.6
+	NEWS: Document changes
+	po/*.po: Regenerate *.po files
+
+2012-08-16  Thorsten Kukuk  <kukuk@thkukuk.de>
+
+	Small documentation and define fixes.
+	modules/pam_limits/limits.conf.5.xml: Document race of maxlogins [#10]
+	modules/pam_namespace/pam_namespace.h: Define MS_SLAVE if necessary
+	modules/pam_pwhistory/pam_pwhistory.c: Document how the module works
+	modules/pam_unix/pam_unix.8.xml: Document remember option obsoleted by pam_pwhistory [#6]
+
+2012-08-13  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Respect PAM_AUTHTOK_TYPE in pam_get_authtok_verify().
+	libpam/pam_get_authtok.c (pam_get_authtok_internal): Set the PAM_AUTHTOK_TYPE
+	item when obtained from module options.
+	(pam_get_authtok_verify): Use the PAM_AUTHTOK_TYPE item when prompting.
+
+2012-08-09  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Document limits.d also in the limits.conf manpage.
+	modules/pam_limits/limits.conf.5.xml: Document the limits.d existence.
+
+2012-07-23  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	New autotools do not create empty directories on install.
+	modules/pam_namespace/Makefile.am: Add install-data-local target to create
+	namespaceddir.
+	modules/pam_sepermit/Makefile.am: Add install-data-local target to create
+	sepermitlockdir.
+
+2012-07-09  Stevan Bajić  <stevan@bajic.ch>
+
+	RLIMIT_* variables are no longer defined unless you explicitly include sys/resource.h.
+
+	modules/pam_unix/pam_unix_acct.c: Include sys/resource.h.
+
+2012-06-27  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_umask: correct the documentation of GECOS field parsing.
+	modules/pam_umask/pam_umask.8.xml: Correct the documentation of GECOS field
+	parsing.
+
+2012-06-22  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_cracklib: Add monotonic character sequence checking.
+	modules/pam_cracklib/pam_cracklib.c (_pam_parse): Parse the maxsequence option.
+	(sequence): New function to check for too long monotonic sequence of characters.
+	(password_check): Call the sequence().
+	modules/pam_cracklib/pam_cracklib.8.xml: Document the maxsequence check.
+
+2012-06-01  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_timestamp: Fix copy&paste error in manpage.
+	modules/pam_timestamp/pam_timestamp.8.xml: Fix AUTHOR section.
+
+2012-05-28  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Pulled new translations from Transifex.
+	po/*.po: Updated translations.
+
+	pam_pwhistory: Always record the old password even when root changes it.
+	modules/pam_pwhistory/pam_pwhistory.c (pam_sm_chauthtok): Use the UID of
+	the process instead of the target user UID (same as in pam_cracklib) to
+	check for root. Always record old password.
+
+2012-05-24  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_cracklib: Add enforce_for_root option.
+	modules/pam_cracklib/pam_cracklib.c (_pam_parse): Recognize the enforce_for_root option.
+	(pam_sm_chauthtok): Enforce errors for root with the option.
+	modules/pam_cracklib/pam_cracklib.8.xml: Document the enforce_for_root option.
+
+2012-04-30  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_cracklib: Add maxclassrepeat, gecoscheck checks and remove unused difignore.
+	modules/pam_cracklib/pam_cracklib.c (_pam_parse): Recognize the maxclassrepeat, gecoscheck options. Ignore difignore option.
+	(simple): Add the check for the same class repetition.
+	(usercheck): Refactor into wordcheck().
+	(gecoscheck): New test for words from the GECOS field.
+	(password_check): Call the gecoscheck().
+	(pam_sm_chauthtok): Drop the diff_ignore from options struct.
+	modules/pam_cracklib/pam_cracklib.8.xml: Document the maxclassrepeat and gecoscheck checks, update the documentation of the difok test.
+
+	pam_lastlog: Never lock out the root account.
+	modules/pam_lastlog/pam_lastlog.c (pam_sm_authenticate): Return PAM_SUCCESS if
+	uid==0.
+	modules/pam_lastlog/pam_lastlog.8.xml: Improve documentation.
+
+2012-04-17  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	pam_lastlog: add possibility to lock out inactive users in auth or account
+	* modules/pam_lastlog/pam_lastlog.8.xml: Document the new functionality and
+	option.
+	* modules/pam_lastlog/pam_lastlog.c: Add the inactive user lock out.
+	(_pam_session_parse): Renamed from _pam_parse.
+	(_pam_auth_parse): New function to parse auth arguments.
+	(_last_login_open): Factor out opening of the lastlog file.
+	(_last_login_read): Factor out opening of the lastlog file.
+	(pam_sm_authenticate): Implement the lockout functionality.
+	(pam_sm_setcred): Just return PAM_SUCCESS.
+	(pam_sm_acct_mgmt): Call pam_sm_authenticate().
+
+2012-04-11  Paul Wouters  <pwouters@redhat.com>
+
+	Check for crypt() failure returning NULL.
+	* modules/pam_unix/pam_unix_passwd.c (pam_sm_chauthtok): Adjust syslog message.
+	* modules/pam_unix/passverify.c (create_password_hash): Check for crypt()
+	returning NULL.
+
+2012-02-03  Dmitry V. Levin  <ldv@altlinux.org>
+
+	pam_unix: make configuration consistent in --enable-static-modules mode.
+	In --enable-static-modules mode, it was not possible to use "pam_unix"
+	in PAM config files.  Instead, different names had to be used for each
+	management group: pam_unix_auth, pam_unix_acct, pam_unix_passwd and
+	pam_unix_session.  This change makes pam_unix configuration consistent
+	with other PAM modules.
+
+	* README: Remove the paragraph describing pam_unix distinctions in
+	--enable-static-modules mode.
+	* libpam/pam_static_modules.h (_pam_unix_acct_modstruct,
+	_pam_unix_auth_modstruct, _pam_unix_passwd_modstruct,
+	_pam_unix_session_modstruct): Remove.
+	(_pam_unix_modstruct): New pam_module declaration.
+	* modules/pam_unix/pam_unix_static.h: New file.
+	* modules/pam_unix/pam_unix_static.c: Likewise.
+	* modules/pam_unix/Makefile.am (noinst_HEADERS): Add pam_unix_static.h
+	(pam_unix_la_SOURCES) [STATIC_MODULES]: Add pam_unix_static.c
+	* modules/pam_unix/pam_unix_acct.c [PAM_STATIC]: Include
+	pam_unix_static.h
+	[PAM_STATIC] (_pam_unix_acct_modstruct): Remove.
+	* modules/pam_unix/pam_unix_auth.c [PAM_STATIC]: Include
+	pam_unix_static.h
+	[PAM_STATIC] (_pam_unix_auth_modstruct): Remove.
+	* modules/pam_unix/pam_unix_passwd.c [PAM_STATIC]: Include
+	pam_unix_static.h
+	[PAM_STATIC] (_pam_unix_passwd_modstruct): Remove.
+	* modules/pam_unix/pam_unix_sess.c [PAM_STATIC]: Include
+	pam_unix_static.h
+	[PAM_STATIC] (_pam_unix_session_modstruct): Remove.
+
+	Suggested-by: Matveychikov Ilya <i.matveychikov@securitycode.ru>
+
+2012-01-27  Dmitry V. Levin  <ldv@altlinux.org>
+
+	Make --disable-cracklib compatible with --enable-static-modules mode.
+	* configure.in: Define HAVE_LIBCRACK when cracklib is enabled.
+	* libpam/pam_static_modules.h (static_modules): Guard the use of
+	_pam_cracklib_modstruct by HAVE_LIBCRACK macro.
+
+2012-02-10  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Add missing includes for types used in the pam_modutil.h.
+	* libpam/include/security/pam_modutil.h: Add missing includes for used types.
+
+2012-01-27  Matveychikov Ilya  <i.matveychikov@securitycode.ru>
+
+	Fix compile time errors in --enable-static-modules mode.
+	* libpam/pam_static_modules.h (_pam_rhosts_auth_modstruct): Remove
+	obsolete declaration.
+	(static_modules): Remove undefined reference to
+	_pam_rhosts_auth_modstruct.
+	* modules/pam_pwhistory/opasswd.h: Rename {save,check}_old_password to
+	{save,check}_old_pass in order to avoid conflicts with pam_unix.
+	* modules/pam_pwhistory/opasswd.c: Likewise.
+	* modules/pam_pwhistory/pam_pwhistory.c: Likewise.
+	* modules/pam_tally2/pam_tally2.c: Rename _pam_tally_modstruct to
+	_pam_tally2_modstruct.
+
+2012-01-26  Dmitry V. Levin  <ldv@altlinux.org>
+
+	Fix SUBDIRS for --enable-static-modules mode.
+	There is no way to build "modules" subdirectory before "libpam" anyway.
+	In STATIC_MODULES mode, "libpam" subdirectory must be built twice to
+	produce a usable libpam.a without undefined references to multiple
+	_pam_*_modstruct symbols.
+
+	* Makefile.am: Use default SUBDIRS in STATIC_MODULES mode.
+
+2012-01-26  Matveychikov Ilya  <i.matveychikov@securitycode.ru>
+
+	configure: fix typo in --disable-nis help string.
+	* configure.in: Change '-disable-nis' to '--disable-nis'.
+
+2012-01-26  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Do not unmount anything by default in pam_namespace close session call.
+	* modules/pam_namespace/pam_namespace.c (pam_sm_close_session): Recognize
+	the unmount_on_close option and make the default to be to not unmount.
+	* modules/pam_namespace/pam_namespace.h: Rename PAMNS_NO_UNMOUNT_ON_CLOSE to
+	PAMNS_UNMOUNT_ON_CLOSE.
+	* modules/pam_namespace/pam_namespace.8.xml: Document the change.
+
+2012-01-24  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Make / mount as rslave instead of bind mounting polydirs.
+	* modules/pam_namespace/pam_namespace.c (protect_dir): Drop the always argument.
+	(check_inst_parent): Drop the always argument from protect_dir().
+	(create_polydir): Likewise.
+	(ns_setup): Likewise and do not mark the polydir with MS_PRIVATE.
+	(setup_namespace): Mark the / with MS_SLAVE|MS_REC.
+	* modules/pam_namespace/pam_namespace.8.xml: Reflect the change in docs.
+
+2012-01-13  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Add possibility to match ruser, rhost, and tty in pam_succeed_if.
+	* modules/pam_succeed_if/pam_succeed_if.c (evaluate): Match ruser,
+	rhost, and tty as left operand.
+	* modules/pam_succeed_if/pam_succeed_if.8.xml: Document the new
+	possible left operands.
+
+2012-01-03  Tomas Mraz  <tmraz@fedoraproject.org>
+
+	Merge branch 'master' of ssh://git.fedorahosted.org/git/linux-pam.
+
+	Fix matching of usernames in the pam_unix remember feature.
+	* modules/pam_unix/pam_unix_passwd.c (check_old_password): Make
+	sure we match only the whole username in opasswd entry.
+	* modules/pam_unix/passverify.c (save_old_password): Likewise make
+	sure we match only the whole username in opasswd entry.
+
+2011-12-26  Dmitry V. Levin  <ldv@altlinux.org>
+
+	pam_start: fix memory leak on error path.
+	* libpam/pam_start.c (pam_start): If _pam_make_env() or
+	_pam_init_handlers() returned an error, release the memory allocated
+	for pam_conv structure.
+
+	Patch-by: cancel <suntsu@yandex.ru>.
+
+2011-11-03  Dmitry V. Levin  <ldv@altlinux.org>
+
+	pam_selinux.8.xml: update.
+	* modules/pam_selinux/pam_selinux.8.xml (pam_selinux-cmdsynopsis):
+	Reorder options, add new "restore" option.
+	pam_selinux-description): Rewrite.
+	(pam_selinux-options): Reorder options, describe new "restore" option.
+	(pam_selinux-return_values): Remove PAM_AUTH_ERR, PAM_SESSION_ERR
+	and PAM_BUF_ERR.
+	(pam_selinux-see_also): Remove pam.conf(5).  Add execve(2), tty(4)
+	and selinux(8).
+
+	pam_selinux.c: add "restore" option.
+	* modules/pam_selinux/pam_selinux.c (pam_sm_open_session): Add new
+	"restore" option.
+
+	pam_selinux.c: rewrite using pam_get_data/pam_set_data.
+	* modules/pam_selinux/pam_selinux.c (security_restorelabel_tty,
+	security_label_tty): Remove old functions.
+	(module_data_t): New structure.
+	(free_module_data, cleanup, get_module_data, get_item,
+	set_exec_context, set_file_context, compute_exec_context,
+	compute_tty_context, restore_context, set_context,
+	create_context): New functions.
+	(pam_sm_authenticate, pam_sm_setcred, pam_sm_open_session,
+	pam_sm_close_session): Use them.
+
+2011-10-28  Dmitry V. Levin  <ldv@altlinux.org>
+
+	Use libpam.la/libpam_misc.la to link with -lpam/-lpam_misc.
+	GNU automake documentation recommends to avoid using -l options in
+	LDADD or LIBADD when referring to libraries built by the package.
+	Instead, it recommends to write the file name of the library explicitly,
+	and use -l option only to list third-party libraries.  As result, the
+	default value of *_DEPENDENCIES will list all local libraries and omit
+	the other ones.
+	* modules/pam_access/Makefile.am (pam_access_la_LIBADD): Replace
+	"-L$(top_builddir)/libpam -lpam" with
+	"$(top_builddir)/libpam/libpam.la", to follow GNU automake
+	recommendations.
+	* modules/pam_cracklib/Makefile.am (pam_cracklib_la_LIBADD): Likewise.
+	* modules/pam_debug/Makefile.am (pam_debug_la_LIBADD): Likewise.
+	* modules/pam_deny/Makefile.am (pam_deny_la_LIBADD): Likewise.
+	* modules/pam_echo/Makefile.am (pam_echo_la_LIBADD): Likewise.
+	* modules/pam_env/Makefile.am (pam_env_la_LIBADD): Likewise.
+	* modules/pam_exec/Makefile.am (pam_exec_la_LIBADD): Likewise.
+	* modules/pam_faildelay/Makefile.am (pam_faildelay_la_LIBADD): Likewise.
+	* modules/pam_filter/Makefile.am (pam_filter_la_LIBADD): Likewise.
+	* modules/pam_filter/upperLOWER/Makefile.am (LDADD): Likewise.
+	* modules/pam_ftp/Makefile.am (pam_ftp_la_LIBADD): Likewise.
+	* modules/pam_group/Makefile.am (pam_group_la_LIBADD): Likewise.
+	* modules/pam_issue/Makefile.am (pam_issue_la_LIBADD): Likewise.
+	* modules/pam_keyinit/Makefile.am (pam_keyinit_la_LIBADD): Likewise.
+	* modules/pam_lastlog/Makefile.am (pam_lastlog_la_LIBADD): Likewise.
+	* modules/pam_limits/Makefile.am (pam_limits_la_LIBADD): Likewise.
+	* modules/pam_listfile/Makefile.am (pam_listfile_la_LIBADD): Likewise.
+	* modules/pam_localuser/Makefile.am (pam_localuser_la_LIBADD): Likewise.
+	* modules/pam_loginuid/Makefile.am (pam_loginuid_la_LIBADD): Likewise.
+	* modules/pam_mail/Makefile.am (pam_mail_la_LIBADD): Likewise.
+	* modules/pam_mkhomedir/Makefile.am (pam_mkhomedir_la_LIBADD,
+	mkhomedir_helper_LDADD): Likewise.
+	* modules/pam_motd/Makefile.am (pam_motd_la_LIBADD): Likewise.
+	* modules/pam_namespace/Makefile.am (pam_namespace_la_LIBADD): Likewise.
+	* modules/pam_nologin/Makefile.am (pam_nologin_la_LIBADD): Likewise.
+	* modules/pam_permit/Makefile.am (pam_permit_la_LIBADD): Likewise.
+	* modules/pam_pwhistory/Makefile.am (pam_pwhistory_la_LIBADD): Likewise.
+	* modules/pam_rhosts/Makefile.am (pam_rhosts_la_LIBADD): Likewise.
+	* modules/pam_rootok/Makefile.am (pam_rootok_la_LIBADD): Likewise.
+	* modules/pam_securetty/Makefile.am (pam_securetty_la_LIBADD): Likewise.
+	* modules/pam_sepermit/Makefile.am (pam_sepermit_la_LIBADD): Likewise.
+	* modules/pam_shells/Makefile.am (pam_shells_la_LIBADD): Likewise.
+	* modules/pam_stress/Makefile.am (pam_stress_la_LIBADD): Likewise.
+	* modules/pam_succeed_if/Makefile.am (pam_succeed_if_la_LIBADD):
+	Likewise.
+	* modules/pam_tally/Makefile.am (pam_tally_la_LIBADD): Likewise.
+	* modules/pam_tally2/Makefile.am (pam_tally2_la_LIBADD,
+	pam_tally2_LDADD): Likewise.
+	* modules/pam_time/Makefile.am (pam_time_la_LIBADD): Likewise.
+	* modules/pam_timestamp/Makefile.am (pam_timestamp_la_LIBADD,
+	pam_timestamp_check_LDADD, hmacfile_LDADD): Likewise.
+	* modules/pam_tty_audit/Makefile.am (pam_tty_audit_la_LIBADD): Likewise.
+	* modules/pam_umask/Makefile.am (pam_umask_la_LIBADD): Likewise.
+	* modules/pam_unix/Makefile.am (pam_unix_la_LIBADD): Likewise.
+	* modules/pam_userdb/Makefile.am (pam_userdb_la_LIBADD): Likewise.
+	* modules/pam_warn/Makefile.am (pam_warn_la_LIBADD): Likewise.
+	* modules/pam_wheel/Makefile.am (pam_wheel_la_LIBADD): Likewise.
+	* modules/pam_xauth/Makefile.am (pam_xauth_la_LIBADD): Likewise.
+	* tests/Makefile.am (LDADD): Likewise.
+	* examples/Makefile.am (LDADD): Replace "-L$(top_builddir)/libpam -lpam"
+	with "$(top_builddir)/libpam/libpam.la", and
+	"-L$(top_builddir)/libpam_misc -lpam_misc" with
+	"$(top_builddir)/libpam_misc/libpam_misc.la", to follow GNU automake
+	recommendations.
+	* xtests/Makefile.am (LDADD): Likewise.
+	* modules/pam_selinux/Makefile.am (pam_selinux_la_LIBADD): Likewise.
+
+	Fix usage of LIBADD, LDADD and LDFLAGS.
+	* modules/pam_selinux/Makefile.am: Rename pam_selinux_check_LDFLAGS to
+	pam_selinux_check_LDADD.
+	* modules/pam_userdb/Makefile.am: Split out pam_userdb_la_LIBADD from
+	AM_LDFLAGS.
+	* modules/pam_warn/Makefile.am: Split out pam_warn_la_LIBADD from
+	AM_LDFLAGS.
+	* modules/pam_wheel/Makefile.am: Split out pam_wheel_la_LIBADD from
+	AM_LDFLAGS.
+	* modules/pam_xauth/Makefile.am: split out pam_xauth_la_LIBADD from
+	AM_LDFLAGS.
+	* xtests/Makefile.am: Rename AM_LDFLAGS to LDADD.
+
+2011-10-27  Dmitry V. Levin  <ldv@altlinux.org>
+
+	Update .gitignore files.
+	* .gitignore: Add common ignore patterns.
+	* m4/.gitignore: Unignore local m4 files.
+	* dynamic/.gitignore: Unignore Makefile.
+	* libpamc/test/modules/.gitignore: Likewise.
+	* libpamc/test/regress/.gitignore: Likewise.
+	* po/.gitignore: Add Makevars.template.
+	* conf/.gitignore: Remove common ignore patterns.
+	* conf/pam_conv1/.gitignore: Likewise.
+	* doc/.gitignore: Likewise.
+	* doc/specs/.gitignore: Likewise.
+	* doc/specs/formatter/.gitignore: Likewise.
+	* examples/.gitignore: Likewise.
+	* modules/pam_filter/upperLOWER/.gitignore: Likewise.
+	* modules/pam_mkhomedir/.gitignore: Likewise.
+	* modules/pam_selinux/.gitignore: Likewise.
+	* modules/pam_stress/.gitignore: Likewise.
+	* modules/pam_tally/.gitignore: Likewise.
+	* modules/pam_tally2/.gitignore: Likewise.
+	* modules/pam_timestamp/.gitignore: Likewise.
+	* modules/pam_unix/.gitignore: Likewise.
+	* tests/.gitignore: Likewise.
+	* xtests/.gitignore: Likewise.
+	* doc/adg/.gitignore: Remove.
+	* doc/man/.gitignore: Remove.
+	* doc/mwg/.gitignore: Remove.
+	* doc/sag/.gitignore: Remove.
+	* libpamc/.gitignore: Remove.
+	* libpamc/test/.gitignore: Remove.
+	* libpam/.gitignore: Remove.
+	* libpam_misc/.gitignore: Remove.
+	* modules/.gitignore: Remove.
+	* modules/pam_access/.gitignore: Remove.
+	* modules/pam_cracklib/.gitignore: Remove.
+	* modules/pam_debug/.gitignore: Remove.
+	* modules/pam_deny/.gitignore: Remove.
+	* modules/pam_echo/.gitignore: Remove.
+	* modules/pam_env/.gitignore: Remove.
+	* modules/pam_exec/.gitignore: Remove.
+	* modules/pam_faildelay/.gitignore: Remove.
+	* modules/pam_filter/.gitignore: Remove.
+	* modules/pam_ftp/.gitignore: Remove.
+	* modules/pam_group/.gitignore: Remove.
+	* modules/pam_issue/.gitignore: Remove.
+	* modules/pam_keyinit/.gitignore: Remove.
+	* modules/pam_lastlog/.gitignore: Remove.
+	* modules/pam_limits/.gitignore: Remove.
+	* modules/pam_listfile/.gitignore: Remove.
+	* modules/pam_localuser/.gitignore: Remove.
+	* modules/pam_loginuid/.gitignore: Remove.
+	* modules/pam_mail/.gitignore: Remove.
+	* modules/pam_motd/.gitignore: Remove.
+	* modules/pam_namespace/.gitignore: Remove.
+	* modules/pam_nologin/.gitignore: Remove.
+	* modules/pam_permit/.gitignore: Remove.
+	* modules/pam_pwhistory/.gitignore: Remove.
+	* modules/pam_rhosts/.gitignore: Remove.
+	* modules/pam_rootok/.gitignore: Remove.
+	* modules/pam_securetty/.gitignore: Remove.
+	* modules/pam_sepermit/.gitignore: Remove.
+	* modules/pam_shells/.gitignore: Remove.
+	* modules/pam_succeed_if/.gitignore: Remove.
+	* modules/pam_time/.gitignore: Remove.
+	* modules/pam_tty_audit/.gitignore: Remove.
+	* modules/pam_umask/.gitignore: Remove.
+	* modules/pam_userdb/.gitignore: Remove.
+	* modules/pam_warn/.gitignore: Remove.
+	* modules/pam_wheel/.gitignore: Remove.
+	* modules/pam_xauth/.gitignore: Remove.
+
+	Move generated auxiliary files to build-aux directory.
+	* configure.in: Add AC_CONFIG_AUX_DIR([build-aux]).
+
+	Remove generated files.
+	* ABOUT-NLS: Remove.
+	* INSTALL: Remove.
+	* config.rpath: Remove.
+	* install-sh: Remove.
+	* mkinstalldirs: Remove.
+	* Makefile.am (EXTRA_DIST): Remove config.rpath and mkinstalldirs.
+	* .gitignore: Add ABOUT-NLS and INSTALL.
+
+	Create release tarballs using safe ownership and permissions.
+	* Makefile.am: Define and export TAR_OPTIONS.
+
+	Generate ChangeLog from git log.
+	* .gitignore: Add ChangeLog
+	* ChangeLog: Rename to ChangeLog-CVS.
+	* Makefile.am (gen-changelog): New rule.
+	(dist-hook, .PHONY): Depend on it.
+	(EXTRA_DIST): Add ChangeLog-CVS.
+	* README-hacking: New file.
+	* gitlog-to-changelog: Import from gnulib.
+	* autogen.sh: Create empty ChangeLog file to make automake strictness
+	check happy.  Use automated "autoreconf -fiv" instead of manual
+	invocations of various autotools.
+
+	Fix "make distcheck"
+	There is no use to distribute m4 files manually, because automake does
+	the right thing, while manual distribution is not only redundant but
+	also very fragile.
+	* Makefile.am (M4_FILES): Remove.
+	(EXTRA_DIST): Remove M4_FILES.
+
+	Remove modules/pam_timestamp/hmacfile from distribution.
+	* modules/pam_timestamp/Makefile.am (dist_TESTS): Add tst-pam_timestamp.
+	(nodist_TESTS): Add hmacfile.
+	(EXTRA_DIST): Replace TESTS with dist_TESTS.
+
+	Rename all .cvsignore files to .gitignore.
+
+	Fix whitespace issues.
+	Cleanup trailing whitespaces, indentation that uses spaces before tabs,
+	and blank lines at EOF.  Make the project free of warnings reported by
+	git diff --check 4b825dc642cb6eb9a060e54bf8d69288fbee4904 HEAD
+
+
+See ChangeLog-CVS for earlier changes.

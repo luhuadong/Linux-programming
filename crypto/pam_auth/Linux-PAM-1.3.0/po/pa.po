@@ -1,0 +1,576 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Linux-PAM Project
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Translators:
+# asaini <asaini@redhat.com>, 2013
+# Amanpreet Singh Alam[ਆਲਮ] <amanpreetalam@yahoo.com>, 2005
+# Jaswinder Singh <jsingh@redhat.com>, 2009,2012
+# Tomáš Mráz <tmraz@fedoraproject.org>, 2016. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: Linux-PAM\n"
+"Report-Msgid-Bugs-To: http://sourceforge.net/projects/pam\n"
+"POT-Creation-Date: 2016-04-28 13:27+0200\n"
+"PO-Revision-Date: 2013-08-29 08:55-0400\n"
+"Last-Translator: asaini <asaini@redhat.com>\n"
+"Language-Team: Panjabi (Punjabi) <punjabi-users@lists.sf.net>\n"
+"Language: pa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Zanata 3.8.3\n"
+
+#: libpam_misc/misc_conv.c:33
+msgid "...Time is running out...\n"
+msgstr "...ਸਮਾਂ ਸਮਾਪਤ ਹੋ ਰਿਹਾ ਹੈ...\n"
+
+#: libpam_misc/misc_conv.c:34
+msgid "...Sorry, your time is up!\n"
+msgstr "...ਅਫਸੋਸ, ਤੁਹਾਡਾ ਸਮਾਂ ਸਮਾਪਤ ਹੋ ਗਿਆ ਹੈ!\n"
+
+#: libpam_misc/misc_conv.c:346
+#, c-format
+msgid "erroneous conversation (%d)\n"
+msgstr "ਗਲਤ ਅਨੁਵਾਦ (%d)\n"
+
+#: libpam/pam_get_authtok.c:39 modules/pam_exec/pam_exec.c:170
+#: modules/pam_userdb/pam_userdb.c:64
+msgid "Password: "
+msgstr "ਪਾਸਵਰਡ: "
+
+#: libpam/pam_get_authtok.c:41
+#, fuzzy, c-format
+msgid "Current %s%spassword: "
+msgstr "ਨਵਾਂ %s%sਪਾਸਵਰਡ: "
+
+#: libpam/pam_get_authtok.c:43 modules/pam_cracklib/pam_cracklib.c:68
+#, c-format
+msgid "New %s%spassword: "
+msgstr "ਨਵਾਂ %s%sਪਾਸਵਰਡ: "
+
+#: libpam/pam_get_authtok.c:45 modules/pam_cracklib/pam_cracklib.c:70
+#, c-format
+msgid "Retype new %s%spassword: "
+msgstr "ਨਵਾਂ %s%sਪਾਸਵਰਡ ਮੁੜ-ਲਿਖੋ: "
+
+#: libpam/pam_get_authtok.c:46 modules/pam_cracklib/pam_cracklib.c:71
+msgid "Sorry, passwords do not match."
+msgstr "ਮਾਫ ਕਰਨਾ ਪਾਸਵਰਡ ਮੇਲ ਨਹੀਂ ਖਾਂਦਾ।"
+
+#: libpam/pam_get_authtok.c:139 libpam/pam_get_authtok.c:220
+#, c-format
+msgid "Retype %s"
+msgstr "ਮੁੜ-ਲਿਖੋ %s"
+
+#: libpam/pam_get_authtok.c:164 libpam/pam_get_authtok.c:236
+msgid "Password change aborted."
+msgstr "ਪਾਸਵਰਡ ਤਬਦੀਲੀ ਅਧੂਰੀ ਛੱਡੀ ਗਈ।"
+
+#: libpam/pam_item.c:311
+msgid "login:"
+msgstr "ਲਾਗਇਨ:"
+
+#: libpam/pam_strerror.c:40
+msgid "Success"
+msgstr "ਸਫ਼ਲ"
+
+#: libpam/pam_strerror.c:42
+msgid "Critical error - immediate abort"
+msgstr "ਨਾਜ਼ੁਕ ਗਲਤੀ - ਤਰੁੰਤ ਅਧੂਰਾ ਛੱਡਿਆ"
+
+#: libpam/pam_strerror.c:44
+msgid "Failed to load module"
+msgstr "ਮੈਡਿਊਲ ਲੋਡ ਕਰਨ ਵਿੱਚ ਫੇਲ"
+
+#: libpam/pam_strerror.c:46
+msgid "Symbol not found"
+msgstr "ਨਿਸ਼ਾਨ ਨਹੀਂ ਮਿਲਿਆ"
+
+#: libpam/pam_strerror.c:48
+msgid "Error in service module"
+msgstr "ਸੇਵਾ ਮੈਡੀਊਲ ਵਿੱਚ ਗਲਤੀ"
+
+#: libpam/pam_strerror.c:50
+msgid "System error"
+msgstr "ਸਿਸਟਮ ਗਲਤੀ"
+
+#: libpam/pam_strerror.c:52
+msgid "Memory buffer error"
+msgstr "ਮੈਮੋਰੀ ਬਫ਼ਰ ਗਲਤੀ"
+
+#: libpam/pam_strerror.c:54
+msgid "Permission denied"
+msgstr "ਅਧਿਕਾਰ ਪਾਬੰਦੀ"
+
+#: libpam/pam_strerror.c:56
+msgid "Authentication failure"
+msgstr "ਪਰਮਾਣਕਿਤਾ ਫੇਲ"
+
+#: libpam/pam_strerror.c:58
+msgid "Insufficient credentials to access authentication data"
+msgstr "ਪ੍ਰਮਾਣਿਕਤਾ ਡਾਟਾ ਵਰਤਣ ਲਈ ਲੋੜੀਂਦੇ ਅਧਿਕਾਰ ਨਹੀਂ ਹਨ"
+
+#: libpam/pam_strerror.c:60
+msgid "Authentication service cannot retrieve authentication info"
+msgstr "ਪ੍ਰਮਾਣਿਕਤਾ ਸਰਵਿਸ ਪ੍ਰਮਾਣਿਕਤਾ ਜਾਣਕਾਰੀ ਪ੍ਰਾਪਤ ਨਹੀਂ ਕਰ ਸਕਦੀ"
+
+#: libpam/pam_strerror.c:62
+msgid "User not known to the underlying authentication module"
+msgstr "ਪ੍ਰਮਾਣਿਕਤਾ ਮੈਡਿਊਲ ਨੂੰ ਆਪਣੇ ਉਪਭੋਗੀ ਬਾਰੇ ਕੁਝ ਪਤਾ ਨਹੀਂ"
+
+#: libpam/pam_strerror.c:64
+msgid "Have exhausted maximum number of retries for service"
+msgstr "ਸਰਵਿਸ ਨੂੰ ਵੱਧ-ਤੋਂ-ਵੱਧ ਵਰਤਣ ਦੀ ਸੀਮਾ ਪਾਰ ਹੋ ਗਈ ਹੈ"
+
+#: libpam/pam_strerror.c:66
+msgid "Authentication token is no longer valid; new one required"
+msgstr "ਪ੍ਰਮਾਣਿਕਤਾ ਟੋਕਨ ਦੀ ਮਿਆਦ ਪੁੱਗ ਚੁੱਕੀ ਹੈ, ਨਵੇਂ ਦੀ ਲੋੜ ਹੈ"
+
+#: libpam/pam_strerror.c:68
+msgid "User account has expired"
+msgstr "ਉਪਭੋਗੀ ਖਾਤੇ ਦੀ ਮਿਆਦ ਪੁੱਗ ਚੁੱਕੀ ਹੈ"
+
+#: libpam/pam_strerror.c:70
+msgid "Cannot make/remove an entry for the specified session"
+msgstr "ਖਾਸ ਸ਼ੈਸ਼ਨ ਲਈ ਇੱਕ ਐਂਟਰੀ ਬਣਾ/ਹਟਾ ਨਹੀਂ ਸਕਦਾ"
+
+#: libpam/pam_strerror.c:72
+msgid "Authentication service cannot retrieve user credentials"
+msgstr "ਪ੍ਰਮਾਣਿਕਤਾ ਸਰਵਿਸ ਉਪਭੋਗੀ ਅਧਿਕਾਰ ਪ੍ਰਾਪਤ ਨਹੀਂ ਕਰ ਸਕਦਾ"
+
+#: libpam/pam_strerror.c:74
+msgid "User credentials expired"
+msgstr "ਉਪਭੋਗੀ ਅਧਿਕਾਰ ਖਤਮ ਹੋ ਗਏ ਹਨ"
+
+#: libpam/pam_strerror.c:76
+msgid "Failure setting user credentials"
+msgstr "ਉਪਭੋਗੀ ਅਧਿਕਾਰ ਸੈੱਟ ਕਰਨ ਵਿੱਚ ਫੇਲ"
+
+#: libpam/pam_strerror.c:78
+msgid "No module specific data is present"
+msgstr "ਕੋਈ ਮੈਡਿਊਲ ਸੰਬੰਧੀ ਡਾਟਾ ਮੌਜੂਦ ਨਹੀਂ ਹੈ"
+
+#: libpam/pam_strerror.c:80
+msgid "Bad item passed to pam_*_item()"
+msgstr "ਗਲਤ ਇਕਾਈਆਂ pam_*_item() ਨੂੰ ਪਾਸ ਕੀਤੀਆਂ ਹਨ"
+
+#: libpam/pam_strerror.c:82
+msgid "Conversation error"
+msgstr "ਤਬਦੀਲੀ ਗਲਤੀ"
+
+#: libpam/pam_strerror.c:84
+msgid "Authentication token manipulation error"
+msgstr "ਪ੍ਰਮਾਣਿਕਤਾ ਟੋਕਨ ਸੋਧ ਗਲਤੀ"
+
+#: libpam/pam_strerror.c:86
+msgid "Authentication information cannot be recovered"
+msgstr "ਪ੍ਰਮਾਣਿਕਤਾ ਜਾਣਕਾਰੀ ਰਿਕਵਰ ਨਹੀਂ ਕੀਤੀ ਜਾ ਸਕਦੀ"
+
+#: libpam/pam_strerror.c:88
+msgid "Authentication token lock busy"
+msgstr "ਪ੍ਰਮਾਣਿਕਤਾ ਟੋਕਨ ਲਾਕ ਬਿਜ਼ੀ ਹੈ"
+
+#: libpam/pam_strerror.c:90
+msgid "Authentication token aging disabled"
+msgstr "ਪ੍ਰਮਾਣਿਕਤਾ ਟੋਕਲ ਏਜਿੰਗ ਅਯੋਗ ਹੈ"
+
+#: libpam/pam_strerror.c:92
+msgid "Failed preliminary check by password service"
+msgstr "ਪਾਸਵਰਡ ਸਰਵਿਸ ਦੁਆਰਾ ਪਹਿਲੀ ਜਾਂਚ ਫੇਲ ਹੋਈ"
+
+#: libpam/pam_strerror.c:94
+msgid "The return value should be ignored by PAM dispatch"
+msgstr "ਰਿਟਰਨ ਮੁੱਲ PAM ਡਿਸਪੈਚ ਦੁਆਰਾ ਅਣਡਿੱਠਾ ਕਰਨਾ ਚਾਹੀਦਾ ਹੈ"
+
+#: libpam/pam_strerror.c:96
+msgid "Module is unknown"
+msgstr "ਮੈਡੀਊਲ ਅਣਜਾਣ ਹੈ"
+
+#: libpam/pam_strerror.c:98
+msgid "Authentication token expired"
+msgstr "ਪਰਮਾਣਕਿਤਾ ਟੋਕਨ ਦੀ ਮਿਆਦ ਪੁੱਗ ਚੁੱਕੀ ਹੈ"
+
+#: libpam/pam_strerror.c:100
+msgid "Conversation is waiting for event"
+msgstr "ਗੱਲਬਾਤ ਕਿਸੇ ਘਟਨਾ ਦੀ ਉਡੀਕ ਵਿੱਚ ਹੈ"
+
+#: libpam/pam_strerror.c:102
+msgid "Application needs to call libpam again"
+msgstr "ਕਾਰਜ ਲਈ ਫਿਰ libpam ਨੂੰ ਕਾਲ ਕਰਨ ਦੀ ਲੋੜ ਹੈ"
+
+#: libpam/pam_strerror.c:105
+msgid "Unknown PAM error"
+msgstr "ਅਣਜਾਣ PAM ਗਲਤੀ"
+
+#: modules/pam_cracklib/pam_cracklib.c:618
+msgid "is the same as the old one"
+msgstr "ਪੁਰਾਣੇ ਵਰਗਾ ਹੈ"
+
+#: modules/pam_cracklib/pam_cracklib.c:624
+#: modules/pam_cracklib/pam_cracklib.c:628
+#: modules/pam_cracklib/pam_cracklib.c:638
+msgid "memory allocation error"
+msgstr "ਮੈਮੋਰੀ ਨਿਰਧਾਰਨ ਗਲਤੀ"
+
+#: modules/pam_cracklib/pam_cracklib.c:643
+msgid "is a palindrome"
+msgstr "ਇੱਕ palindrome ਹੈ"
+
+#: modules/pam_cracklib/pam_cracklib.c:646
+msgid "case changes only"
+msgstr "ਸਿਰਫ ਅੱਖਰ ਤਬਦੀਲੀ"
+
+#: modules/pam_cracklib/pam_cracklib.c:649
+msgid "is too similar to the old one"
+msgstr "ਪੁਰਾਣੇ ਨਾਲ ਬਹੁਤ ਮਿਲਦਾ-ਜੁਲਦਾ ਹੈ"
+
+#: modules/pam_cracklib/pam_cracklib.c:652
+msgid "is too simple"
+msgstr "ਬਹੁਤ ਸਧਾਰਨ ਹੈ"
+
+#: modules/pam_cracklib/pam_cracklib.c:655
+msgid "is rotated"
+msgstr "ਘੁੰਮਾਇਆ ਹੈ"
+
+#: modules/pam_cracklib/pam_cracklib.c:658
+msgid "not enough character classes"
+msgstr "ਲੋੜੀਂਦੀਆਂ ਅੱਖਰ ਸ਼੍ਰੇਣੀਆਂ ਨਹੀਂ ਹਨ"
+
+#: modules/pam_cracklib/pam_cracklib.c:661
+msgid "contains too many same characters consecutively"
+msgstr "ਲਗਾਤਾਰ ਬਹੁਤ ਸਾਰੇ ਮਿਲਦੇ-ਜੁਲਦੇ ਅੱਖਰ ਸ਼ਾਮਿਲ ਹਨ"
+
+#: modules/pam_cracklib/pam_cracklib.c:664
+msgid "contains too long of a monotonic character sequence"
+msgstr "ਇੱਕ ਬਹੁਤ ਜਿਆਦਾ ਲੰਬੀ ਇਕਸੁਰਤਾ ਵਾਲੀ ਅੱਖਰ ਲੜੀ ਸਮਾਈ ਹੋਈ ਹੈ"
+
+#: modules/pam_cracklib/pam_cracklib.c:667
+msgid "contains the user name in some form"
+msgstr "ਕੁਸੇ ਰੂਪ ਵਿੱਚ ਉਪਭੋਗੀ ਨਾਂ ਸ਼ਾਮਿਲ ਹੈ"
+
+#: modules/pam_cracklib/pam_cracklib.c:701
+#: modules/pam_unix/pam_unix_passwd.c:568
+msgid "No password supplied"
+msgstr "ਕੋਈ ਪਾਸਵਰਡ ਨਹੀਂ ਦਿੱਤਾ ਗਿਆ"
+
+#: modules/pam_cracklib/pam_cracklib.c:701
+#: modules/pam_unix/pam_unix_passwd.c:568
+msgid "Password unchanged"
+msgstr "ਪਾਸਵਰਡ ਨਾ-ਤਬਦੀਲ ਹੈ"
+
+#: modules/pam_cracklib/pam_cracklib.c:721
+#: modules/pam_cracklib/pam_cracklib.c:803
+#, c-format
+msgid "BAD PASSWORD: %s"
+msgstr "ਗਲਤ ਪਾਸਵਰਡ: %s"
+
+#: modules/pam_exec/pam_exec.c:273
+#, c-format
+msgid "%s failed: exit code %d"
+msgstr "%s ਫੇਲ ਹੋਇਆ: ਕੋਡ %d ਨਾਲ ਬੰਦ ਹੋ ਗਿਆ"
+
+#: modules/pam_exec/pam_exec.c:282
+#, c-format
+msgid "%s failed: caught signal %d%s"
+msgstr "%s ਫੇਲ ਹੋ ਗਿਆ: ਸਿਗਨਲ %d%s ਮਿਲਿਆ"
+
+#: modules/pam_exec/pam_exec.c:291
+#, c-format
+msgid "%s failed: unknown status 0x%x"
+msgstr "%s ਫੇਲ ਹੋਇਆ: ਅਣਪਛਾਤੀ ਸਥਿਤੀ 0x%x"
+
+#. TRANSLATORS: "strftime options for date of last login"
+#: modules/pam_lastlog/pam_lastlog.c:282 modules/pam_lastlog/pam_lastlog.c:496
+msgid " %a %b %e %H:%M:%S %Z %Y"
+msgstr " %a %b %e %H:%M:%S %Z %Y"
+
+#. TRANSLATORS: " from <host>"
+#: modules/pam_lastlog/pam_lastlog.c:291 modules/pam_lastlog/pam_lastlog.c:505
+#, c-format
+msgid " from %.*s"
+msgstr " from %.*s"
+
+#. TRANSLATORS: " on <terminal>"
+#: modules/pam_lastlog/pam_lastlog.c:303 modules/pam_lastlog/pam_lastlog.c:517
+#, c-format
+msgid " on %.*s"
+msgstr " on %.*s"
+
+#. TRANSLATORS: "Last login: <date> from <host> on <terminal>"
+#: modules/pam_lastlog/pam_lastlog.c:313
+#, c-format
+msgid "Last login:%s%s%s"
+msgstr "ਆਖਰੀ ਲਾਗਇਨ:%s%s%s"
+
+#: modules/pam_lastlog/pam_lastlog.c:319
+msgid "Welcome to your new account!"
+msgstr "ਤੁਹਾਡੇ ਨਵੇਂ ਖਾਤੇ ਵਿੱਚ ਜੀ ਆਇਆਂ ਨੂੰ!"
+
+#. TRANSLATORS: "Last failed login: <date> from <host> on <terminal>"
+#: modules/pam_lastlog/pam_lastlog.c:527
+#, c-format
+msgid "Last failed login:%s%s%s"
+msgstr "ਆਖਰੀ ਫੇਲ ਹੋਇਆ ਲਾਗਇਨ:%s%s%s"
+
+#: modules/pam_lastlog/pam_lastlog.c:536 modules/pam_lastlog/pam_lastlog.c:543
+#, c-format
+msgid "There was %d failed login attempt since the last successful login."
+msgid_plural ""
+"There were %d failed login attempts since the last successful login."
+msgstr[0] "ਪਿਛਲੇ ਸਫਲਤਾਪੂਰਕ ਲਾਗਇਨ ਤੋਂ ਬਾਇਦ %d ਫੇਲ ਲਾਗਇਨ ਕੋਸ਼ਿਸ਼ ਹੈ।"
+msgstr[1] "ਪਿਛਲੇ ਸਫਲਤਾਪੂਰਕ ਲਾਗਇਨ ਤੋਂ ਬਾਇਦ %d ਫੇਲ ਲਾਗਇਨ ਕੋਸ਼ਿਸ਼ਾਂ ਹਨ।"
+
+#. TRANSLATORS: only used if dngettext is not supported
+#: modules/pam_lastlog/pam_lastlog.c:548
+#, c-format
+msgid "There were %d failed login attempts since the last successful login."
+msgstr "ਪਿਛਲੇ ਸਫਲਤਾਪੂਰਕ ਲਾਗਇਨ ਤੋਂ ਬਾਇਦ %d ਫੇਲ ਲਾਗਇਨ ਕੋਸ਼ਿਸ਼ਾਂ ਹਨ।"
+
+#: modules/pam_limits/pam_limits.c:1091
+#, c-format
+msgid "Too many logins for '%s'."
+msgstr "'%s' ਲਈ ਬਹੁਤ ਸਾਰੇ ਲਾਗਇਨ।"
+
+#: modules/pam_mail/pam_mail.c:297
+msgid "No mail."
+msgstr "ਕੋਈ ਮੇਲ ਨਹੀਂ।"
+
+#: modules/pam_mail/pam_mail.c:300
+msgid "You have new mail."
+msgstr "ਤੁਹਾਡੀ ਨਵੀਂ ਮੇਲ ਹੈ।"
+
+#: modules/pam_mail/pam_mail.c:303
+msgid "You have old mail."
+msgstr "ਤੁਹਾਡੀ ਪੁਰਾਣੀ ਮੇਲ ਹੈ।"
+
+#: modules/pam_mail/pam_mail.c:307
+msgid "You have mail."
+msgstr "ਤੁਹਾਡੀ ਮੇਲ ਹੈ।"
+
+#: modules/pam_mail/pam_mail.c:314
+#, c-format
+msgid "You have no mail in folder %s."
+msgstr "ਫੋਲਡਰ %s ਵਿੱਚ ਤੁਹਾਡੀ ਕੋਈ ਮੇਲ ਨਹੀਂ ਹੈ।"
+
+#: modules/pam_mail/pam_mail.c:318
+#, c-format
+msgid "You have new mail in folder %s."
+msgstr "ਫੋਲਡਰ %s ਵਿੱਚ ਤੁਹਾਡੀ ਨਵੀਂ ਮੇਲ ਹੈ।"
+
+#: modules/pam_mail/pam_mail.c:322
+#, c-format
+msgid "You have old mail in folder %s."
+msgstr "ਫੋਲਡਰ %s ਵਿੱਚ ਤੁਹਾਡੀ ਪੁਰਾਣੀ ਮੇਲ ਹੈ।"
+
+#: modules/pam_mail/pam_mail.c:327
+#, c-format
+msgid "You have mail in folder %s."
+msgstr "ਫੇਲਡਰ %s ਵਿੱਚ ਤੁਹਾਡੀ ਮੇਲ ਹੈ।"
+
+#: modules/pam_mkhomedir/pam_mkhomedir.c:111
+#, c-format
+msgid "Creating directory '%s'."
+msgstr "ਡਾਇਰੈਕਟਰੀ '%s' ਬਣਾ ਰਿਹਾ ਹੈ।"
+
+#: modules/pam_mkhomedir/pam_mkhomedir.c:176
+#, c-format
+msgid "Unable to create and initialize directory '%s'."
+msgstr "ਡਾਇਰੈਕਟਰੀ '%s' ਨੂੰ ਬਣਾਉਣ ਅਤੇ ਸ਼ੁਰੂ ਕਰਨ ਵਿੱਚ ਅਸਮਰਥ।"
+
+#: modules/pam_pwhistory/pam_pwhistory.c:217
+#: modules/pam_unix/pam_unix_passwd.c:589
+msgid "Password has been already used. Choose another."
+msgstr "ਪਾਸਵਰਡ ਪਹਿਲਾਂ ਵੀ ਵਰਤਿਆ ਗਿਆ ਹੈ। ਵੱਖਰਾ ਚੁਣੋ।"
+
+#: modules/pam_pwhistory/pam_pwhistory.c:224
+msgid "Password has been already used."
+msgstr "ਗੁਪਤ-ਸ਼ਬਦ ਪਹਿਲਾਂ ਹੀ ਵਰਤਿਆ ਜਾ ਚੁੱਕਾ ਹੈ।"
+
+#: modules/pam_selinux/pam_selinux.c:210
+#, c-format
+msgid "Default Security Context %s\n"
+msgstr "ਮੂਲ ਸੁਰੱਖਿਆ ਪ੍ਰਸੰਗ %s\n"
+
+#: modules/pam_selinux/pam_selinux.c:214
+msgid "Would you like to enter a different role or level?"
+msgstr "ਕੀ ਤੁਸੀਂ ਇੱਕ ਵੱਖਰਾ ਰੋਲ ਜਾਂ ਲੈਵਲ ਦੇਣਾ ਚਾਹੁੰਦੇ ਹੋ?"
+
+#: modules/pam_selinux/pam_selinux.c:227
+msgid "role:"
+msgstr "ਰੋਲ:"
+
+#: modules/pam_selinux/pam_selinux.c:230
+#, c-format
+msgid "No default type for role %s\n"
+msgstr "ਰੋਲ %s ਵਾਲੀ ਕੋਈ ਮੂਲ ਕਿਸਮ ਨਹੀਂ ਹੈ\n"
+
+#: modules/pam_selinux/pam_selinux.c:262
+msgid "level:"
+msgstr "ਲੈਵਲ:"
+
+#: modules/pam_selinux/pam_selinux.c:295
+msgid "Not a valid security context"
+msgstr "ਇੱਕ ਠੀਕ ਸੁਰੱਖਿਆ ਪਰਸੰਗ ਨਹੀਂ"
+
+#: modules/pam_selinux/pam_selinux.c:544
+#, c-format
+msgid "Unable to get valid context for %s"
+msgstr "%s ਲਈ ਯੋਗ ਪ੍ਰਸੰਗ ਲੈਣ ਵਿੱਚ ਅਸਮਰਥ"
+
+#: modules/pam_selinux/pam_selinux.c:663
+#, c-format
+msgid "Security Context %s Assigned"
+msgstr "ਸੁਰੱਖਿਆ ਪ੍ਰਸੰਗ %s ਨਿਰਧਾਰਤ ਕੀਤਾ"
+
+#: modules/pam_selinux/pam_selinux.c:679
+#, c-format
+msgid "Key Creation Context %s Assigned"
+msgstr "ਕੁੰਜੀ ਬਣਾਉਣ ਪ੍ਰਸੰਗ %s ਨਿਰਧਾਰਤ ਕੀਤਾ"
+
+#: modules/pam_selinux/pam_selinux_check.c:99
+#, c-format
+msgid "failed to initialize PAM\n"
+msgstr "PAM ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਫੇਲ\n"
+
+#: modules/pam_selinux/pam_selinux_check.c:105
+#, c-format
+msgid "failed to pam_set_item()\n"
+msgstr "pam_set_item() ਲਈ ਫੇਲ\n"
+
+#: modules/pam_selinux/pam_selinux_check.c:133
+#, c-format
+msgid "login: failure forking: %m"
+msgstr "ਲਾਗਇਨ: ਫੋਰਕਿੰਗ ਫੇਲ: %m"
+
+#: modules/pam_stress/pam_stress.c:470
+#, c-format
+msgid "Changing STRESS password for %s."
+msgstr "%s ਲਈ STRESS ਪਾਸਵਰਡ ਤਬਦੀਲ ਕਰ ਰਿਹਾ ਹੈ।"
+
+#: modules/pam_stress/pam_stress.c:484
+msgid "Enter new STRESS password: "
+msgstr "ਨਵਾਂ STRESS ਪਾਸਵਰਡ ਦਿਓ: "
+
+#: modules/pam_stress/pam_stress.c:487
+msgid "Retype new STRESS password: "
+msgstr "ਨਵਾਂ STRESS ਪਾਸਵਰਡ ਮੁੜ-ਲਿਖੋ: "
+
+#: modules/pam_stress/pam_stress.c:516
+msgid "Verification mis-typed; password unchanged"
+msgstr "ਗਲਤ-ਟਾਈਪ ਜਾਂਚ; ਪਾਸਵਰਡ ਨਾ-ਤਬਦੀਲ"
+
+#: modules/pam_tally/pam_tally.c:541 modules/pam_tally2/pam_tally2.c:597
+#, c-format
+msgid "Account temporary locked (%ld seconds left)"
+msgstr "ਖਾਤਾ ਆਰਜੀ ਤੌਰ ਤੇ ਲਾਕ ਕੀਤਾ ਹੈ (%ld ਸਕਿੰਟ ਬਾਕੀ ਹਨ)"
+
+#: modules/pam_tally/pam_tally.c:566 modules/pam_tally2/pam_tally2.c:580
+#, c-format
+msgid "Account locked due to %u failed logins"
+msgstr "%u ਫੇਲ ਹੋਏ ਲਾਗਇਨਾਂ ਕਰਕੇ ਖਾਤਾ ਲਾਕ ਕੀਤਾ ਹੈ"
+
+#: modules/pam_tally/pam_tally.c:750 modules/pam_tally2/pam_tally2.c:863
+msgid "Authentication error"
+msgstr "ਪਰਮਾਣਕਿਤਾ ਗਲਤੀ"
+
+#: modules/pam_tally/pam_tally.c:751 modules/pam_tally2/pam_tally2.c:864
+msgid "Service error"
+msgstr "ਸੇਵਾ ਗਲਤੀ"
+
+#: modules/pam_tally/pam_tally.c:752 modules/pam_tally2/pam_tally2.c:865
+msgid "Unknown user"
+msgstr "ਅਣਜਾਣ ਉਪਭੋਗੀ"
+
+#: modules/pam_tally/pam_tally.c:753 modules/pam_tally2/pam_tally2.c:866
+msgid "Unknown error"
+msgstr "ਅਣਜਾਣੀ ਗਲਤੀ"
+
+#: modules/pam_tally/pam_tally.c:769 modules/pam_tally2/pam_tally2.c:885
+#, c-format
+msgid "%s: Bad number given to --reset=\n"
+msgstr "%s: --reset= ਲਈ ਗਲਤ ਨੰਬਰ ਦਿੱਤਾ ਗਿਆ\n"
+
+#: modules/pam_tally/pam_tally.c:773 modules/pam_tally2/pam_tally2.c:889
+#, c-format
+msgid "%s: Unrecognised option %s\n"
+msgstr "%s: ਬੇਪਛਾਣ ਚੋਣ %s\n"
+
+#: modules/pam_tally/pam_tally.c:785
+#, c-format
+msgid ""
+"%s: [--file rooted-filename] [--user username] [--reset[=n]] [--quiet]\n"
+msgstr ""
+"%s: [--file rooted-filename] [--user username] [--reset[=n]] [--quiet]\n"
+
+#: modules/pam_tally/pam_tally.c:859 modules/pam_tally2/pam_tally2.c:1016
+#, c-format
+msgid "%s: Can't reset all users to non-zero\n"
+msgstr "%s: ਸਭ ਉਪਭੋਗੀਆਂ ਨੂੰ ਨਾਨ-ਜ਼ੀਰੋ ਰੀਸੈੱਟ ਨਹੀਂ ਕਰ ਸਕਦਾ\n"
+
+#: modules/pam_tally2/pam_tally2.c:917
+#, c-format
+msgid "Login           Failures Latest failure     From\n"
+msgstr "Login           Failures Latest failure     From\n"
+
+#: modules/pam_tally2/pam_tally2.c:933
+#, c-format
+msgid ""
+"%s: [-f rooted-filename] [--file rooted-filename]\n"
+"   [-u username] [--user username]\n"
+"   [-r] [--reset[=n]] [--quiet]\n"
+msgstr ""
+"%s: [-f rooted-filename] [--file rooted-filename]\n"
+"   [-u username] [--user username]\n"
+"   [-r] [--reset[=n]] [--quiet]\n"
+
+#: modules/pam_timestamp/pam_timestamp.c:357
+#, c-format
+msgid "Access granted (last access was %ld seconds ago)."
+msgstr "ਪਹੁੰਚ ਰੱਦ ਕੀਤੀ (ਪਿਛਲੀ ਪਹੁੰਚ %ld ਸਕਿੰਟ ਪਹਿਲਾਂ ਸੀ)।"
+
+#: modules/pam_unix/pam_unix_acct.c:253 modules/pam_unix/pam_unix_acct.c:275
+msgid "Your account has expired; please contact your system administrator"
+msgstr "ਤੁਹਾਡਾ ਖਾਤਾ ਮਿਆਦ ਪੁੱਗ ਗਈ ਹੈ; ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਸਿਸਟਮ ਪਰਬੰਧਕ ਨਾਲ ਸੰਪਰਕ ਕਰੋ"
+
+#: modules/pam_unix/pam_unix_acct.c:261
+#, fuzzy
+msgid ""
+"You are required to change your password immediately (administrator enforced)"
+msgstr "ਤੁਹਾਨੂੰ ਆਪਣਾ ਪਾਸਵਰਡ ਤੁਰੰਤ ਤਬਦੀਲ ਕਰਨਾ ਚਾਹੀਦਾ ਹੈ (ਰੂਟ ਵੱਲੋਂ ਹਦਾਇਤ)"
+
+#: modules/pam_unix/pam_unix_acct.c:267
+#, fuzzy
+msgid "You are required to change your password immediately (password expired)"
+msgstr "ਤੁਹਾਨੂੰ ਆਪਣਾ ਪਾਸਵਰਡ ਤੁਰੰਤ ਤਬਦੀਲ ਕਰਨਾ ਚਾਹੀਦਾ ਹੈ (ਪਾਸਵਰਡ ਪੁਰਾਣਾ ਹੋ ਗਿਆ ਹੈ)"
+
+#: modules/pam_unix/pam_unix_acct.c:288 modules/pam_unix/pam_unix_acct.c:295
+#, c-format
+msgid "Warning: your password will expire in %d day"
+msgid_plural "Warning: your password will expire in %d days"
+msgstr[0] "ਚੇਤਾਵਨੀ: ਤੁਹਾਡੇ ਪਾਸਵਰਡ ਦੀ ਮਿਆਦ %d ਦਿਨ ਵਿੱਚ ਪੁੱਗ ਜਾਵੇਗੀ"
+msgstr[1] "ਚੇਤਾਵਨੀ: ਤੁਹਾਡੇ ਪਾਸਵਰਡ ਦੀ ਮਿਆਦ %d ਦਿਨਾਂ ਵਿੱਚ ਪੁੱਗ ਜਾਵੇਗੀ"
+
+#. TRANSLATORS: only used if dngettext is not supported
+#: modules/pam_unix/pam_unix_acct.c:300
+#, c-format
+msgid "Warning: your password will expire in %d days"
+msgstr "ਚੇਤਾਵਨੀ: ਤੁਹਾਡੇ ਪਾਸਵਰਡ ਦੀ ਮਿਆਦ %d ਦਿਨਾਂ ਵਿੱਚ ਪੁੱਗ ਜਾਵੇਗੀ"
+
+#: modules/pam_unix/pam_unix_passwd.c:470
+msgid "NIS password could not be changed."
+msgstr "NIS ਪਾਸਵਰਡ ਤਬਦੀਲ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ ਹੈ।"
+
+#: modules/pam_unix/pam_unix_passwd.c:585
+msgid "You must choose a longer password"
+msgstr "ਤੁਹਾਨੂੰ ਲੰਮੇ ਪਾਸਵਰਡ ਦੀ ਚੋਣ ਕਰਨੀ ਚਾਹੀਦੀ ਹੈ"
+
+#: modules/pam_unix/pam_unix_passwd.c:692
+#, c-format
+msgid "Changing password for %s."
+msgstr "%s ਲਈ ਪਾਸਵਰਡ ਤਬਦੀਲ ਕਰ ਰਿਹਾ ਹੈ।"
+
+#: modules/pam_unix/pam_unix_passwd.c:722
+msgid "You must wait longer to change your password"
+msgstr "ਤੁਹਾਨੂੰ ਲੰਬੇ ਸਮੇਂ ਲਈ ਆਪਣੇ ਪਾਸਵਰਡ ਲਈ ਉਡੀਕ ਕਰਨੀ ਪਵੇਗੀ"

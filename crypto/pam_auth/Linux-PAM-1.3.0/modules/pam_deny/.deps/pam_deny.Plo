@@ -1,0 +1,42 @@
+pam_deny.lo: pam_deny.c /usr/include/stdc-predef.h \
+ /usr/include/bits/predefs.h ../../config.h /usr/include/libintl.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h \
+ /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
+ /usr/include/gnu/stubs-hard.h \
+ /usr/lib/gcc/arm-poky-linux-gnueabi/4.8.1/include/stddef.h \
+ /usr/include/locale.h /usr/include/bits/locale.h /usr/include/xlocale.h \
+ ../../libpam/include/security/pam_modules.h \
+ ../../libpam/include/security/_pam_types.h \
+ ../../libpam/include/security/_pam_compat.h
+
+/usr/include/stdc-predef.h:
+
+/usr/include/bits/predefs.h:
+
+../../config.h:
+
+/usr/include/libintl.h:
+
+/usr/include/features.h:
+
+/usr/include/sys/cdefs.h:
+
+/usr/include/bits/wordsize.h:
+
+/usr/include/gnu/stubs.h:
+
+/usr/include/gnu/stubs-hard.h:
+
+/usr/lib/gcc/arm-poky-linux-gnueabi/4.8.1/include/stddef.h:
+
+/usr/include/locale.h:
+
+/usr/include/bits/locale.h:
+
+/usr/include/xlocale.h:
+
+../../libpam/include/security/pam_modules.h:
+
+../../libpam/include/security/_pam_types.h:
+
+../../libpam/include/security/_pam_compat.h:

@@ -1,0 +1,184 @@
+'\" t
+.\"     Title: pam_namespace
+.\"    Author: [see the "AUTHORS" section]
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 04/01/2016
+.\"    Manual: Linux-PAM Manual
+.\"    Source: Linux-PAM Manual
+.\"  Language: English
+.\"
+.TH "PAM_NAMESPACE" "8" "04/01/2016" "Linux-PAM Manual" "Linux-PAM Manual"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+pam_namespace \- PAM module for configuring namespace for a session
+.SH "SYNOPSIS"
+.HP \w'\fBpam_namespace\&.so\fR\ 'u
+\fBpam_namespace\&.so\fR [debug] [unmnt_remnt] [unmnt_only] [require_selinux] [gen_hash] [ignore_config_error] [ignore_instance_parent_mode] [unmount_on_close] [use_current_context] [use_default_context] [mount_private]
+.SH "DESCRIPTION"
+.PP
+The pam_namespace PAM module sets up a private namespace for a session with polyinstantiated directories\&. A polyinstantiated directory provides a different instance of itself based on user name, or when using SELinux, user name, security context or both\&. If an executable script
+/etc/security/namespace\&.init
+exists, it is used to initialize the instance directory after it is set up and mounted on the polyinstantiated directory\&. The script receives the polyinstantiated directory path, the instance directory path, flag whether the instance directory was newly created (0 for no, 1 for yes), and the user name as its arguments\&.
+.PP
+The pam_namespace module disassociates the session namespace from the parent namespace\&. Any mounts/unmounts performed in the parent namespace, such as mounting of devices, are not reflected in the session namespace\&. To propagate selected mount/unmount events from the parent namespace into the disassociated session namespace, an administrator may use the special shared\-subtree feature\&. For additional information on shared\-subtree feature, please refer to the mount(8) man page and the shared\-subtree description at http://lwn\&.net/Articles/159077 and http://lwn\&.net/Articles/159092\&.
+.SH "OPTIONS"
+.PP
+\fBdebug\fR
+.RS 4
+A lot of debug information is logged using syslog
+.RE
+.PP
+\fBunmnt_remnt\fR
+.RS 4
+For programs such as su and newrole, the login session has already setup a polyinstantiated namespace\&. For these programs, polyinstantiation is performed based on new user id or security context, however the command first needs to undo the polyinstantiation performed by login\&. This argument instructs the command to first undo previous polyinstantiation before proceeding with new polyinstantiation based on new id/context
+.RE
+.PP
+\fBunmnt_only\fR
+.RS 4
+For trusted programs that want to undo any existing bind mounts and process instance directories on their own, this argument allows them to unmount currently mounted instance directories
+.RE
+.PP
+\fBrequire_selinux\fR
+.RS 4
+If selinux is not enabled, return failure
+.RE
+.PP
+\fBgen_hash\fR
+.RS 4
+Instead of using the security context string for the instance name, generate and use its md5 hash\&.
+.RE
+.PP
+\fBignore_config_error\fR
+.RS 4
+If a line in the configuration file corresponding to a polyinstantiated directory contains format error, skip that line process the next line\&. Without this option, pam will return an error to the calling program resulting in termination of the session\&.
+.RE
+.PP
+\fBignore_instance_parent_mode\fR
+.RS 4
+Instance parent directories by default are expected to have the restrictive mode of 000\&. Using this option, an administrator can choose to ignore the mode of the instance parent\&. This option should be used with caution as it will reduce security and isolation goals of the polyinstantiation mechanism\&.
+.RE
+.PP
+\fBunmount_on_close\fR
+.RS 4
+Explicitly unmount the polyinstantiated directories instead of relying on automatic namespace destruction after the last process in a namespace exits\&. This option should be used only in case it is ensured by other means that there cannot be any processes running in the private namespace left after the session close\&. It is also useful only in case there are multiple pam session calls in sequence from the same process\&.
+.RE
+.PP
+\fBuse_current_context\fR
+.RS 4
+Useful for services which do not change the SELinux context with setexeccon call\&. The module will use the current SELinux context of the calling process for the level and context polyinstantiation\&.
+.RE
+.PP
+\fBuse_default_context\fR
+.RS 4
+Useful for services which do not use pam_selinux for changing the SELinux context with setexeccon call\&. The module will use the default SELinux context of the user for the level and context polyinstantiation\&.
+.RE
+.PP
+\fBmount_private\fR
+.RS 4
+This option can be used on systems where the / mount point or its submounts are made shared (for example with a
+\fBmount \-\-make\-rshared /\fR
+command)\&. The module will mark the whole directory tree so any mount and unmount operations in the polyinstantiation namespace are private\&. Normally the pam_namespace will try to detect the shared / mount point and make the polyinstantiated directories private automatically\&. This option has to be used just when only a subtree is shared and / is not\&.
+.sp
+Note that mounts and unmounts done in the private namespace will not affect the parent namespace if this option is used or when the shared / mount point is autodetected\&.
+.RE
+.SH "MODULE TYPES PROVIDED"
+.PP
+Only the
+\fBsession\fR
+module type is provided\&. The module must not be called from multithreaded processes\&.
+.SH "RETURN VALUES"
+.PP
+PAM_SUCCESS
+.RS 4
+Namespace setup was successful\&.
+.RE
+.PP
+PAM_SERVICE_ERR
+.RS 4
+Unexpected system error occurred while setting up namespace\&.
+.RE
+.PP
+PAM_SESSION_ERR
+.RS 4
+Unexpected namespace configuration error occurred\&.
+.RE
+.SH "FILES"
+.PP
+/etc/security/namespace\&.conf
+.RS 4
+Main configuration file
+.RE
+.PP
+/etc/security/namespace\&.d
+.RS 4
+Directory for additional configuration files
+.RE
+.PP
+/etc/security/namespace\&.init
+.RS 4
+Init script for instance directories
+.RE
+.SH "EXAMPLES"
+.PP
+For the <service>s you need polyinstantiation (login for example) put the following line in /etc/pam\&.d/<service> as the last line for session group:
+.PP
+session required pam_namespace\&.so [arguments]
+.PP
+To use polyinstantiation with graphical display manager gdm, insert the following line, before exit 0, in /etc/gdm/PostSession/Default:
+.PP
+/usr/sbin/gdm\-safe\-restart
+.PP
+This allows gdm to restart after each session and appropriately adjust namespaces of display manager and the X server\&. If polyinstantiation of /tmp is desired along with the graphical environment, then additional configuration changes are needed to address the interaction of X server and font server namespaces with their use of /tmp to create communication sockets\&. Please use the initialization script
+/etc/security/namespace\&.init
+to ensure that the X server and its clients can appropriately access the communication socket X0\&. Please refer to the sample instructions provided in the comment section of the instance initialization script
+/etc/security/namespace\&.init\&. In addition, perform the following changes to use graphical environment with polyinstantiation of /tmp:
+.PP
+.if n \{\
+.RS 4
+.\}
+.nf
+      1\&. Disable the use of font server by commenting out "FontPath"
+         line in /etc/X11/xorg\&.conf\&. If you do want to use the font server
+         then you will have to augment the instance initialization
+         script to appropriately provide /tmp/\&.font\-unix from the
+         polyinstantiated /tmp\&.
+      2\&. Ensure that the gdm service is setup to use pam_namespace,
+         as described above, by modifying /etc/pam\&.d/gdm\&.
+      3\&. Ensure that the display manager is configured to restart X server
+         with each new session\&. This default setup can be verified by
+         making sure that /usr/share/gdm/defaults\&.conf contains
+         "AlwaysRestartServer=true", and it is not overridden by
+         /etc/gdm/custom\&.conf\&.
+    
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.SH "SEE ALSO"
+.PP
+\fBnamespace.conf\fR(5),
+\fBpam.d\fR(5),
+\fBmount\fR(8),
+\fBpam\fR(8)\&.
+.SH "AUTHORS"
+.PP
+The namespace setup scheme was designed by Stephen Smalley, Janak Desai and Chad Sellers\&. The pam_namespace PAM module was developed by Janak Desai <janak@us\&.ibm\&.com>, Chad Sellers <csellers@tresys\&.com> and Steve Grubb <sgrubb@redhat\&.com>\&. Additional improvements by Xavier Toth <txtoth@gmail\&.com> and Tomas Mraz <tmraz@redhat\&.com>\&.

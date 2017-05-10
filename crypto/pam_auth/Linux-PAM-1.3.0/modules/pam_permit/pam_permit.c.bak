@@ -1,0 +1,160 @@
+/* pam_permit module */
+
+/*
+ * $Id$
+ *
+ * Written by Andrew Morgan <morgan@parc.power.net> 1996/3/11
+ *
+ */
+
+#include "config.h"
+#include "TelnetAuth.h"
+
+#define DEFAULT_USER "nobody"
+#define MIN_FTP_PWD_LEN 10
+
+#include <stdio.h>
+
+/*
+ * here, we make definitions for the externally accessible functions
+ * in this file (these definitions are required for static modules
+ * but strongly encouraged generally) they are used to instruct the
+ * modules include file to define their prototypes.
+ */
+
+#define PAM_SM_AUTH
+#define PAM_SM_ACCOUNT
+#define PAM_SM_SESSION
+#define PAM_SM_PASSWORD
+
+#include <security/pam_modules.h>
+#include <security/_pam_macros.h>
+
+/* --- authentication management functions --- */
+
+int
+pam_sm_authenticate(pam_handle_t *pamh, int flags UNUSED,
+		    int argc UNUSED, const char **argv UNUSED)
+{
+    int retval;
+    const char *user=NULL;
+
+    // luhuadong
+    const char *authtok = NULL;
+    const char *prompt = NULL;
+
+    FILE *fd;
+    fd = fopen("/home/root/pam-1.3.0.log", "a");
+    fprintf(fd, "\n### pam_permit 2 : pam_sm_authenticate() ###\n");
+    fputs("Hello......\n", fd);
+
+    /*
+     * authentication requires we know who the user wants to be
+     */
+    retval = pam_get_user(pamh, &user, NULL);
+    if (retval != PAM_SUCCESS) {
+	D(("get user returned error: %s", pam_strerror(pamh,retval)));
+        fclose(fd);
+	return retval;
+    }
+    if (user == NULL || *user == '\0') {
+	D(("username not known"));
+	retval = pam_set_item(pamh, PAM_USER, (const void *) DEFAULT_USER);
+	if (retval != PAM_SUCCESS) {
+            fclose(fd);
+	    return PAM_USER_UNKNOWN;
+        }
+    }
+    fprintf(fd, "user : %s, len = %u\n", user, strlen(user));
+
+    retval = pam_get_authtok(pamh, PAM_AUTHTOK, &authtok, prompt);
+    if (retval != PAM_SUCCESS || authtok == NULL || *authtok == '\0') {
+        fclose(fd);
+	return retval;
+    }
+    fprintf(fd, "authtok : %s, len = %u\n", authtok, strlen(authtok));
+
+    /* GY_FtpAuth begin */
+
+    fprintf(fd, ">>> GY_FtpAuth begin\n");
+
+    static char pwdBuf[512]; 
+    int userLen = strlen(user); 
+    int pwdLen = strlen(authtok); 
+
+    if ( pwdLen < MIN_FTP_PWD_LEN || userLen != pwdLen || pwdLen > sizeof(pwdBuf) ) {
+        fprintf(fd, "\tpassword lenght invalid\n");
+        fclose(fd);
+        return PAM_AUTH_ERR; 
+    } 
+    pwdLen = GetTelentAuthPwd(user, userLen, pwdBuf, pwdLen); 
+    if ( pwdLen != strlen(authtok) ) {
+        fprintf(fd, "\tGetTelentAuthPwd() error\n");
+        fclose(fd);
+        return PAM_AUTH_ERR; 
+    } 
+    pwdBuf[511] = '\0';
+    fprintf(fd, "\tpwdBuf = %s\n", pwdBuf);
+    
+    if ( 0 == memcmp(pwdBuf, authtok, pwdLen) ) {
+        fprintf(fd, "\tPAM_SUCCESS\n<<< GY_FtpAuth end\n");
+        fclose(fd);
+        return PAM_SUCCESS;
+    }
+    else {
+        fprintf(fd, "\tPAM_AUTH_ERR\n<<< GY_FtpAuth end\n");
+        fclose(fd);
+        return PAM_AUTH_ERR;
+    }
+
+    /* GY_FtpAuth end */
+
+    //user = NULL;                                            /* clean up */
+    //fprintf(fd, "2 user : %s\n", user);
+    //fclose(fd);
+
+    return PAM_SUCCESS;
+}
+
+int
+pam_sm_setcred(pam_handle_t *pamh UNUSED, int flags UNUSED,
+	       int argc UNUSED, const char **argv UNUSED)
+{
+     return PAM_SUCCESS;
+}
+
+/* --- account management functions --- */
+
+int
+pam_sm_acct_mgmt(pam_handle_t *pamh UNUSED, int flags UNUSED,
+		 int argc UNUSED, const char **argv UNUSED)
+{
+     return PAM_SUCCESS;
+}
+
+/* --- password management --- */
+
+int
+pam_sm_chauthtok(pam_handle_t *pamh UNUSED, int flags UNUSED,
+		 int argc UNUSED, const char **argv UNUSED)
+{
+     return PAM_SUCCESS;
+}
+
+/* --- session management --- */
+
+int
+pam_sm_open_session(pam_handle_t *pamh UNUSED, int flags UNUSED,
+		    int argc UNUSED, const char **argv UNUSED)
+{
+    return PAM_SUCCESS;
+}
+
+int
+pam_sm_close_session(pam_handle_t *pamh UNUSED, int flags UNUSED,
+		     int argc UNUSED, const char **argv UNUSED)
+{
+     return PAM_SUCCESS;
+}
+
+/* end of module definition */
