@@ -14,8 +14,18 @@ Linux-PAM-1.3.0-lu.tar.bz2 是添加了广有席位网关动态密码验证的PA
 
 修改完之后
 
+( Native - compilation )
+
 # cd <your-dir>/Linux-PAM-1.3.0
 # ./configure --prefix=/<your-dir>/Linux-PAM-1.3.0-install
+# make
+# make install
+
+( Cross - compilation )
+
+# cd <your-dir>/Linux-PAM-1.3.0
+# source /opt/poky/1.5.3/environment-setup-cortexa9hf-vfp-neon-poky-linux-gnueabi
+# ./configure --host=arm-poky-linux-gnueabi --prefix=/<your-dir>/Linux-PAM-1.3.0-install
 # make
 # make install
 

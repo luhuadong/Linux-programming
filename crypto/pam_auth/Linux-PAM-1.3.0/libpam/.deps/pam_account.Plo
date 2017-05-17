@@ -1,67 +1,92 @@
-pam_account.lo: pam_account.c /usr/include/stdc-predef.h \
- /usr/include/bits/predefs.h pam_private.h ../config.h \
- /usr/include/libintl.h /usr/include/features.h /usr/include/sys/cdefs.h \
- /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
- /usr/include/gnu/stubs-hard.h \
- /usr/lib/gcc/arm-poky-linux-gnueabi/4.8.1/include/stddef.h \
- /usr/include/locale.h /usr/include/bits/locale.h /usr/include/xlocale.h \
- /usr/include/syslog.h /usr/include/sys/syslog.h \
- /usr/lib/gcc/arm-poky-linux-gnueabi/4.8.1/include/stdarg.h \
- /usr/include/bits/syslog-path.h include/security/pam_appl.h \
- include/security/_pam_types.h include/security/_pam_compat.h \
- include/security/pam_modules.h include/security/pam_ext.h \
- /usr/include/sys/time.h /usr/include/bits/types.h \
- /usr/include/bits/typesizes.h /usr/include/time.h \
- /usr/include/bits/time.h /usr/include/sys/select.h \
- /usr/include/bits/select.h /usr/include/bits/sigset.h \
- include/security/_pam_macros.h /usr/include/stdlib.h \
- /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h \
- /usr/include/endian.h /usr/include/bits/endian.h \
- /usr/include/bits/byteswap.h /usr/include/bits/byteswap-16.h \
- /usr/include/sys/types.h /usr/include/sys/sysmacros.h \
- /usr/include/bits/pthreadtypes.h /usr/include/alloca.h \
- /usr/include/bits/stdlib-bsearch.h /usr/include/bits/stdlib-float.h \
- /usr/include/string.h /usr/include/bits/string.h \
- /usr/include/bits/string2.h /usr/include/stdio.h /usr/include/libio.h \
- /usr/include/_G_config.h /usr/include/wchar.h \
- /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
- /usr/include/bits/stdio.h
+pam_account.lo: pam_account.c \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/stdc-predef.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/predefs.h \
+ pam_private.h ../config.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/libintl.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/features.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/sys/cdefs.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/wordsize.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/gnu/stubs.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/gnu/stubs-hard.h \
+ /opt/poky/1.5.3/sysroots/x86_64-pokysdk-linux/usr/lib/arm-poky-linux-gnueabi/gcc/arm-poky-linux-gnueabi/4.8.1/include/stddef.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/locale.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/locale.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/xlocale.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/syslog.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/sys/syslog.h \
+ /opt/poky/1.5.3/sysroots/x86_64-pokysdk-linux/usr/lib/arm-poky-linux-gnueabi/gcc/arm-poky-linux-gnueabi/4.8.1/include/stdarg.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/syslog-path.h \
+ include/security/pam_appl.h include/security/_pam_types.h \
+ include/security/_pam_compat.h include/security/pam_modules.h \
+ include/security/pam_ext.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/sys/time.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/types.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/typesizes.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/time.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/time.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/sys/select.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/select.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/sigset.h \
+ include/security/_pam_macros.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/stdlib.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/waitflags.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/waitstatus.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/endian.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/endian.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/byteswap.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/byteswap-16.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/sys/types.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/sys/sysmacros.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/pthreadtypes.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/alloca.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/stdlib-bsearch.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/stdlib-float.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/string.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/string.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/string2.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/stdio.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/libio.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/_G_config.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/wchar.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/stdio_lim.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/sys_errlist.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/stdio.h
 
-/usr/include/stdc-predef.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/stdc-predef.h:
 
-/usr/include/bits/predefs.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/predefs.h:
 
 pam_private.h:
 
 ../config.h:
 
-/usr/include/libintl.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/libintl.h:
 
-/usr/include/features.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/features.h:
 
-/usr/include/sys/cdefs.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/sys/cdefs.h:
 
-/usr/include/bits/wordsize.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/wordsize.h:
 
-/usr/include/gnu/stubs.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/gnu/stubs.h:
 
-/usr/include/gnu/stubs-hard.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/gnu/stubs-hard.h:
 
-/usr/lib/gcc/arm-poky-linux-gnueabi/4.8.1/include/stddef.h:
+/opt/poky/1.5.3/sysroots/x86_64-pokysdk-linux/usr/lib/arm-poky-linux-gnueabi/gcc/arm-poky-linux-gnueabi/4.8.1/include/stddef.h:
 
-/usr/include/locale.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/locale.h:
 
-/usr/include/bits/locale.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/locale.h:
 
-/usr/include/xlocale.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/xlocale.h:
 
-/usr/include/syslog.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/syslog.h:
 
-/usr/include/sys/syslog.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/sys/syslog.h:
 
-/usr/lib/gcc/arm-poky-linux-gnueabi/4.8.1/include/stdarg.h:
+/opt/poky/1.5.3/sysroots/x86_64-pokysdk-linux/usr/lib/arm-poky-linux-gnueabi/gcc/arm-poky-linux-gnueabi/4.8.1/include/stdarg.h:
 
-/usr/include/bits/syslog-path.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/syslog-path.h:
 
 include/security/pam_appl.h:
 
@@ -73,66 +98,66 @@ include/security/pam_modules.h:
 
 include/security/pam_ext.h:
 
-/usr/include/sys/time.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/sys/time.h:
 
-/usr/include/bits/types.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/types.h:
 
-/usr/include/bits/typesizes.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/typesizes.h:
 
-/usr/include/time.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/time.h:
 
-/usr/include/bits/time.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/time.h:
 
-/usr/include/sys/select.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/sys/select.h:
 
-/usr/include/bits/select.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/select.h:
 
-/usr/include/bits/sigset.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/sigset.h:
 
 include/security/_pam_macros.h:
 
-/usr/include/stdlib.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/stdlib.h:
 
-/usr/include/bits/waitflags.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/waitflags.h:
 
-/usr/include/bits/waitstatus.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/waitstatus.h:
 
-/usr/include/endian.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/endian.h:
 
-/usr/include/bits/endian.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/endian.h:
 
-/usr/include/bits/byteswap.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/byteswap.h:
 
-/usr/include/bits/byteswap-16.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/byteswap-16.h:
 
-/usr/include/sys/types.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/sys/types.h:
 
-/usr/include/sys/sysmacros.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/sys/sysmacros.h:
 
-/usr/include/bits/pthreadtypes.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/pthreadtypes.h:
 
-/usr/include/alloca.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/alloca.h:
 
-/usr/include/bits/stdlib-bsearch.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/stdlib-bsearch.h:
 
-/usr/include/bits/stdlib-float.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/stdlib-float.h:
 
-/usr/include/string.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/string.h:
 
-/usr/include/bits/string.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/string.h:
 
-/usr/include/bits/string2.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/string2.h:
 
-/usr/include/stdio.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/stdio.h:
 
-/usr/include/libio.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/libio.h:
 
-/usr/include/_G_config.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/_G_config.h:
 
-/usr/include/wchar.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/wchar.h:
 
-/usr/include/bits/stdio_lim.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/stdio_lim.h:
 
-/usr/include/bits/sys_errlist.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/sys_errlist.h:
 
-/usr/include/bits/stdio.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/stdio.h:

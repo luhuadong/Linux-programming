@@ -39,10 +39,10 @@
 /* #undef HAVE_DBM_STORE */
 
 /* Define to 1 if you have the `db_create' function. */
-/* #undef HAVE_DB_CREATE */
+#define HAVE_DB_CREATE 1
 
 /* Define to 1 if you have the <db.h> header file. */
-/* #undef HAVE_DB_H */
+#define HAVE_DB_H 1
 
 /* Define if the GNU dcgettext() function is already present or preinstalled.
    */
@@ -177,7 +177,7 @@
 #define HAVE_PATHS_H 1
 
 /* Define to 1 if you have the `rpcb_getaddr' function. */
-/* #undef HAVE_RPCB_GETADDR */
+#define HAVE_RPCB_GETADDR 1
 
 /* Define to 1 if you have the <rpcsvc/ypclnt.h> header file. */
 #define HAVE_RPCSVC_YPCLNT_H 1
@@ -336,7 +336,7 @@
 /* #undef PAM_LOCKING */
 
 /* Path where mails are stored */
-#define PAM_PATH_MAILDIR _PATH_MAILDIR
+#define PAM_PATH_MAILDIR "/var/spool/mail"
 
 /* Random device path. */
 #define PAM_PATH_RANDOMDEV "/dev/urandom"
@@ -404,7 +404,7 @@
 
 /* Define to 1 if `lex' declares `yytext' as a `char *' by default, not a
    `char[]'. */
-#define YYTEXT_POINTER 1
+/* #undef YYTEXT_POINTER */
 
 /* Enable large inode numbers on Mac OS X 10.5.  */
 #ifndef _DARWIN_USE_64_BIT_INODE

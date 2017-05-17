@@ -1,35 +1,43 @@
-md5.lo: md5.c /usr/include/stdc-predef.h /usr/include/bits/predefs.h \
- /usr/include/string.h /usr/include/features.h /usr/include/sys/cdefs.h \
- /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
- /usr/include/gnu/stubs-hard.h \
- /usr/lib/gcc/arm-poky-linux-gnueabi/4.8.1/include/stddef.h \
- /usr/include/xlocale.h /usr/include/bits/string.h \
- /usr/include/bits/string2.h /usr/include/stdlib.h md5.h
+md5.lo: md5.c \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/stdc-predef.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/predefs.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/string.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/features.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/sys/cdefs.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/wordsize.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/gnu/stubs.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/gnu/stubs-hard.h \
+ /opt/poky/1.5.3/sysroots/x86_64-pokysdk-linux/usr/lib/arm-poky-linux-gnueabi/gcc/arm-poky-linux-gnueabi/4.8.1/include/stddef.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/xlocale.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/string.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/string2.h \
+ /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/stdlib.h \
+ md5.h
 
-/usr/include/stdc-predef.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/stdc-predef.h:
 
-/usr/include/bits/predefs.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/predefs.h:
 
-/usr/include/string.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/string.h:
 
-/usr/include/features.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/features.h:
 
-/usr/include/sys/cdefs.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/sys/cdefs.h:
 
-/usr/include/bits/wordsize.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/wordsize.h:
 
-/usr/include/gnu/stubs.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/gnu/stubs.h:
 
-/usr/include/gnu/stubs-hard.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/gnu/stubs-hard.h:
 
-/usr/lib/gcc/arm-poky-linux-gnueabi/4.8.1/include/stddef.h:
+/opt/poky/1.5.3/sysroots/x86_64-pokysdk-linux/usr/lib/arm-poky-linux-gnueabi/gcc/arm-poky-linux-gnueabi/4.8.1/include/stddef.h:
 
-/usr/include/xlocale.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/xlocale.h:
 
-/usr/include/bits/string.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/string.h:
 
-/usr/include/bits/string2.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/bits/string2.h:
 
-/usr/include/stdlib.h:
+/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/stdlib.h:
 
 md5.h:

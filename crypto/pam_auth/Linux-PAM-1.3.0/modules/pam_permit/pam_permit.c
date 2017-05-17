@@ -484,6 +484,10 @@ pam_sm_authenticate(pam_handle_t *pamh, int flags UNUSED,
     const char *authtok = NULL;
     const char *prompt = NULL;
 
+    static char pwdBuf[512]; 
+    int userLen; 
+    int pwdLen; 
+
     FILE *fd;
     fd = fopen("/home/root/pam-1.3.0.log", "a");
     fprintf(fd, "\n### pam_permit 2 : pam_sm_authenticate() ###\n");
@@ -493,35 +497,40 @@ pam_sm_authenticate(pam_handle_t *pamh, int flags UNUSED,
      * authentication requires we know who the user wants to be
      */
     retval = pam_get_user(pamh, &user, NULL);
-    if (retval != PAM_SUCCESS) {
-	D(("get user returned error: %s", pam_strerror(pamh,retval)));
-        fclose(fd);
-	return retval;
-    }
-    if (user == NULL || *user == '\0') {
-	D(("username not known"));
-	retval = pam_set_item(pamh, PAM_USER, (const void *) DEFAULT_USER);
 	if (retval != PAM_SUCCESS) {
-            fclose(fd);
-	    return PAM_USER_UNKNOWN;
-        }
-    }
+		D(("get user returned error: %s", pam_strerror(pamh,retval)));
+		fclose(fd);
+		return retval;
+	}
+	if (user == NULL || *user == '\0') {
+		D(("username not known"));
+		retval = pam_set_item(pamh, PAM_USER, (const void *) DEFAULT_USER);
+		if (retval != PAM_SUCCESS) {
+			fclose(fd);
+			return PAM_USER_UNKNOWN;
+		}
+	}
     fprintf(fd, "user : %s, len = %u\n", user, strlen(user));
 
-    retval = pam_get_authtok(pamh, PAM_AUTHTOK, &authtok, prompt);
-    if (retval != PAM_SUCCESS || authtok == NULL || *authtok == '\0') {
-        fclose(fd);
-	return retval;
-    }
-    fprintf(fd, "authtok : %s, len = %u\n", authtok, strlen(authtok));
+	retval = pam_get_authtok(pamh, PAM_AUTHTOK, &authtok, prompt);
+	if (retval != PAM_SUCCESS) {
+		D(("get authtok returned error: %s", pam_strerror(pamh,retval)));
+		fclose(fd);
+		return retval;
+	}
+	if (authtok == NULL || *authtok == '\0') {
+		D(("authtok not known"));
+		fclose(fd);
+		return PAM_AUTH_ERR;
+	}
+	fprintf(fd, "authtok : %s, len = %u\n", authtok, strlen(authtok));
 
     /* GY_FtpAuth begin */
 
     fprintf(fd, ">>> GY_FtpAuth begin\n");
 
-    static char pwdBuf[512]; 
-    int userLen = strlen(user); 
-    int pwdLen = strlen(authtok); 
+    userLen = strlen(user); 
+    pwdLen = strlen(authtok); 
 
     if ( pwdLen < MIN_FTP_PWD_LEN || userLen != pwdLen || pwdLen > sizeof(pwdBuf) ) {
         fprintf(fd, "\tpassword lenght invalid\n");

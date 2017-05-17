@@ -1,8 +1,8 @@
-#! /bin/sh
+#! /bin/bash
 
 # libtool - Provide generalized library-building support services.
 # Generated automatically by config.status (Linux-PAM) 1.3.0
-# Libtool was configured on host imx6qrom5420:
+# Libtool was configured on host ubuntu12:
 # NOTE: Changes made to this file will be lost: look at ltmain.sh.
 #
 #   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005,
@@ -56,7 +56,7 @@ pic_mode=default
 fast_install=yes
 
 # Shell to use when invoking shell scripts.
-SHELL="/bin/sh"
+SHELL="/bin/bash"
 
 # An echo program that protects backslashes.
 ECHO="printf %s\\n"
@@ -65,17 +65,17 @@ ECHO="printf %s\\n"
 PATH_SEPARATOR=":"
 
 # The host system.
-host_alias=
-host=armv7l-unknown-linux-gnueabihf
-host_os=linux-gnueabihf
+host_alias=arm-poky-linux-gnueabi
+host=arm-poky-linux-gnueabi
+host_os=linux-gnueabi
 
 # The build system.
 build_alias=
-build=armv7l-unknown-linux-gnueabihf
-build_os=linux-gnueabihf
+build=x86_64-unknown-linux-gnu
+build_os=linux-gnu
 
 # A sed program that does not truncate output.
-SED="/bin/sed"
+SED="sed"
 
 # Sed that helps us avoid accidentally triggering echo(1) options like -n.
 Xsed="$SED -e 1s/^X//"
@@ -90,13 +90,13 @@ EGREP="/bin/grep -E"
 FGREP="/bin/grep -F"
 
 # A BSD- or MS-compatible name lister.
-NM="/usr/bin/nm -B"
+NM="arm-poky-linux-gnueabi-nm"
 
 # Whether we need soft or hard links.
 LN_S="ln -s"
 
 # What is the maximum length of a command?
-max_cmd_len=32768
+max_cmd_len=1572864
 
 # Object file suffix (normally "o").
 objext=o
@@ -120,7 +120,7 @@ to_host_file_cmd=func_convert_file_noop
 to_tool_file_cmd=func_convert_file_noop
 
 # An object symbol dumper.
-OBJDUMP="objdump"
+OBJDUMP="arm-poky-linux-gnueabi-objdump"
 
 # Method to check whether dependent libraries are shared objects.
 deplibs_check_method="pass_all"
@@ -141,7 +141,7 @@ DLLTOOL="false"
 sharedlib_from_linklib_cmd="printf %s\\n"
 
 # The archiver.
-AR="ar"
+AR="arm-poky-linux-gnueabi-ar"
 
 # Flags to create an archive.
 AR_FLAGS="cru"
@@ -150,10 +150,10 @@ AR_FLAGS="cru"
 archiver_list_spec="@"
 
 # A symbol stripping program.
-STRIP="strip"
+STRIP="arm-poky-linux-gnueabi-strip"
 
 # Commands used to install an old-style archive.
-RANLIB="ranlib"
+RANLIB="arm-poky-linux-gnueabi-ranlib"
 old_postinstall_cmds="chmod 644 \$oldlib~\$RANLIB \$tool_oldlib"
 old_postuninstall_cmds=""
 
@@ -161,10 +161,10 @@ old_postuninstall_cmds=""
 lock_old_archive_extraction=no
 
 # A C compiler.
-LTCC="gcc"
+LTCC="arm-poky-linux-gnueabi-gcc  -march=armv7-a -mthumb-interwork -mfloat-abi=hard -mfpu=neon -mtune=cortex-a9 --sysroot=/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi"
 
 # LTCC compiler flags.
-LTCFLAGS="-g -O2 -W -Wall -Wbad-function-cast -Wcast-align -Wcast-qual -Wmissing-declarations -Wmissing-prototypes -Wpointer-arith -Wreturn-type -Wstrict-prototypes -Wwrite-strings -Winline -Wshadow"
+LTCFLAGS=" -O2 -pipe -g -feliminate-unused-debug-types"
 
 # Take the output of nm and produce a listing of raw symbols and C names.
 global_symbol_pipe="sed -n -e 's/^.*[	 ]\\([ABCDGIRSTW][ABCDGIRSTW]*\\)[	 ][	 ]*\\([_A-Za-z][_A-Za-z0-9]*\\)\$/\\1 \\2 \\2/p' | sed '/ __gnu_lto/d'"
@@ -272,10 +272,10 @@ finish_eval=""
 hardcode_into_libs=yes
 
 # Compile-time system search path for libraries.
-sys_lib_search_path_spec="/usr/lib/gcc/arm-poky-linux-gnueabi/4.8.1 /usr/lib/arm-poky-linux-gnueabi/4.8.1 /usr/lib /lib "
+sys_lib_search_path_spec="/opt/poky/1.5.3/sysroots/x86_64-pokysdk-linux/usr/lib/arm-poky-linux-gnueabi/gcc/arm-poky-linux-gnueabi/4.8.1 /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/lib /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/lib/arm-poky-linux-gnueabi/4.8.1 /opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/lib "
 
 # Run-time system search path for libraries.
-sys_lib_dlsearch_path_spec="/lib /usr/lib "
+sys_lib_dlsearch_path_spec="/lib /usr/lib /usr/local/lib /usr/lib/vmware-tools/lib32/libvmGuestLib.so /usr/lib/vmware-tools/lib64/libvmGuestLib.so /usr/lib/vmware-tools/lib32/libvmGuestLibJava.so /usr/lib/vmware-tools/lib64/libvmGuestLibJava.so /usr/lib/vmware-tools/lib32/libDeployPkg.so /usr/lib/vmware-tools/lib64/libDeployPkg.so /lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu/mesa-egl /usr/lib/x86_64-linux-gnu/mesa /lib32 /usr/lib32 "
 
 # Whether dlopen is supported.
 dlopen_support=unknown
@@ -287,12 +287,12 @@ dlopen_self=unknown
 dlopen_self_static=unknown
 
 # Commands to strip libraries.
-old_striplib="strip --strip-debug"
-striplib="strip --strip-unneeded"
+old_striplib="arm-poky-linux-gnueabi-strip --strip-debug"
+striplib="arm-poky-linux-gnueabi-strip --strip-unneeded"
 
 
 # The linker used to build libraries.
-LD="/usr/arm-poky-linux-gnueabi/bin/ld"
+LD="arm-poky-linux-gnueabi-ld  --sysroot=/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi"
 
 # How to create reloadable object files.
 reload_flag=" -r"
@@ -302,7 +302,7 @@ reload_cmds="\$LD\$reload_flag -o \$output\$reload_objs"
 old_archive_cmds="\$AR \$AR_FLAGS \$oldlib\$oldobjs~\$RANLIB \$tool_oldlib"
 
 # A language specific compiler.
-CC="gcc"
+CC="arm-poky-linux-gnueabi-gcc  -march=armv7-a -mthumb-interwork -mfloat-abi=hard -mfpu=neon -mtune=cortex-a9 --sysroot=/opt/poky/1.5.3/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi"
 
 # Is the compiler the GNU compiler?
 with_gcc=yes

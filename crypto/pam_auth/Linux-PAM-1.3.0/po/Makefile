@@ -15,7 +15,7 @@ PACKAGE = Linux-PAM
 VERSION = 1.3.0
 PACKAGE_BUGREPORT = 
 
-SED = /bin/sed
+SED = sed
 SHELL = /bin/sh
 
 
@@ -23,42 +23,42 @@ srcdir = .
 top_srcdir = ..
 
 
-prefix = /home/root/Linux-PAM-1.3.0-install
+prefix = /home/rudy/workspace/Linux-programming/crypto/pam_auth/Linux-PAM-1.3.0-install
 exec_prefix = ${prefix}
 datarootdir = ${prefix}/share
 datadir = ${datarootdir}
 localedir = ${datarootdir}/locale
 gettextsrcdir = $(datadir)/gettext/po
 
-INSTALL = ../build-aux/install-sh -c
+INSTALL = /usr/bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
 
 # We use $(mkdir_p).
 # In automake <= 1.9.x, $(mkdir_p) is defined either as "mkdir -p --" or as
 # "$(mkinstalldirs)" or as "$(install_sh) -d". For these automake versions,
-# ${SHELL} /home/root/Linux-PAM-1.3.0/build-aux/install-sh does not start with $(SHELL), so we add it.
+# ${SHELL} /home/rudy/workspace/Linux-programming/crypto/pam_auth/Linux-PAM-1.3.0/build-aux/install-sh does not start with $(SHELL), so we add it.
 # In automake >= 1.10, $(MKDIR_P) is derived from ${MKDIR_P}, which is defined
 # either as "/path/to/mkdir -p" or ".../install-sh -c -d". For these automake
 # versions, $(mkinstalldirs) and $(install_sh) are unused.
-mkinstalldirs = $(SHELL) ${SHELL} /home/root/Linux-PAM-1.3.0/build-aux/install-sh -d
-install_sh = $(SHELL) ${SHELL} /home/root/Linux-PAM-1.3.0/build-aux/install-sh
-MKDIR_P = ../build-aux/install-sh -c -d
+mkinstalldirs = $(SHELL) ${SHELL} /home/rudy/workspace/Linux-programming/crypto/pam_auth/Linux-PAM-1.3.0/build-aux/install-sh -d
+install_sh = $(SHELL) ${SHELL} /home/rudy/workspace/Linux-programming/crypto/pam_auth/Linux-PAM-1.3.0/build-aux/install-sh
+MKDIR_P = /bin/mkdir -p
 mkdir_p = $(MKDIR_P)
 
-GMSGFMT_ = :
-GMSGFMT_no = :
-GMSGFMT_yes = :
+GMSGFMT_ = /usr/bin/msgfmt
+GMSGFMT_no = /usr/bin/msgfmt
+GMSGFMT_yes = /usr/bin/msgfmt
 GMSGFMT = $(GMSGFMT_$(USE_MSGCTXT))
-MSGFMT_ = :
-MSGFMT_no = :
-MSGFMT_yes = :
+MSGFMT_ = /usr/bin/msgfmt
+MSGFMT_no = /usr/bin/msgfmt
+MSGFMT_yes = /usr/bin/msgfmt
 MSGFMT = $(MSGFMT_$(USE_MSGCTXT))
-XGETTEXT_ = :
-XGETTEXT_no = :
-XGETTEXT_yes = :
+XGETTEXT_ = /usr/bin/xgettext
+XGETTEXT_no = /usr/bin/xgettext
+XGETTEXT_yes = /usr/bin/xgettext
 XGETTEXT = $(XGETTEXT_$(USE_MSGCTXT))
 MSGMERGE = msgmerge
-MSGMERGE_UPDATE = : --update
+MSGMERGE_UPDATE = /usr/bin/msgmerge --update
 MSGINIT = msginit
 MSGCONV = msgconv
 MSGFILTER = msgfilter
@@ -592,11 +592,11 @@ update-gmo: Makefile $(GMOFILES)
 
 # Recreate Makefile by invoking config.status. Explicitly invoke the shell,
 # because execution permission bits may not work on the current file system.
-# Use /bin/sh, which is the shell determined by autoconf for the use by its
+# Use /bin/bash, which is the shell determined by autoconf for the use by its
 # scripts, not $(SHELL) which is hardwired to /bin/sh and may be deficient.
 Makefile: Makefile.in.in Makevars $(top_builddir)/config.status POTFILES.in LINGUAS
 	cd $(top_builddir) \
-	  && /bin/sh ./config.status $(subdir)/$@.in po-directories
+	  && /bin/bash ./config.status $(subdir)/$@.in po-directories
 
 force:
 
