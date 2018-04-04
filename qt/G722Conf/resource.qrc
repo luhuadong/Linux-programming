@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>pictures/checked.png</file>
+        <file>pictures/G722_icon.png</file>
+        <file>pictures/unchecked.png</file>
+        <file>stylesheet.qss</file>
+    </qresource>
+</RCC>

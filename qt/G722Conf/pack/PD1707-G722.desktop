@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=G722
+Comment=Special for PD1707
+Exec=/home/root/tools/G722Conf
+Terminal=true
+Type=Application
+Icon=G722_icon.png
+X-MB-SingleInstance=false
+StartupNotify=true
+Categories=System;Settings;
