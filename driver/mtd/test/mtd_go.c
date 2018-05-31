@@ -1,7 +1,7 @@
 /*================================================================
 *   Copyright (C) 2018 Guangzhou Firefly Ltd. All rights reserved.
 *   
-*   文件名称：mtd_read.c
+*   文件名称：mtd_go.c
 *   创 建 者：luhuadong
 *   创建日期：2018年05月18日
 *   描    述：
@@ -139,7 +139,8 @@ static int mtd_write(const char *device, const void *data, const unsigned int si
 	
 	ret = write(fd, data, size);
 	if(ret != -1) {
-		printf("\n Write ok!\n");
+		if( ret == 0) printf("\n Nothing to write!\n");
+		else printf("\n Write ok!\n");
 	}
 	else {
 		printf("(E) Write error!\n");
@@ -300,11 +301,11 @@ static int mtd_write_file(const char *device, const char *filename)
 {
 	s8	retval = FAIL;
 	u16 i = 0;
-	s16 maxlen = 64;
+	s16 maxlen = 8*64;
 	FILE *file = NULL;
-	u16 b[8];
+	u32 b[8];
 	s8 temp[200];
-	u16 buffer[OTP_NUM_WORDS];
+	u16 buffer[OTP_NUM_WORDS*8];
 
 	file = fopen(filename, "r");
 	if(NULL == file) {
@@ -312,16 +313,16 @@ static int mtd_write_file(const char *device, const char *filename)
 		return -1;
 	} 
 	else {
-		FILE *file_ro = file; // WTF! (FILE *)0x12008 --> (FILE *)0x10000
-		memset(b, 0x0, sizeof(u16)*8);
-		memset(buffer, 0x0, sizeof(u16)*OTP_NUM_WORDS);
+		//FILE *file_ro = file; // WTF! (FILE *)0x12008 --> (FILE *)0x10000 by sscanf
+		memset(b, 0x0, sizeof(b));
+		memset(buffer, 0x0, sizeof(buffer));
 
 		retval = EeReadLineFromEepFile(file, temp, 200);
 
 		while ((SUCCESS == retval) && (i < maxlen))
 		{
 			// place the hex numbers from the line read in to the temp buffer
-			sscanf(temp, "%04x %04x %04x %04x %04x %04x %04x %04x", \
+			sscanf(temp, "%08lx %08lx %08lx %08lx %08lx %08lx %08lx %08lx", \
 					&(b[0]), &(b[1]), &(b[2]), &(b[3]), \
 					&(b[4]), &(b[5]), &(b[6]), &(b[7]));
 			//printf("%04x %04x %04x %04x %04x %04x %04x %04x\n", b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7]);
