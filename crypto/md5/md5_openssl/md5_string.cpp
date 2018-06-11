@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 {
 	MD5_CTX c;
 	unsigned char md[16];
-	char *ss = "";
+	char *ss = NULL;
 	char tmp[3]={'\0'}, md5buf[33]={'\0'};
 	
 	if(argc > 2) {

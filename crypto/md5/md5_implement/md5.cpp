@@ -20,7 +20,7 @@
    L. Peter Deutsch
    ghost@aladdin.com
 
- */
+*/
 /* $Id: md5.cpp,v 1.3 2008/01/20 22:52:04 lilyco Exp $ */
 /*
    Independent implementation of MD5 (RFC 1321).
@@ -49,7 +49,7 @@ self-checking.
 1999-11-04 lpd Edited comments slightly for automatic TOC extraction.
 1999-10-18 lpd Fixed typo in header comment (ansi2knr rather than md5).
 1999-05-03 lpd Original version.
- */
+*/
 
 #include "md5.h"
 #include <string.h>
@@ -128,12 +128,9 @@ self-checking.
 #define T64 /* 0xeb86d391 */ (T_MASK ^ 0x14792c6e)
 
 
-	static void
-md5_process(md5_state_t *pms, const md5_byte_t *data /*[64]*/)
+static void md5_process(md5_state_t *pms, const md5_byte_t *data /*[64]*/)
 {
-	md5_word_t
-		a = pms->abcd[0], b = pms->abcd[1],
-		  c = pms->abcd[2], d = pms->abcd[3];
+	md5_word_t a = pms->abcd[0], b = pms->abcd[1], c = pms->abcd[2], d = pms->abcd[3];
 	md5_word_t t;
 #if BYTE_ORDER > 0
 	/* Define storage only for big-endian CPUs. */
@@ -309,8 +306,7 @@ md5_process(md5_state_t *pms, const md5_byte_t *data /*[64]*/)
 	pms->abcd[3] += d;
 }
 
-	void
-md5_init(md5_state_t *pms)
+void md5_init(md5_state_t *pms)
 {
 	pms->count[0] = pms->count[1] = 0;
 	pms->abcd[0] = 0x67452301;
@@ -319,8 +315,7 @@ md5_init(md5_state_t *pms)
 	pms->abcd[3] = 0x10325476;
 }
 
-	void
-md5_append(md5_state_t *pms, const md5_byte_t *data, int nbytes)
+void md5_append(md5_state_t *pms, const md5_byte_t *data, int nbytes)
 {
 	const md5_byte_t *p = data;
 	int left = nbytes;
@@ -357,8 +352,7 @@ md5_append(md5_state_t *pms, const md5_byte_t *data, int nbytes)
 		memcpy(pms->buf, p, left);
 }
 
-	void
-md5_finish(md5_state_t *pms, md5_byte_t digest[16])
+void md5_finish(md5_state_t *pms, md5_byte_t digest[16])
 {
 	static const md5_byte_t pad[64] = {
 		0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
