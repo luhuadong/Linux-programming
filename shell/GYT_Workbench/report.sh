@@ -53,46 +53,46 @@ function generate_html()
 	echo "<title>GYT Workbench</title>" >> $HTML_FILE
 	echo "<body>" >> $HTML_FILE
 	echo "<h3>Report</h3>" >> $HTML_FILE
-	echo "<table border=\"1\">" >> $HTML_FILE
+	echo "<table border=\"1\"; bordercolor=\"Indigo\" cellspacing=\"0\"; cellpadding=\"4\">" >> $HTML_FILE
 	#-------- Header --------
-	echo "<tr>" >> $HTML_FILE
-	echo "<th>Item</th>" >> $HTML_FILE
-	echo "<th>Count</th>" >> $HTML_FILE
+	echo "<tr style=\"background-color:Indigo; color:Lavender\">" >> $HTML_FILE
+	echo "<th width=\"128px\">Item</th>" >> $HTML_FILE
+	echo "<th width=\"128px\">Count</th>" >> $HTML_FILE
 	echo "</tr>" >> $HTML_FILE
 	#-------- Row1 --------
 	echo "<tr>" >> $HTML_FILE
 	echo "<td>power on</td>" >> $HTML_FILE
-	echo "<td>$POWER_ON</td>" >> $HTML_FILE
+	echo "<td align=\"right\">$POWER_ON</td>" >> $HTML_FILE
 	echo "</tr>" >> $HTML_FILE
 	#-------- Row2 --------
-	echo "<tr>" >> $HTML_FILE
+	echo "<tr style=\"background-color:Lavender\">" >> $HTML_FILE
 	echo "<td>all okay</td>" >> $HTML_FILE
-	echo "<td>$ALL_OKAY</td>" >> $HTML_FILE
+	echo "<td align=\"right\">$ALL_OKAY</td>" >> $HTML_FILE
 	echo "</tr>" >> $HTML_FILE
 	#-------- Row3 --------
 	echo "<tr>" >> $HTML_FILE
 	echo "<td>i210 yes</td>" >> $HTML_FILE
-	echo "<td>$I210_OKAY</td>" >> $HTML_FILE
+	echo "<td align=\"right\">$I210_OKAY</td>" >> $HTML_FILE
 	echo "</tr>" >> $HTML_FILE
 	#-------- Row4 --------
-	echo "<tr>" >> $HTML_FILE
+	echo "<tr style=\"background-color:Lavender\">" >> $HTML_FILE
 	echo "<td>eth0 yes</td>" >> $HTML_FILE
-	echo "<td>$ETH0_OKAY</td>" >> $HTML_FILE
+	echo "<td align=\"right\">$ETH0_OKAY</td>" >> $HTML_FILE
 	echo "</tr>" >> $HTML_FILE
 	#-------- Row5 --------
 	echo "<tr>" >> $HTML_FILE
 	echo "<td>eth1 yes</td>" >> $HTML_FILE
-	echo "<td>$ETH1_OKAY</td>" >> $HTML_FILE
+	echo "<td align=\"right\">$ETH1_OKAY</td>" >> $HTML_FILE
 	echo "</tr>" >> $HTML_FILE
 	#-------- Row6 --------
-	echo "<tr>" >> $HTML_FILE
+	echo "<tr style=\"background-color:Lavender\">" >> $HTML_FILE
 	echo "<td>connect to dsp</td>" >> $HTML_FILE
-	echo "<td>$DSP_CONN</td>" >> $HTML_FILE
+	echo "<td align=\"right\">$DSP_CONN</td>" >> $HTML_FILE
 	echo "</tr>" >> $HTML_FILE
 	#-------- Row7 --------
 	echo "<tr>" >> $HTML_FILE
 	echo "<td>connect to stm32</td>" >> $HTML_FILE
-	echo "<td>$STM32_CONN</td>" >> $HTML_FILE
+	echo "<td align=\"right\">$STM32_CONN</td>" >> $HTML_FILE
 	echo "</tr>" >> $HTML_FILE
 	echo "</table>" >> $HTML_FILE
 	#-------- The end --------
