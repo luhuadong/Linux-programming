@@ -1,6 +1,6 @@
 
-#KERN_DIR = /home/rudy/workspace_hd/GYT/advantech/kernel/kernel_3.10.17
-KERN_DIR=/lib/modules/$(shell uname -r)/build
+KERN_DIR = /home/rudy/workspace/Projects/Bocon/tmp_kernel_5.4_k37x
+#KERN_DIR=/lib/modules/$(shell uname -r)/build
 
 obj-m += hello.o
 
