@@ -1,6 +1,5 @@
-
-KERN_DIR = /home/rudy/workspace/Projects/Bocon/tmp_kernel_5.4_k37x
-#KERN_DIR=/lib/modules/$(shell uname -r)/build
+KERN_DIR=/lib/modules/$(shell uname -r)/build
+#KERN_DIR = /home/rudy/workspace/Projects/Bocon/bocon-linux-imx8
 
 obj-m += hello.o
 
