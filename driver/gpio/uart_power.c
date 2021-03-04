@@ -3,7 +3,7 @@
 *   
 *   Filename：   uart_power.c
 *   Author：     luhuadong
-*   Create Date：2018年05月08日
+*   Create Date：2021年03月03日
 *   Description：
 *
 ================================================================*/
@@ -25,7 +25,7 @@
 #include <linux/platform_device.h>
 
 // #define USER_LED      374       /*GPIO LED  GPIO4_22*/
-#define UART_PWR_EN      321       /*UART_PWR_EN  GPIO5_01*/
+#define UART_PWR_EN      129       /*UART_PWR_EN  GPIO5_01*/
 
 int major;
 struct class  *uart_power_class;
