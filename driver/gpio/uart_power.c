@@ -24,13 +24,11 @@
 #include <linux/device.h>
 #include <linux/platform_device.h>
 
-// #define USER_LED      374       /*GPIO LED  GPIO4_22*/
 #define UART_PWR_EN      129       /*UART_PWR_EN  GPIO5_01*/
 
 int major;
 struct class  *uart_power_class;
 struct device *uart_power_class_devs;
-
 
 static int uart_power_chrdev_open(struct inode *inode, struct file *filp)
 {
