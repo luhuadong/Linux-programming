@@ -87,8 +87,10 @@ static ssize_t globalmem_read(struct file *filp, char __user *buf, size_t size, 
     return ret;
 #else
     #define CONFIG_RTC_HCTOSYS_DEVICE   "rtc0"
+
     int err = -ENODEV;
     struct rtc_time tm;
+    int data[TIME_LEN]={0};
 
     struct rtc_device *rtc = rtc_class_open(CONFIG_RTC_HCTOSYS_DEVICE);
 
@@ -108,6 +110,14 @@ static ssize_t globalmem_read(struct file *filp, char __user *buf, size_t size, 
     printk("Current RTC date/time is %d-%d-%d, %02d:%02d:%02d, %d\n",
             tm.tm_mday, tm.tm_mon + 1, tm.tm_year,
             tm.tm_hour, tm.tm_min, tm.tm_sec, tm.tm_wday);
+
+    data[0] = tm.tm_sec;
+    data[1] = tm.tm_min;
+    data[2] = tm.tm_hour;
+    data[3] = tm.tm_mday;
+    data[4] = tm.tm_mon + 1;
+    data[5] = tm.tm_year + 1900;
+    data[6] = tm.tm_wday;
 
 err_read:
     rtc_class_close(rtc);
@@ -226,6 +236,9 @@ static int __init globalmem_init(void)
     }
 
     globalmem_setup_cdev(globalmem_devp, 0);
+
+    printk("bocon-rtc init\n");
+
     return 0;
 
 fail_malloc:
@@ -238,6 +251,7 @@ static void __exit globalmem_exit(void)
     cdev_del(&globalmem_devp->cdev);
     kfree(globalmem_devp);
     unregister_chrdev_region(MKDEV(globalmem_major, 0), 1);
+    printk("bocon-rtc exit\n");
 }
 
 module_init(globalmem_init);
