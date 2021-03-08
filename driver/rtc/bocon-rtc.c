@@ -21,9 +21,12 @@
 #include <linux/uaccess.h>
 #include <linux/rtc.h>
 
-#define GLOBALMEM_SIZE   0x1000  /* 4KB */
-#define MEM_CLEAR        0x1
-#define GLOBALMEM_MAJOR  230
+#define DEFAULT_RTC_DEVICE   "rtc0"
+#define TIME_LEN             7
+
+#define GLOBALMEM_SIZE       0x1000  /* 4KB */
+#define MEM_CLEAR            0x1
+#define GLOBALMEM_MAJOR      230
 
 static int globalmem_major = GLOBALMEM_MAJOR;
 module_param(globalmem_major, int, S_IRUGO);
@@ -86,30 +89,24 @@ static ssize_t globalmem_read(struct file *filp, char __user *buf, size_t size, 
 
     return ret;
 #else
-    #define CONFIG_RTC_HCTOSYS_DEVICE   "rtc0"
-
     int err = -ENODEV;
     struct rtc_time tm;
     int data[TIME_LEN]={0};
+    unsigned int count = size;
 
-    struct rtc_device *rtc = rtc_class_open(CONFIG_RTC_HCTOSYS_DEVICE);
+    struct rtc_device *rtc = rtc_class_open(DEFAULT_RTC_DEVICE);
 
     if (!rtc) {
-        pr_info("unable to open rtc device (%s)\n",
-            CONFIG_RTC_HCTOSYS_DEVICE);
-        goto err_open;
+        pr_info("unable to open rtc device (%s)\n", DEFAULT_RTC_DEVICE);
+        return err;
     }
 
     err = rtc_read_time(rtc, &tm);
     if (err) {
-        dev_err(rtc->dev.parent,
-            "hctosys: unable to read the hardware clock\n");
-        goto err_read;
+        dev_err(rtc->dev.parent, "hctosys: unable to read the hardware clock\n");
+        rtc_class_close(rtc);
+        return err;
     }
-
-    printk("Current RTC date/time is %d-%d-%d, %02d:%02d:%02d, %d\n",
-            tm.tm_mday, tm.tm_mon + 1, tm.tm_year,
-            tm.tm_hour, tm.tm_min, tm.tm_sec, tm.tm_wday);
 
     data[0] = tm.tm_sec;
     data[1] = tm.tm_min;
@@ -119,10 +116,18 @@ static ssize_t globalmem_read(struct file *filp, char __user *buf, size_t size, 
     data[5] = tm.tm_year + 1900;
     data[6] = tm.tm_wday;
 
-err_read:
-    rtc_class_close(rtc);
+    printk(KERN_INFO "Current RTC date/time is %d-%d-%d, %02d:%02d:%02d, %d\n",
+            data[5], data[4], data[3], data[2], data[1], data[0], data[6]);
 
-err_open:
+    if (size > sizeof(int) * TIME_LEN)
+        count = sizeof(int) * TIME_LEN;
+
+    if (copy_to_user(buf, data, count)) {
+        err = -EFAULT;
+    } else {
+        err = count;
+        printk(KERN_INFO "read %u bytes(s) from %s\n", count, DEFAULT_RTC_DEVICE);
+    }
 
     return err;
 #endif
@@ -153,7 +158,43 @@ static ssize_t globalmem_write(struct file *filp, const char __user *buf, size_t
     return ret;
 #else
     int err = -ENODEV;
+    struct rtc_time tm;
+    int data[TIME_LEN]={0};
+    unsigned int count = size;
 
+    struct rtc_device *rtc = rtc_class_open(DEFAULT_RTC_DEVICE);
+
+    if (!rtc) {
+        pr_info("unable to open rtc device (%s)\n", DEFAULT_RTC_DEVICE);
+        return err;
+    }
+
+    if (!rtc->ops || !rtc->ops->set_time) {
+        rtc_class_close(rtc);
+        return err;
+    }
+
+    if (size > sizeof(int) * TIME_LEN)
+        count = sizeof(int) * TIME_LEN;
+
+    if (copy_from_user(data, buf, count)) {
+        return -EFAULT;
+    } else {
+        //*ppos += count;
+        err = count;
+        printk(KERN_INFO "written %u bytes(s)\n", count);
+    }
+
+    tm.tm_sec  = data[0];
+    tm.tm_min  = data[1];
+    tm.tm_hour = data[2];
+    tm.tm_mday = data[3];
+    tm.tm_mon  = data[4] - 1;
+    tm.tm_year = data[5] - 1900;
+    tm.tm_wday = data[6];
+
+    err = rtc_set_time(rtc, &tm);
+    rtc_class_close(rtc);
     return err;
 #endif
 }
