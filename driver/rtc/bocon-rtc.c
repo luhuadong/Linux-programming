@@ -38,6 +38,9 @@ struct globalmem_dev {
 
 struct globalmem_dev *globalmem_devp;
 
+struct class  *bocon_rtc_class;
+struct device *bocon_rtc_class_devs;
+
 static int globalmem_open(struct inode *inode, struct file *filp)
 {
     filp->private_data = globalmem_devp;
@@ -244,6 +247,7 @@ static const struct file_operations globalmem_fops = {
     .release = globalmem_release,
 };
 
+#if 0
 static void globalmem_setup_cdev(struct globalmem_dev *dev, int index)
 {
     int err, devno = MKDEV(globalmem_major, index);
@@ -255,6 +259,18 @@ static void globalmem_setup_cdev(struct globalmem_dev *dev, int index)
         printk(KERN_NOTICE "Error %d adding globalmem %d", err, index);
     }
 }
+#else
+static void globalmem_setup_cdev(struct globalmem_dev *dev, int index)
+{
+    int major = register_chrdev(0, "bocon-rtc", &globalmem_fops);
+    
+    //创建设备信息，执行后会出现 /sys/class/bocon-rtc
+    bocon_rtc_class = class_create(THIS_MODULE, "bocon-rtc");
+
+    //创建设备节点，就是根据上面的设备信息来的
+    bocon_rtc_class_devs = device_create(bocon_rtc_class, NULL, MKDEV(major, 0), NULL, "bocon-rtc"); /* /dev/bocon-rtc */
+}
+#endif
 
 static int __init globalmem_init(void)
 {
