@@ -75,35 +75,16 @@ static long bocon_rtc_ioctl(struct file *filp, unsigned int cmd, unsigned long a
 
 static ssize_t bocon_rtc_read(struct file *filp, char __user *buf, size_t size, loff_t *ppos)
 {
-#if 0
-    unsigned long p = *ppos;
-    unsigned int count = size;
-    int ret = 0;
-    struct bocon_rtc_dev *dev = filp->private_data;
+    /* not support ppos */
 
-    if (p > RTC_DATA_SIZE)
-        return 0;
-    if (count > RTC_DATA_SIZE - p)
-        count = RTC_DATA_SIZE - p;
-
-    if (copy_to_user(buf, dev->mem + p, count)) {
-        ret = -EFAULT;
-    } else {
-        *ppos += count;
-        ret = count;
-
-        printk(KERN_INFO "read %u bytes(s) from %lu\n", count, p);
-    }
-
-    return ret;
-#else
     int err = -ENODEV;
     struct rtc_time tm;
-    int data[TIME_LEN]={0};
     unsigned int count = size;
+    int data[TIME_LEN] = {0};
+
+    struct bocon_rtc_dev *dev = filp->private_data;
 
     struct rtc_device *rtc = rtc_class_open(DEFAULT_RTC_DEVICE);
-
     if (!rtc) {
         pr_info("unable to open rtc device (%s)\n", DEFAULT_RTC_DEVICE);
         return err;
@@ -111,7 +92,7 @@ static ssize_t bocon_rtc_read(struct file *filp, char __user *buf, size_t size, 
 
     err = rtc_read_time(rtc, &tm);
     if (err) {
-        dev_err(rtc->dev.parent, "hctosys: unable to read the hardware clock\n");
+        dev_err(rtc->dev.parent, "unable to read the hardware clock\n");
         rtc_class_close(rtc);
         return err;
     }
@@ -124,51 +105,31 @@ static ssize_t bocon_rtc_read(struct file *filp, char __user *buf, size_t size, 
     data[5] = tm.tm_year + 1900;
     data[6] = tm.tm_wday;
 
-    printk(KERN_INFO "Current RTC date/time is %d-%d-%d, %02d:%02d:%02d, %d\n",
-            data[5], data[4], data[3], data[2], data[1], data[0], data[6]);
+    memcpy(dev->mem, data, RTC_DATA_SIZE); /* useless */
 
+    /* check length */
     if (size > sizeof(int) * TIME_LEN)
         count = sizeof(int) * TIME_LEN;
 
-    if (copy_to_user(buf, data, count)) {
-        err = -EFAULT;
-    } else {
-        err = count;
-        printk(KERN_INFO "read %u bytes(s) from %s\n", count, DEFAULT_RTC_DEVICE);
-    }
+    if (copy_to_user(buf, data, count))
+        return -EFAULT;
 
-    return err;
-#endif
+    printk(KERN_INFO "read %u bytes: %d-%d-%d, %02d:%02d:%02d, %d\n", count, 
+            data[5], data[4], data[3], data[2], data[1], data[0], data[6]);
+
+    return count;
 }
 
 static ssize_t bocon_rtc_write(struct file *filp, const char __user *buf, size_t size, loff_t *ppos)
 {
-#if 0
-    unsigned long p = *ppos;
-    unsigned int count = size;
-    int ret = 0;
-    struct bocon_rtc_dev *dev = filp->private_data;
+    /* not support ppos */
 
-    if (p > RTC_DATA_SIZE)
-        return 0;
-    if (count > RTC_DATA_SIZE - p)
-        count = RTC_DATA_SIZE - p;
-
-    if (copy_from_user(dev->mem + p, buf, count)) {
-        return -EFAULT;
-    } else {
-        *ppos += count;
-        ret = count;
-
-        printk(KERN_INFO "written %u bytes(s) from %lu\n", count, p);
-    }
-
-    return ret;
-#else
     int err = -ENODEV;
     struct rtc_time tm;
-    int data[TIME_LEN]={0};
     unsigned int count = size;
+    int data[TIME_LEN] = {0};
+
+    struct bocon_rtc_dev *dev = filp->private_data;
 
     struct rtc_device *rtc = rtc_class_open(DEFAULT_RTC_DEVICE);
 
@@ -187,11 +148,9 @@ static ssize_t bocon_rtc_write(struct file *filp, const char __user *buf, size_t
 
     if (copy_from_user(data, buf, count)) {
         return -EFAULT;
-    } else {
-        //*ppos += count;
-        err = count;
-        printk(KERN_INFO "written %u bytes(s)\n", count);
     }
+
+    memcpy(dev->mem, data, RTC_DATA_SIZE); /* useless */
 
     tm.tm_sec  = data[0];
     tm.tm_min  = data[1];
@@ -203,8 +162,15 @@ static ssize_t bocon_rtc_write(struct file *filp, const char __user *buf, size_t
 
     err = rtc_set_time(rtc, &tm);
     rtc_class_close(rtc);
-    return err;
-#endif
+
+    if (err < 0) {
+        printk(KERN_INFO "write %u bytes failed\n", count);
+        return err;
+    }
+    else {
+        printk(KERN_INFO "write %u bytes\n", count);
+        return count;
+    }
 }
 
 static const struct file_operations bocon_rtc_fops = {
