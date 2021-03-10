@@ -211,9 +211,13 @@ static const struct file_operations bocon_rtc_fops = {
     .release = bocon_rtc_release,
 };
 
-#if 0
 static void bocon_rtc_setup_cdev(struct globalmem_dev *dev, int index)
 {
+#if 0
+    int major = register_chrdev(0, "bocon-rtc", &bocon_rtc_fops);
+#else
+    int major = globalmem_major;
+
     int err, devno = MKDEV(globalmem_major, index);
 
     cdev_init(&dev->cdev, &bocon_rtc_fops);
@@ -222,33 +226,32 @@ static void bocon_rtc_setup_cdev(struct globalmem_dev *dev, int index)
     if (err) {
         printk(KERN_NOTICE "Error %d adding globalmem %d", err, index);
     }
-}
-#else
-static void bocon_rtc_setup_cdev(struct globalmem_dev *dev, int index)
-{
-    int major = register_chrdev(0, "bocon-rtc", &bocon_rtc_fops);
+#endif
     
     //创建设备信息，执行后会出现 /sys/class/bocon-rtc
     bocon_rtc_class = class_create(THIS_MODULE, "bocon-rtc");
 
-    //创建设备节点，就是根据上面的设备信息来的
-    bocon_rtc_class_devs = device_create(bocon_rtc_class, NULL, MKDEV(major, 0), NULL, "bocon-rtc"); /* /dev/bocon-rtc */
+    //创建设备节点 /dev/bocon-rtc，就是根据上面的设备信息来的
+    bocon_rtc_class_devs = device_create(bocon_rtc_class, NULL, MKDEV(major, 0), NULL, "bocon-rtc");
 }
-#endif
 
 static int __init bocon_rtc_init(void)
 {
     int ret;
+#if 1
     dev_t devno = MKDEV(globalmem_major, 0);
 
     if (globalmem_major) {
         ret = register_chrdev_region(devno, 1, "bocon-rtc");
+        printk(KERN_INFO "register char device region, major = %d\n", globalmem_major);
     } else {
         ret = alloc_chrdev_region(&devno, 0, 1, "bocon-rtc");
         globalmem_major = MAJOR(devno);
+        printk(KERN_INFO "register char device region, major = %d\n", globalmem_major);
     }
     if (ret < 0)
         return ret;
+#endif
 
     globalmem_devp = kzalloc(sizeof(struct globalmem_dev), GFP_KERNEL);
     if (!globalmem_devp) {
@@ -266,6 +269,12 @@ static int __init bocon_rtc_init(void)
 
 static void __exit bocon_rtc_exit(void)
 {
+    if (bocon_rtc_class_devs) 
+        device_destroy(bocon_rtc_class, MKDEV(globalmem_major, 0));
+
+    if (bocon_rtc_class) 
+        class_destroy(bocon_rtc_class);
+
     cdev_del(&globalmem_devp->cdev);
     kfree(globalmem_devp);
     unregister_chrdev_region(MKDEV(globalmem_major, 0), 1);
