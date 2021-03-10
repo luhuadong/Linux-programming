@@ -25,9 +25,8 @@
 #define DEFAULT_DEVICENAME   "bocon-rtc"
 
 #define DEFAULT_RTC_DEVICE   "rtc0"
-#define TIME_LEN             7
+#define RTC_DATA_SIZE        7
 
-#define RTC_DATA_SIZE        (TIME_LEN * sizeof(int))
 #define MEM_CLEAR            0x1
 #define BOCON_RTC_MAJOR      230
 
@@ -36,7 +35,7 @@ module_param(bocon_rtc_major, int, S_IRUGO);
 
 struct bocon_rtc_dev {
     struct cdev cdev;
-    unsigned char mem[RTC_DATA_SIZE];
+    unsigned int data[RTC_DATA_SIZE];
 };
 
 struct bocon_rtc_dev *bocon_rtc_devp;
@@ -63,8 +62,8 @@ static long bocon_rtc_ioctl(struct file *filp, unsigned int cmd, unsigned long a
 
     switch (cmd) {
     case MEM_CLEAR:
-        memset(dev->mem, 0, RTC_DATA_SIZE);
-        printk(KERN_INFO "clear bocon rtc memory\n");
+        memset(dev->data, 0, sizeof(dev->data));
+        printk(KERN_INFO "clear bocon rtc memory %lu bytes\n", sizeof(dev->data));
         break;
     default:
         return -EINVAL;
@@ -80,7 +79,6 @@ static ssize_t bocon_rtc_read(struct file *filp, char __user *buf, size_t size, 
     int err = -ENODEV;
     struct rtc_time tm;
     unsigned int count = size;
-    int data[TIME_LEN] = {0};
 
     struct bocon_rtc_dev *dev = filp->private_data;
 
@@ -97,25 +95,24 @@ static ssize_t bocon_rtc_read(struct file *filp, char __user *buf, size_t size, 
         return err;
     }
 
-    data[0] = tm.tm_sec;
-    data[1] = tm.tm_min;
-    data[2] = tm.tm_hour;
-    data[3] = tm.tm_mday;
-    data[4] = tm.tm_mon + 1;
-    data[5] = tm.tm_year + 1900;
-    data[6] = tm.tm_wday;
-
-    memcpy(dev->mem, data, RTC_DATA_SIZE); /* useless */
+    dev->data[0] = tm.tm_sec;
+    dev->data[1] = tm.tm_min;
+    dev->data[2] = tm.tm_hour;
+    dev->data[3] = tm.tm_mday;
+    dev->data[4] = tm.tm_mon + 1;
+    dev->data[5] = tm.tm_year + 1900;
+    dev->data[6] = tm.tm_wday;
 
     /* check length */
-    if (size > sizeof(int) * TIME_LEN)
-        count = sizeof(int) * TIME_LEN;
+    if (size > sizeof(dev->data))
+        count = sizeof(dev->data);
 
-    if (copy_to_user(buf, data, count))
+    if (copy_to_user(buf, dev->data, count))
         return -EFAULT;
 
     printk(KERN_INFO "read %u bytes: %d-%d-%d, %02d:%02d:%02d, %d\n", count, 
-            data[5], data[4], data[3], data[2], data[1], data[0], data[6]);
+            dev->data[5], dev->data[4], dev->data[3], dev->data[2], 
+            dev->data[1], dev->data[0], dev->data[6]);
 
     return count;
 }
@@ -127,7 +124,6 @@ static ssize_t bocon_rtc_write(struct file *filp, const char __user *buf, size_t
     int err = -ENODEV;
     struct rtc_time tm;
     unsigned int count = size;
-    int data[TIME_LEN] = {0};
 
     struct bocon_rtc_dev *dev = filp->private_data;
 
@@ -143,22 +139,20 @@ static ssize_t bocon_rtc_write(struct file *filp, const char __user *buf, size_t
         return err;
     }
 
-    if (size > sizeof(int) * TIME_LEN)
-        count = sizeof(int) * TIME_LEN;
+    if (size > sizeof(dev->data))
+        count = sizeof(dev->data);
 
-    if (copy_from_user(data, buf, count)) {
+    if (copy_from_user(dev->data, buf, count)) {
         return -EFAULT;
     }
 
-    memcpy(dev->mem, data, RTC_DATA_SIZE); /* useless */
-
-    tm.tm_sec  = data[0];
-    tm.tm_min  = data[1];
-    tm.tm_hour = data[2];
-    tm.tm_mday = data[3];
-    tm.tm_mon  = data[4] - 1;
-    tm.tm_year = data[5] - 1900;
-    tm.tm_wday = data[6];
+    tm.tm_sec  = dev->data[0];
+    tm.tm_min  = dev->data[1];
+    tm.tm_hour = dev->data[2];
+    tm.tm_mday = dev->data[3];
+    tm.tm_mon  = dev->data[4] - 1;
+    tm.tm_year = dev->data[5] - 1900;
+    tm.tm_wday = dev->data[6];
 
     err = rtc_set_time(rtc, &tm);
     rtc_class_close(rtc);
