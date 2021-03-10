@@ -1,5 +1,5 @@
-/*====================================================================
-*   Copyright (C) 2021 Guangzhou Dreamgrow Ltd. All rights reserved.
+/*================================================================
+*   Copyright (C) 2021 Guangzhou Bocon Ltd. All rights reserved.
 *   
 *   Filename：   bocon-rtc.c
 *   Author：     luhuadong
@@ -11,7 +11,7 @@
 *     echo "hello world" > /dev/bocon-rtc
 *     cat /dev/bocon-rtc
 *
-====================================================================*/
+================================================================*/
 
 #include <linux/module.h>
 #include <linux/init.h>
@@ -41,18 +41,18 @@ struct globalmem_dev *globalmem_devp;
 struct class  *bocon_rtc_class;
 struct device *bocon_rtc_class_devs;
 
-static int globalmem_open(struct inode *inode, struct file *filp)
+static int bocon_rtc_open(struct inode *inode, struct file *filp)
 {
     filp->private_data = globalmem_devp;
     return 0;
 }
 
-static int globalmem_release(struct inode *inode, struct file *filp)
+static int bocon_rtc_release(struct inode *inode, struct file *filp)
 {
     return 0;
 }
 
-static long globalmem_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+static long bocon_rtc_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 {
     struct globalmem_dev *dev = filp->private_data;
 
@@ -68,7 +68,7 @@ static long globalmem_ioctl(struct file *filp, unsigned int cmd, unsigned long a
     return 0;
 }
 
-static ssize_t globalmem_read(struct file *filp, char __user *buf, size_t size, loff_t *ppos)
+static ssize_t bocon_rtc_read(struct file *filp, char __user *buf, size_t size, loff_t *ppos)
 {
 #if 0
     unsigned long p = *ppos;
@@ -136,7 +136,7 @@ static ssize_t globalmem_read(struct file *filp, char __user *buf, size_t size, 
 #endif
 }
 
-static ssize_t globalmem_write(struct file *filp, const char __user *buf, size_t size, loff_t *ppos)
+static ssize_t bocon_rtc_write(struct file *filp, const char __user *buf, size_t size, loff_t *ppos)
 {
 #if 0
     unsigned long p = *ppos;
@@ -202,57 +202,21 @@ static ssize_t globalmem_write(struct file *filp, const char __user *buf, size_t
 #endif
 }
 
-static loff_t globalmem_llseek(struct file *filp, loff_t offset, int orig)
-{
-    loff_t ret = 0;
-    switch (orig) {
-    case 0:
-        if (offset < 0) {
-            ret = -EINVAL;
-            break;
-        }
-        if ((unsigned int)offset > GLOBALMEM_SIZE) {
-            ret = -EINVAL;
-            break;
-        }
-        filp->f_pos = (unsigned int)offset;
-        ret = filp->f_pos;
-        break;
-    case 1:
-        if ((filp->f_pos + offset) > GLOBALMEM_SIZE) {
-            ret = -EINVAL;
-            break;
-        }
-        if ((filp->f_pos + offset) < 0) {
-            ret = -EINVAL;
-            break;
-        }
-        filp->f_pos += offset;
-        ret = filp->f_pos;
-        break;
-    default:
-        ret = -EINVAL;
-        break;
-    }
-    return ret;
-}
-
-static const struct file_operations globalmem_fops = {
-    .owner = THIS_MODULE,
-    .llseek = globalmem_llseek,
-    .read = globalmem_read,
-    .write = globalmem_write,
-    .unlocked_ioctl = globalmem_ioctl,
-    .open = globalmem_open,
-    .release = globalmem_release,
+static const struct file_operations bocon_rtc_fops = {
+    .owner   = THIS_MODULE,
+    .read    = bocon_rtc_read,
+    .write   = bocon_rtc_write,
+    .unlocked_ioctl = bocon_rtc_ioctl,
+    .open    = bocon_rtc_open,
+    .release = bocon_rtc_release,
 };
 
 #if 0
-static void globalmem_setup_cdev(struct globalmem_dev *dev, int index)
+static void bocon_rtc_setup_cdev(struct globalmem_dev *dev, int index)
 {
     int err, devno = MKDEV(globalmem_major, index);
 
-    cdev_init(&dev->cdev, &globalmem_fops);
+    cdev_init(&dev->cdev, &bocon_rtc_fops);
     dev->cdev.owner = THIS_MODULE;
     err = cdev_add(&dev->cdev, devno, 1);
     if (err) {
@@ -260,9 +224,9 @@ static void globalmem_setup_cdev(struct globalmem_dev *dev, int index)
     }
 }
 #else
-static void globalmem_setup_cdev(struct globalmem_dev *dev, int index)
+static void bocon_rtc_setup_cdev(struct globalmem_dev *dev, int index)
 {
-    int major = register_chrdev(0, "bocon-rtc", &globalmem_fops);
+    int major = register_chrdev(0, "bocon-rtc", &bocon_rtc_fops);
     
     //创建设备信息，执行后会出现 /sys/class/bocon-rtc
     bocon_rtc_class = class_create(THIS_MODULE, "bocon-rtc");
@@ -272,7 +236,7 @@ static void globalmem_setup_cdev(struct globalmem_dev *dev, int index)
 }
 #endif
 
-static int __init globalmem_init(void)
+static int __init bocon_rtc_init(void)
 {
     int ret;
     dev_t devno = MKDEV(globalmem_major, 0);
@@ -289,21 +253,18 @@ static int __init globalmem_init(void)
     globalmem_devp = kzalloc(sizeof(struct globalmem_dev), GFP_KERNEL);
     if (!globalmem_devp) {
         ret = -ENOMEM;
-        goto fail_malloc;
+        unregister_chrdev_region(devno, 1);
+        return ret;
     }
 
-    globalmem_setup_cdev(globalmem_devp, 0);
+    bocon_rtc_setup_cdev(globalmem_devp, 0);
 
     printk("bocon-rtc init\n");
 
     return 0;
-
-fail_malloc:
-    unregister_chrdev_region(devno, 1);
-    return ret;
 }
 
-static void __exit globalmem_exit(void)
+static void __exit bocon_rtc_exit(void)
 {
     cdev_del(&globalmem_devp->cdev);
     kfree(globalmem_devp);
@@ -311,8 +272,8 @@ static void __exit globalmem_exit(void)
     printk("bocon-rtc exit\n");
 }
 
-module_init(globalmem_init);
-module_exit(globalmem_exit);
+module_init(bocon_rtc_init);
+module_exit(bocon_rtc_exit);
 
 MODULE_AUTHOR("luhuadong");
 MODULE_LICENSE("GPL");
