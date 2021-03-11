@@ -1,17 +1,12 @@
-/*================================================================
-*   Copyright (C) 2021 Guangzhou Bocon Ltd. All rights reserved.
+/*========================================================================
+*   Copyright (C) 2003-2021 Guangzhou Bocon Ltd. All rights reserved.
 *   
 *   Filename：   bocon-rtc.c
 *   Author：     luhuadong
 *   Create Date：2021年03月08日
-*   Description：
+*   Description：Read or write file /dev/bocon-rtc to get or set rtc time
 *
-*     cat /proc/devices
-*     mknod /dev/bocon-rtc c 230 0
-*     echo "hello world" > /dev/bocon-rtc
-*     cat /dev/bocon-rtc
-*
-================================================================*/
+========================================================================*/
 
 #include <linux/module.h>
 #include <linux/init.h>
@@ -21,14 +16,15 @@
 #include <linux/uaccess.h>
 #include <linux/rtc.h>
 
-#define DYNAMIC_DEVICE_NUM   0
-#define DEFAULT_DEVICENAME   "bocon-rtc"
+#define DEFAULT_DEVICENAME       "bocon-rtc"
+#define DEFAULT_RTC_DEVICE       "rtc0"
+#define RTC_DATA_SIZE            7
 
-#define DEFAULT_RTC_DEVICE   "rtc0"
-#define RTC_DATA_SIZE        7
+/* ioctl commands */
+#define MEM_CLEAR                0x1
 
-#define MEM_CLEAR            0x1
-#define BOCON_RTC_MAJOR      230
+/* If you need alloc major number dynamically, please set BOCON_RTC_MAJOR to 0 */
+#define BOCON_RTC_MAJOR          230
 
 static int bocon_rtc_major = BOCON_RTC_MAJOR;
 module_param(bocon_rtc_major, int, S_IRUGO);
@@ -38,10 +34,10 @@ struct bocon_rtc_dev {
     unsigned int data[RTC_DATA_SIZE];
 };
 
-struct bocon_rtc_dev *bocon_rtc_devp;
+static struct bocon_rtc_dev *bocon_rtc_devp;
 
-struct class  *bocon_rtc_class;
-struct device *bocon_rtc_class_devs;
+static struct class  *bocon_rtc_class;
+static struct device *bocon_rtc_class_devs;
 
 static int bocon_rtc_open(struct inode *inode, struct file *filp)
 {
@@ -81,8 +77,8 @@ static ssize_t bocon_rtc_read(struct file *filp, char __user *buf, size_t size, 
     unsigned int count = size;
 
     struct bocon_rtc_dev *dev = filp->private_data;
+    struct rtc_device    *rtc = rtc_class_open(DEFAULT_RTC_DEVICE);
 
-    struct rtc_device *rtc = rtc_class_open(DEFAULT_RTC_DEVICE);
     if (!rtc) {
         pr_info("unable to open rtc device (%s)\n", DEFAULT_RTC_DEVICE);
         return err;
@@ -103,8 +99,7 @@ static ssize_t bocon_rtc_read(struct file *filp, char __user *buf, size_t size, 
     dev->data[5] = tm.tm_year + 1900;
     dev->data[6] = tm.tm_wday;
 
-    /* check length */
-    if (size > sizeof(dev->data))
+    if (size > sizeof(dev->data))  /* check length */
         count = sizeof(dev->data);
 
     if (copy_to_user(buf, dev->data, count))
@@ -126,8 +121,7 @@ static ssize_t bocon_rtc_write(struct file *filp, const char __user *buf, size_t
     unsigned int count = size;
 
     struct bocon_rtc_dev *dev = filp->private_data;
-
-    struct rtc_device *rtc = rtc_class_open(DEFAULT_RTC_DEVICE);
+    struct rtc_device    *rtc = rtc_class_open(DEFAULT_RTC_DEVICE);
 
     if (!rtc) {
         pr_info("unable to open rtc device (%s)\n", DEFAULT_RTC_DEVICE);
@@ -139,7 +133,7 @@ static ssize_t bocon_rtc_write(struct file *filp, const char __user *buf, size_t
         return err;
     }
 
-    if (size > sizeof(dev->data))
+    if (size > sizeof(dev->data))  /* check length */
         count = sizeof(dev->data);
 
     if (copy_from_user(dev->data, buf, count)) {
@@ -176,78 +170,55 @@ static const struct file_operations bocon_rtc_fops = {
     .release = bocon_rtc_release,
 };
 
-static void bocon_rtc_setup_cdev(struct bocon_rtc_dev *dev, int index)
-{
-#if DYNAMIC_DEVICE_NUM
-    int major = register_chrdev(0, DEFAULT_DEVICENAME, &bocon_rtc_fops);
-#else
-    int major = bocon_rtc_major;
-
-    int err, devno = MKDEV(bocon_rtc_major, index);
-
-    cdev_init(&dev->cdev, &bocon_rtc_fops);
-    dev->cdev.owner = THIS_MODULE;
-    err = cdev_add(&dev->cdev, devno, 1);
-    if (err) {
-        printk(KERN_NOTICE "Error %d adding bocon-rtc %d", err, index);
-    }
-#endif
-    
-    //创建设备信息，执行后会出现 /sys/class/bocon-rtc
-    bocon_rtc_class = class_create(THIS_MODULE, DEFAULT_DEVICENAME);
-
-    //创建设备节点 /dev/bocon-rtc，就是根据上面的设备信息来的
-    bocon_rtc_class_devs = device_create(bocon_rtc_class, NULL, MKDEV(major, 0), NULL, DEFAULT_DEVICENAME);
-}
-
 static int __init bocon_rtc_init(void)
 {
     int ret;
-#if DYNAMIC_DEVICE_NUM
-
-#else
-    dev_t devno = MKDEV(bocon_rtc_major, 0);
-
-    if (bocon_rtc_major) {
-        ret = register_chrdev_region(devno, 1, DEFAULT_DEVICENAME);
-        printk(KERN_INFO "register char device region, major = %d\n", bocon_rtc_major);
-    } else {
-        ret = alloc_chrdev_region(&devno, 0, 1, DEFAULT_DEVICENAME);
-        bocon_rtc_major = MAJOR(devno);
-        printk(KERN_INFO "register char device region, major = %d\n", bocon_rtc_major);
-    }
-    if (ret < 0)
-        return ret;
-#endif
 
     bocon_rtc_devp = kzalloc(sizeof(struct bocon_rtc_dev), GFP_KERNEL);
     if (!bocon_rtc_devp) {
-        ret = -ENOMEM;
-        unregister_chrdev_region(devno, 1);
-        return ret;
+        printk(KERN_NOTICE "Error alloc bocon-rtc memory");
+        return -ENOMEM;
     }
 
-    bocon_rtc_setup_cdev(bocon_rtc_devp, 0);
-    printk("bocon-rtc init\n");
+    /* register char device number */
 
+    if (bocon_rtc_major) {
+        ret = register_chrdev(bocon_rtc_major, DEFAULT_DEVICENAME, &bocon_rtc_fops);  /* return zero on success */
+    } else {
+        ret = register_chrdev(0, DEFAULT_DEVICENAME, &bocon_rtc_fops);  /* return a major a number on success */
+    }
+    
+    if (ret < 0) {
+        printk(KERN_NOTICE "Error register chrdev number for bocon-rtc");
+        return ret;
+    }
+    else if (ret > 0) {
+        bocon_rtc_major = ret;  /* update major number */
+    }
+
+    /* 创建设备信息，执行后会出现 /sys/class/bocon-rtc */
+    bocon_rtc_class = class_create(THIS_MODULE, DEFAULT_DEVICENAME);
+
+    /* 创建设备节点 /dev/bocon-rtc，就是根据上面的设备信息来的 */
+    bocon_rtc_class_devs = device_create(bocon_rtc_class, NULL, MKDEV(bocon_rtc_major, 0), NULL, DEFAULT_DEVICENAME);
+
+    printk("bocon-rtc init, major = %d\n", bocon_rtc_major);
     return 0;
 }
 
 static void __exit bocon_rtc_exit(void)
 {
-    if (bocon_rtc_class_devs) 
+    if (bocon_rtc_class_devs)
         device_destroy(bocon_rtc_class, MKDEV(bocon_rtc_major, 0));
 
-    if (bocon_rtc_class) 
+    if (bocon_rtc_class)
         class_destroy(bocon_rtc_class);
 
-#if DYNAMIC_DEVICE_NUM
-    unregister_chrdev(MKDEV(bocon_rtc_major, 0), DEFAULT_DEVICENAME);
-#else
-    cdev_del(&bocon_rtc_devp->cdev);
-    kfree(bocon_rtc_devp);
-    unregister_chrdev_region(MKDEV(bocon_rtc_major, 0), 1);
-#endif
+    unregister_chrdev(bocon_rtc_major, DEFAULT_DEVICENAME);
+
+    if (bocon_rtc_devp)
+        kfree(bocon_rtc_devp);
+
     printk("bocon-rtc exit\n");
 }
 
