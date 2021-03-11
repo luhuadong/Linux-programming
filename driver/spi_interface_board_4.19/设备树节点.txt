@@ -1,0 +1,15 @@
+&spi0 {
+        status = "okay";
+        pinctrl-names = "default";
+        pinctrl-0 = <&spi0_pins_default>;
+        ti,pindir-d0-out-d1-in;
+
+        spi_mcu_protocol{
+                compatible = "spi-mcu-protocol";
+                reg = <0>;
+                spi-cpha;	/**/
+                spi-max-frequency = <100000>;
+                run-gpios = <&gpio2 0 GPIO_ACTIVE_HIGH>;
+
+        };
+};
