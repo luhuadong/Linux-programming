@@ -4,7 +4,7 @@
 *   Filename：   uart_power.c
 *   Author：     luhuadong
 *   Create Date：2021年03月03日
-*   Description：
+*   Description：Write file /dev/uart-power to switch on/off
 *
 ================================================================*/
 
@@ -14,7 +14,6 @@
 #include <linux/fs.h>
 #include <linux/uaccess.h>
 #include <linux/io.h>
-
 #include <linux/types.h>
 #include <linux/kernel.h>
 #include <linux/gpio.h>
@@ -24,7 +23,8 @@
 #include <linux/device.h>
 #include <linux/platform_device.h>
 
-#define UART_PWR_EN      129       /*UART_PWR_EN  GPIO5_01*/
+#define UART_PWR_EN_PIN          129            /* GPIO5_01 */
+#define DEFAULT_DEVICENAME       "uart-power"
 
 int major;
 struct class  *uart_power_class;
@@ -32,76 +32,103 @@ struct device *uart_power_class_devs;
 
 static int uart_power_chrdev_open(struct inode *inode, struct file *filp)
 {
-    printk("\n open form driver \n");
+    printk(KERN_INFO "%s is opened\n", DEFAULT_DEVICENAME);
     return 0;
 }
 
-static ssize_t uart_power_chrdev_write(struct file *filp, const char __user *buf, size_t cnt, loff_t *offt)
+static int uart_power_chrdev_release(struct inode *inode, struct file *filp)
 {
-    unsigned char write_data; //用于保存接收到的数据
+    printk(KERN_INFO "%s is released\n", DEFAULT_DEVICENAME);
+    return 0;
+}
 
-    int error = copy_from_user(&write_data, buf, cnt);
-    if(error < 0) {
-            return -1;
+static ssize_t uart_power_chrdev_read(struct file *filp, char __user *buf, size_t size, loff_t *ppos)
+{
+    unsigned int count = size, value = 0;
+
+    value = gpio_get_value(UART_PWR_EN_PIN);
+
+    if (size > sizeof(value))
+        count = sizeof(value);
+
+    if (copy_to_user(buf, &value, count))
+        return -EFAULT;
+
+    return count;
+}
+
+static ssize_t uart_power_chrdev_write(struct file *filp, const char __user *buf, size_t size, loff_t *ppos)
+{
+    unsigned int count = size, value = 0;
+
+    if (size > sizeof(value))
+        count = sizeof(value);
+
+    if (copy_from_user(&value, buf, count)) {
+        return -EFAULT;
     }
 
-    printk("\n write data %d\n", write_data);
+    if(value == 0)
+    {
+        gpio_set_value(UART_PWR_EN_PIN, 0);
+        printk(KERN_INFO "uart power off\n");
+    }
+    else {
+        gpio_set_value(UART_PWR_EN_PIN, 1);
+        printk(KERN_INFO "uart power on\n");
+    }
 
-    return 0;
+    return count;
 }
 
 static struct file_operations uart_power_drv_fops =
 {
-    .owner = THIS_MODULE,
-    .open = uart_power_chrdev_open,
-    .write = uart_power_chrdev_write,
+    .owner   = THIS_MODULE,
+    .open    = uart_power_chrdev_open,
+    .release = uart_power_chrdev_release,
+    .read    = uart_power_chrdev_read,
+    .write   = uart_power_chrdev_write,
 };
-
-static long uart_power_drv_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-{   
-    printk("gpio_ioctl\n");
-    switch(cmd) {
-
-        case 1:
-            if(arg == 0)
-            {
-                gpio_set_value(UART_PWR_EN, 0);
-                printk("uart power off\n");
-                break;
-            }
-            else {
-                gpio_set_value(UART_PWR_EN, 1);
-                printk("uart power on\n");
-                break;
-            }
-        default:
-                return -EINVAL;
-    }
-    return 0;
-}
 
 static  int uart_power_probe(struct platform_device *pdev)
 {
     int ret;
-    ret = gpio_request(UART_PWR_EN, "UART_PWR_EN");//第一个参数，为要申请的引脚，第二个为你要定义的名字
-    
-    if (ret) 
-    {
-        printk("[pual] gpio_request error %s - %d -- \n",__func__,__LINE__);
+    ret = gpio_request(UART_PWR_EN_PIN, "UART_PWR_EN"); //第一个参数，为要申请的引脚，第二个为你要定义的名字
+    if (ret) {
+        dev_notice(&pdev->dev, "gpio_request error %s - %d -- \n", __func__,__LINE__);
         return ret;
     }
 
-    gpio_direction_output(UART_PWR_EN, 1);
-    gpio_set_value(UART_PWR_EN, 1);
-    major = register_chrdev(0, "uart-power", &uart_power_drv_fops);
-    
-    //创建设备信息，执行后会出现 /sys/class/uart-power
-    uart_power_class = class_create(THIS_MODULE, "uart-power");
+    gpio_direction_output(UART_PWR_EN_PIN, 1);
+    gpio_set_value(UART_PWR_EN_PIN, 1);
 
-    //创建设备节点，就是根据上面的设备信息来的
-    uart_power_class_devs = device_create(uart_power_class, NULL, MKDEV(major, 0), NULL, "uart-power"); /* /dev/uart-power */
+    major = register_chrdev(0, DEFAULT_DEVICENAME, &uart_power_drv_fops);
     
-    return 0;   
+    /* 创建设备信息，执行后会出现 /sys/class/uart-power */
+    uart_power_class = class_create(THIS_MODULE, DEFAULT_DEVICENAME);
+
+    /* 创建设备节点 /dev/uart-power，就是根据上面的设备信息来的 */
+    uart_power_class_devs = device_create(uart_power_class, NULL, MKDEV(major, 0), NULL, DEFAULT_DEVICENAME);
+
+    dev_info(&pdev->dev, "probe device ok!\n");
+    
+    return 0;
+}
+
+static int uart_power_remove(struct platform_device *pdev)
+{
+    if (uart_power_class_devs)
+        device_destroy(uart_power_class, MKDEV(major, 0));
+
+    if (uart_power_class)
+        class_destroy(uart_power_class);
+
+    unregister_chrdev(major, DEFAULT_DEVICENAME);
+    gpio_free(UART_PWR_EN_PIN);
+
+    dev_info(&pdev->dev, "remove device ok!\n");
+
+    return 0;
 }
 
 static const struct of_device_id uart_power_ids[] = {
@@ -109,9 +136,8 @@ static const struct of_device_id uart_power_ids[] = {
     { .compatible = "gpio-uart-power", },
     { },
 };
-//MODULE_DEVICE_TABLE(of, uart_power_ids);
 
-static struct platform_driver uart_power_driver={
+static struct platform_driver uart_power_driver = {
     
     .driver = {
         .name  = "uart_power",
@@ -119,27 +145,23 @@ static struct platform_driver uart_power_driver={
         .of_match_table = uart_power_ids,
     },
     .probe  = uart_power_probe,
-    //.remove = uart_power_remove,
+    .remove = uart_power_remove,
 };
-//module_platform_driver(uart_power_driver); /* call module_init() */
 
 static int __init uart_power_init(void)
 {
-    /*2. 注册平台驱动*/
     platform_driver_register(&uart_power_driver);
     return 0;
 }
 
 static void __exit uart_power_exit(void)
 {
-    /*3. 注销平台驱动*/
     platform_driver_unregister(&uart_power_driver);
 }
 
 module_init(uart_power_init);
 module_exit(uart_power_exit);
 
-MODULE_AUTHOR("Rudy Lo <luhuadong@163.com>");
-MODULE_LICENSE("GPL v2");
+MODULE_AUTHOR("luhuadong");
+MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("Bocon UART Power Driver");
-MODULE_ALIAS("a uart power module");
