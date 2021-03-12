@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
     ret = write(fd, data, sizeof(int) * TIME_LEN);
     if (ret == -1)
     {
-        printf("read %s failed\n", BOCON_RTC_DEVICE);
+        printf("write %s failed\n", BOCON_RTC_DEVICE);
     }
 
     /* read again */
