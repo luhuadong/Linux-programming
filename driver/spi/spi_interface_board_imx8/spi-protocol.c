@@ -72,7 +72,7 @@ float  get_ai(int pos,struct protocol_data * pro)
     down(&mcu_conf->sem);
     ai=mcu_conf->ai[pos].f_value;
     up(&mcu_conf->sem);
-        
+
     return  ai;
 }
 
@@ -179,13 +179,13 @@ int get_di_counters(unsigned char dev,unsigned long *counter,struct protocol_dat
     
     if(protocol_engine(pro,&pack_str)==0)
     {
-         *counter=htonl(buf[dev-1]);
-         ret = 0;
-    }
-    else 
-        ret=-1;
+     *counter=htonl(buf[dev-1]);
+     ret = 0;
+ }
+ else 
+    ret=-1;
 
-    return ret;
+return ret;
 }
 
 int clear_di_counters(unsigned char dev,struct protocol_data * pro)
@@ -325,7 +325,7 @@ int get_current_user_info(struct user_info *user_info,struct protocol_data * pro
 {
     struct mcu_conf_t *mcu_conf=&pro->mcu_conf;
     int ret=0;
-     if(!user_info) return -1;
+    if(!user_info) return -1;
 
     down(&mcu_conf->sem);
     user_info->user= mcu_conf->user[0];//  1:known user,  0: unknown user
@@ -379,7 +379,7 @@ int sync_mcu_time(long seconds,struct protocol_data * pro)
     tm[1]=seconds>>16 &0xff;
     tm[2]=seconds>>8 & 0xff;
     tm[3]=seconds & 0xff;
-        
+
     memset(&pack_str,0,sizeof(pack_str_t));
     pack_str.cmd=REQUEST(SYNC_MCU_TIME);
     pack_str.arg=tm;
@@ -445,7 +445,7 @@ int get_mcu_log(char *order,char *log,int *log_len,unsigned long timeout,struct 
 {
     pack_str_t  pack_str;
     int ret;
-        
+
     memset(&pack_str,0,sizeof(pack_str_t));
     pack_str.cmd=REQUEST(GET_MCU_LOG);
     pack_str.arg=order;
@@ -464,7 +464,7 @@ int clear_mcu_log(struct protocol_data * pro)
 {
     pack_str_t  pack_str;
     int ret;
-        
+
     memset(&pack_str,0,sizeof(pack_str_t));
     pack_str.cmd=REQUEST(CLR_MCU_LOG);
     pack_str.arg=0;
@@ -480,7 +480,7 @@ int clear_mcu_log(struct protocol_data * pro)
 char read_battery_quantity(struct protocol_data * pro)
 {//return %0~%100
     struct mcu_conf_t *mcu_conf=&pro->mcu_conf;
-     char quantity;
+    char quantity;
 
     down(&mcu_conf->sem);
     quantity= mcu_conf->battery & 0x3f;
@@ -520,7 +520,7 @@ int cut_off_battery_supply_power_all(struct protocol_data * pro)
 {
     pack_str_t  pack_str;
     int ret;
-        
+
     memset(&pack_str,0,sizeof(pack_str_t));
     pack_str.cmd=REQUEST(CUT_OFF_ALL_POWER_SUPPLY);
     pack_str.arg=0;
@@ -553,7 +553,7 @@ int start_mcu_firmware_update(struct firmware_update *datas,struct protocol_data
 }
 
 int transfer_mcu_firmwares(struct firmware_packet *datas,int datas_len,
-                struct transfer_result *result,int *result_len,struct protocol_data * pro)
+    struct transfer_result *result,int *result_len,struct protocol_data * pro)
 {
     pack_str_t  pack_str;
     int ret;    
@@ -562,7 +562,7 @@ int transfer_mcu_firmwares(struct firmware_packet *datas,int datas_len,
     
     memset(&pack_str,0,sizeof(pack_str_t));
     pack_str.cmd=REQUEST(START_PACKET_TRANSFER);
-     pack_str.byte_8th.order = datas->order;
+    pack_str.byte_8th.order = datas->order;
     pack_str.arg = datas->datas;
     pack_str.arg_len=datas_len - 2;
     pack_str.data = (char *)result;
@@ -695,7 +695,7 @@ int get_mcu_memory_test_result(int memory_type,struct memory_result *mem_res,str
 
     memset(&pack_str,0,sizeof(pack_str_t));
     pack_str.cmd=REQUEST(GET_MCU_MEM_TEST_RESULT);
-     pack_str.byte_8th.memory_type=memory_type;
+    pack_str.byte_8th.memory_type=memory_type;
     pack_str.arg=NULL;
     pack_str.arg_len=0;
     pack_str.data = (char *)mem_res;
@@ -774,129 +774,129 @@ static int create_packet(char * packet,pack_str_t * pack_str)
 
     switch(COMMAND(cmd))
     {
-    case GET_DATA_CONF:
-    case GET_IBUTTON_CODE:
-    case  SYNC_MCU_TIME:
-    case SET_K37A_LOCKER:  
-    case GET_MCU_LOG:
-    case CLR_MCU_LOG:
-    case GET_BATTERY_VOLTAGE:
-    case GET_BATTERY_CALIBRATION:   
+        case GET_DATA_CONF:
+        case GET_IBUTTON_CODE:
+        case  SYNC_MCU_TIME:
+        case SET_K37A_LOCKER:  
+        case GET_MCU_LOG:
+        case CLR_MCU_LOG:
+        case GET_BATTERY_VOLTAGE:
+        case GET_BATTERY_CALIBRATION:   
         break;
         
-    case SET_DATA_DO_VOLTAGE: 
-    case SET_DATA_DO_PULSE:    
-    case GET_DATA_DI_COUNTER:
-    case CLR_DATA_DI_COUNTER :
-    {        
-        unsigned short dodi_dev;
-        dodi_dev=pack_str->byte_8th.dodi_dev;
-        packet[pos++] = (dodi_dev >> 8) & 0xff;
-        packet[pos++] = dodi_dev&0xff;
-    }
+        case SET_DATA_DO_VOLTAGE: 
+        case SET_DATA_DO_PULSE:    
+        case GET_DATA_DI_COUNTER:
+        case CLR_DATA_DI_COUNTER :
+        {        
+            unsigned short dodi_dev;
+            dodi_dev=pack_str->byte_8th.dodi_dev;
+            packet[pos++] = (dodi_dev >> 8) & 0xff;
+            packet[pos++] = dodi_dev&0xff;
+        }
         break;
-    case START_MCU_MEM_TEST:
-    case GET_MCU_MEM_TEST_RESULT:
-    case SET_MCU_ANALOG_MODE:
-    case GET_MCU_ANALOG_VALUE:
-    {        
-        
-        packet[pos++]=pack_str->byte_8th.memory_type;
-    }
+        case START_MCU_MEM_TEST:
+        case GET_MCU_MEM_TEST_RESULT:
+        case SET_MCU_ANALOG_MODE:
+        case GET_MCU_ANALOG_VALUE:
+        {        
+
+            packet[pos++]=pack_str->byte_8th.memory_type;
+        }
         break;  
-    case SET_DATA_AI_TYPE:
-    case SYNC_AI_CALIBRATION:
-    case GET_AI_CALIBRATION:
-    {        
-        unsigned int ai_dev;
-        ai_dev = pack_str->byte_8th.ai_dev;
-        packet[pos++] = (ai_dev >> 24) & 0xff;
-        packet[pos++] = (ai_dev >> 16) & 0xff;
-        packet[pos++] = (ai_dev >> 8) & 0xff;
-        packet[pos++] = ai_dev & 0xff;
-    }
+        case SET_DATA_AI_TYPE:
+        case SYNC_AI_CALIBRATION:
+        case GET_AI_CALIBRATION:
+        {        
+            unsigned int ai_dev;
+            ai_dev = pack_str->byte_8th.ai_dev;
+            packet[pos++] = (ai_dev >> 24) & 0xff;
+            packet[pos++] = (ai_dev >> 16) & 0xff;
+            packet[pos++] = (ai_dev >> 8) & 0xff;
+            packet[pos++] = ai_dev & 0xff;
+        }
         break;
 
-   case  SYNC_USER_INFO:
-   {
-        char user_count;
-        user_count = pack_str->byte_8th.user_count;
-        packet[pos++]=user_count;
-    }
+        case  SYNC_USER_INFO:
+        {
+            char user_count;
+            user_count = pack_str->byte_8th.user_count;
+            packet[pos++]=user_count;
+        }
         break;
-   case  START_MCU_FIRMWARE_UPDATE:
-   case  START_PACKET_TRANSFER:
-   {
-        unsigned short order;
+        case  START_MCU_FIRMWARE_UPDATE:
+        case  START_PACKET_TRANSFER:
+        {
+            unsigned short order;
         order = pack_str->byte_8th.order;   //this total packet in START_MCU_FIRMWARE_UPDATE CMD.
         packet[pos++] = (order >> 8) & 0xff;
         packet[pos++] = order&0xff;
     }
-        break;
-   default : ;      
-   
-    }
+    break;
+    default : ;      
 
-    if(arg_len!=0 )
+}
+
+if(arg_len!=0 )
+{
+    switch(COMMAND(cmd))
     {
-        switch(COMMAND(cmd))
+        case SET_DATA_DO_VOLTAGE: 
+        {        
+            char *data = (char *)arguments;
+            packet[pos++] = *(data + 1);
+            packet[pos++] = *data;
+        }
+        break;
+        case SYNC_AI_CALIBRATION:
         {
-            case SET_DATA_DO_VOLTAGE: 
-            {        
-                char *data = (char *)arguments;
-                packet[pos++] = *(data + 1);
-                packet[pos++] = *data;
-            }
-            break;
-            case SYNC_AI_CALIBRATION:
-            {
                 //vol_a
-                char *data = (char *)arguments;
-                packet[pos++] = *(data + 3);
-                packet[pos++] = *(data + 2);
-                packet[pos++] = *(data + 1);
-                packet[pos++] = *(data);
+            char *data = (char *)arguments;
+            packet[pos++] = *(data + 3);
+            packet[pos++] = *(data + 2);
+            packet[pos++] = *(data + 1);
+            packet[pos++] = *(data);
                 //vol_b
-                packet[pos++] = *(data + 7);
-                packet[pos++] = *(data + 6);
-                packet[pos++] = *(data + 5);
-                packet[pos++] = *(data + 4);
+            packet[pos++] = *(data + 7);
+            packet[pos++] = *(data + 6);
+            packet[pos++] = *(data + 5);
+            packet[pos++] = *(data + 4);
                 //cur_a
-                packet[pos++] = *(data + 11);
-                packet[pos++] = *(data + 10);
-                packet[pos++] = *(data + 9);
-                packet[pos++] = *(data + 8);
+            packet[pos++] = *(data + 11);
+            packet[pos++] = *(data + 10);
+            packet[pos++] = *(data + 9);
+            packet[pos++] = *(data + 8);
                 //cur_b
-                packet[pos++] = *(data + 15);
-                packet[pos++] = *(data + 14);
-                packet[pos++] = *(data + 13);
-                packet[pos++] = *(data + 12);
+            packet[pos++] = *(data + 15);
+            packet[pos++] = *(data + 14);
+            packet[pos++] = *(data + 13);
+            packet[pos++] = *(data + 12);
                 //CRC
-                packet[pos++] = *(data + 17);
-                packet[pos++] = *(data + 16);
-            }
-            break;
-            case SYNC_BATTERY_CALIBRATION:
-            {
+            packet[pos++] = *(data + 17);
+            packet[pos++] = *(data + 16);
+        }
+        break;
+        case SYNC_BATTERY_CALIBRATION:
+        {
                 //vol_a
-                char *data = (char *)arguments;
-                packet[pos++] = *(data + 3);
-                packet[pos++] = *(data + 2);
-                packet[pos++] = *(data + 1);
-                packet[pos++] = *(data);
+            char *data = (char *)arguments;
+            packet[pos++] = *(data + 3);
+            packet[pos++] = *(data + 2);
+            packet[pos++] = *(data + 1);
+            packet[pos++] = *(data);
                 //vol_b
-                packet[pos++] = *(data + 7);
-                packet[pos++] = *(data + 6);
-                packet[pos++] = *(data + 5);
-                packet[pos++] = *(data + 4);
+            packet[pos++] = *(data + 7);
+            packet[pos++] = *(data + 6);
+            packet[pos++] = *(data + 5);
+            packet[pos++] = *(data + 4);
                 //CRC
-                packet[pos++] = *(data + 9);
-                packet[pos++] = *(data + 8);
-            }
-            break;
-            case START_MCU_FIRMWARE_UPDATE:
-            {
-                char *data = (char *)arguments;
+            packet[pos++] = *(data + 9);
+            packet[pos++] = *(data + 8);
+        }
+        break;
+        case START_MCU_FIRMWARE_UPDATE:
+        {
+            char *data = (char *)arguments;
                 memcpy(&packet[pos],arguments,arg_len - 2); //version
                 pos += (arg_len - 2);
                 packet[pos++] = data[arg_len - 1];
@@ -954,13 +954,12 @@ spipro_sync(struct protocol_data *pro, struct spi_message *message)
     return status;
 }
 
-
 ssize_t spipro_sync_write(struct protocol_data *pro, char *buffer, size_t len)
 {
     struct spi_transfer t = {
-            .tx_buf     = buffer,
-            .len        = len,
-        };
+        .tx_buf = buffer,
+        .len    = len,
+    };
     struct spi_message  m;
 
     spi_message_init(&m);
@@ -971,8 +970,8 @@ ssize_t spipro_sync_write(struct protocol_data *pro, char *buffer, size_t len)
 ssize_t spipro_sync_read(struct protocol_data *pro, char *buffer, size_t len)
 {
     struct spi_transfer t = {
-        .rx_buf     = buffer,
-        .len        = len,
+        .rx_buf = buffer,
+        .len    = len,
     };
     struct spi_message  m;
 
@@ -980,8 +979,6 @@ ssize_t spipro_sync_read(struct protocol_data *pro, char *buffer, size_t len)
     spi_message_add_tail(&t, &m);
     return spipro_sync(pro, &m);
 }
-
-
 
 static int protocol_send_packet(struct protocol_data *pro,char *packet, int len)
 {
@@ -1007,7 +1004,6 @@ static int protocol_send_packet(struct protocol_data *pro,char *packet, int len)
     return ret;
 }
 
-
 static int protocol_recv_packet(struct protocol_data *pro,char *packet, int *size,unsigned long timeout)
 {
     char *buf = packet;
@@ -1023,19 +1019,15 @@ static int protocol_recv_packet(struct protocol_data *pro,char *packet, int *siz
     return ret;
 }
 
-
 #define CACHE_LEN (RES_CMD_CONF_DATA_LEN+14)    
 static int exist_header(const char *buf)
 {
     int i=0;
     for(i=0;i<CACHE_LEN-5;i++)/*header 3+length 2*/
-        if(!memcmp(&buf[i],"#0#",3)) return i; 
-        
+    if(!memcmp(&buf[i],"#0#",3)) return i; 
+
     return -1;
 }
-
-
-
 
 static int host_recv_packet(struct protocol_data *pro,char *buf,int *len,unsigned long timeout)
 {
@@ -1043,7 +1035,7 @@ static int host_recv_packet(struct protocol_data *pro,char *buf,int *len,unsigne
     char recv_buff[CACHE_LEN] = {0};
     int pack_len = 0, size = 0, diff = 0, pos = 0;
     int ret = 0;
-     
+
     mutex_lock(&pro->spidev_lock);
     size = spipro_sync_read(pro, recv_buff, CACHE_LEN);
     if(size <= CACHE_LEN && size > 0)
@@ -1094,300 +1086,295 @@ static int host_recv_packet(struct protocol_data *pro,char *buf,int *len,unsigne
     *len = pack_len;
     ret = 0;
     
-PACK_RECV_FAILED:    
+    PACK_RECV_FAILED:    
     //if(ret < 0)        
     //    err_hex("receive  packet error",buf,pack_len>0 ? pack_len : size);
 
-   return ret;
+    return ret;
 }
-
-
-
-
-
 
 static int analyse_packet(struct protocol_data *pro,char *packet,int len,char *recv_packet,int recv_len,pack_str_t * pack_str)
 {
-        char *data; 
-        int *data_len;
-        unsigned short cmd,rcmd;
-        int ret=0;
+    char *data; 
+    int *data_len;
+    unsigned short cmd,rcmd;
+    int ret=0;
 
-        if(!pro ||!packet ||!recv_packet||!pack_str) return -1;
-        if(len==0 ||recv_len==0 ) return -1;
+    if(!pro ||!packet ||!recv_packet||!pack_str) return -1;
+    if(len==0 ||recv_len==0 ) return -1;
 
-        cmd=get_cmd(packet);
-        rcmd=get_cmd(recv_packet);
-        
-        if(COMMAND(cmd) != COMMAND(rcmd))
-        {
-                DBG_ERR("request and respond command not match : %x,%x\n",cmd,rcmd);
-                return -1;
-        }
-        if(rcmd == NAK(rcmd))
-        {
-                ret=get_error(recv_packet);
-                return ret;
-         }
+    cmd=get_cmd(packet);
+    rcmd=get_cmd(recv_packet);
 
-        data = pack_str->data;
-        data_len=pack_str->data_len;
-        
-        switch(rcmd)
-        {
-                case ACK(SET_DATA_DO_VOLTAGE):
-                case ACK(SET_DATA_DO_PULSE):
-                case ACK(CLR_DATA_DI_COUNTER):
-                case ACK(SET_DATA_AI_TYPE):
-                case ACK(SYNC_USER_INFO):
-                case ACK(SYNC_MCU_TIME):
-                case ACK(SET_K37A_LOCKER):
-                case ACK(CLR_MCU_LOG):
-                case ACK(CUT_OFF_ALL_POWER_SUPPLY):
+    if(COMMAND(cmd) != COMMAND(rcmd))
+    {
+        DBG_ERR("request and respond command not match : %x,%x\n",cmd,rcmd);
+        return -1;
+    }
+    if(rcmd == NAK(rcmd))
+    {
+        ret=get_error(recv_packet);
+        return ret;
+    }
+
+    data = pack_str->data;
+    data_len=pack_str->data_len;
+
+    switch(rcmd)
+    {
+        case ACK(SET_DATA_DO_VOLTAGE):
+        case ACK(SET_DATA_DO_PULSE):
+        case ACK(CLR_DATA_DI_COUNTER):
+        case ACK(SET_DATA_AI_TYPE):
+        case ACK(SYNC_USER_INFO):
+        case ACK(SYNC_MCU_TIME):
+        case ACK(SET_K37A_LOCKER):
+        case ACK(CLR_MCU_LOG):
+        case ACK(CUT_OFF_ALL_POWER_SUPPLY):
                 /* new add  */
-                case ACK(SYNC_AI_CALIBRATION):
-                case ACK(START_MCU_FIRMWARE_UPDATE):
-                case ACK(SYNC_BATTERY_CALIBRATION):
-                case ACK(START_MCU_MEM_TEST):   
-                case ACK(SET_MCU_ANALOG_MODE):
+        case ACK(SYNC_AI_CALIBRATION):
+        case ACK(START_MCU_FIRMWARE_UPDATE):
+        case ACK(SYNC_BATTERY_CALIBRATION):
+        case ACK(START_MCU_MEM_TEST):   
+        case ACK(SET_MCU_ANALOG_MODE):
 
-                case RESPOND(SET_DATA_DO_VOLTAGE):
-                case RESPOND(SET_DATA_DO_PULSE):
-                case RESPOND(CLR_DATA_DI_COUNTER):
-                case RESPOND(SET_DATA_AI_TYPE):
-                case RESPOND(SYNC_USER_INFO):
-                case RESPOND(SYNC_MCU_TIME):
-                case RESPOND(SET_K37A_LOCKER):
-                case RESPOND(CLR_MCU_LOG):                    
-                case RESPOND(CUT_OFF_ALL_POWER_SUPPLY):
-                case RESPOND(SYNC_BATTERY_CALIBRATION):
-                case RESPOND(START_MCU_MEM_TEST):
-                case RESPOND(SET_MCU_ANALOG_MODE):
-                break;
-                
-                case RESPOND(GET_DATA_CONF) :
-                {                    
-                    int pack_len=get_len(recv_packet);
-                    
-                    if(!data || !data_len) goto DATA_RECV_FAILED;
-                    if((pack_len-CMD_BASE_LEN)<=0)goto DATA_RECV_FAILED;
-                    
-                    memcpy(data,&recv_packet[STAT_POS],RES_CMD_CONF_DATA_LEN);
-                    *data_len = RES_CMD_CONF_DATA_LEN;
-                    ret=FLAG_OK;
-                }
-                break;
-                
-                case RESPOND(GET_DATA_DI_COUNTER):
-                {
-                    int pack_len=get_len(recv_packet);
-                    
-                    if(!data || !data_len) goto DATA_RECV_FAILED;
-                    if(get_dev(recv_packet)!=get_dev(packet)) goto DATA_RECV_FAILED;
-                    if((pack_len-(CMD_BASE_LEN+1))<=0)goto DATA_RECV_FAILED;
-                    
-                    memcpy(data,&recv_packet[DI_COUNT_POS],RES_CMD_COUNTER_DATA_LEN);
-                    *data_len = RES_CMD_COUNTER_DATA_LEN;
-                    ret=FLAG_OK;        
-                }
-                break;
-                
-                case RESPOND(GET_IBUTTON_CODE):
-                {
-                    int pack_len=get_len(recv_packet);
-                    
-                    if(!data || !data_len) goto DATA_RECV_FAILED;
-                    if((pack_len-CMD_BASE_LEN)<=0)goto DATA_RECV_FAILED;
-                    
-                    memcpy(data,&recv_packet[IBTN_CODE_POS],8);
-                    *data_len = 8;
-                    ret=FLAG_OK;
-                }
-                break;
-                case RESPOND(GET_MCU_LOG):
-                {
-                    int pack_len=get_len(recv_packet);
-                    int log_len;
+        case RESPOND(SET_DATA_DO_VOLTAGE):
+        case RESPOND(SET_DATA_DO_PULSE):
+        case RESPOND(CLR_DATA_DI_COUNTER):
+        case RESPOND(SET_DATA_AI_TYPE):
+        case RESPOND(SYNC_USER_INFO):
+        case RESPOND(SYNC_MCU_TIME):
+        case RESPOND(SET_K37A_LOCKER):
+        case RESPOND(CLR_MCU_LOG):                    
+        case RESPOND(CUT_OFF_ALL_POWER_SUPPLY):
+        case RESPOND(SYNC_BATTERY_CALIBRATION):
+        case RESPOND(START_MCU_MEM_TEST):
+        case RESPOND(SET_MCU_ANALOG_MODE):
+        break;
 
-                    if(!data || !data_len) 
-                        goto DATA_RECV_FAILED;
-                    if((pack_len-CMD_BASE_LEN)<=0)
-                        goto DATA_RECV_FAILED;
-                    
+        case RESPOND(GET_DATA_CONF) :
+        {                    
+            int pack_len=get_len(recv_packet);
+
+            if(!data || !data_len) goto DATA_RECV_FAILED;
+            if((pack_len-CMD_BASE_LEN)<=0)goto DATA_RECV_FAILED;
+
+            memcpy(data,&recv_packet[STAT_POS],RES_CMD_CONF_DATA_LEN);
+            *data_len = RES_CMD_CONF_DATA_LEN;
+            ret=FLAG_OK;
+        }
+        break;
+
+        case RESPOND(GET_DATA_DI_COUNTER):
+        {
+            int pack_len=get_len(recv_packet);
+
+            if(!data || !data_len) goto DATA_RECV_FAILED;
+            if(get_dev(recv_packet)!=get_dev(packet)) goto DATA_RECV_FAILED;
+            if((pack_len-(CMD_BASE_LEN+1))<=0)goto DATA_RECV_FAILED;
+
+            memcpy(data,&recv_packet[DI_COUNT_POS],RES_CMD_COUNTER_DATA_LEN);
+            *data_len = RES_CMD_COUNTER_DATA_LEN;
+            ret=FLAG_OK;        
+        }
+        break;
+
+        case RESPOND(GET_IBUTTON_CODE):
+        {
+            int pack_len=get_len(recv_packet);
+
+            if(!data || !data_len) goto DATA_RECV_FAILED;
+            if((pack_len-CMD_BASE_LEN)<=0)goto DATA_RECV_FAILED;
+
+            memcpy(data,&recv_packet[IBTN_CODE_POS],8);
+            *data_len = 8;
+            ret=FLAG_OK;
+        }
+        break;
+        case RESPOND(GET_MCU_LOG):
+        {
+            int pack_len=get_len(recv_packet);
+            int log_len;
+
+            if(!data || !data_len) 
+                goto DATA_RECV_FAILED;
+            if((pack_len-CMD_BASE_LEN)<=0)
+                goto DATA_RECV_FAILED;
+
                     log_len = pack_len-LOG_DATA_POS-2;/*2=CRC_len*/
-                    if((get_log_len(recv_packet)!=log_len) && (log_len>DATA_MAX_LENGTH)) 
-                        goto DATA_RECV_FAILED;
-                    
-                    memcpy(data,&recv_packet[LOG_DATA_POS],log_len);
-                    *data_len = log_len;
-                    ret=FLAG_OK;
-                }
-                break;
+            if((get_log_len(recv_packet)!=log_len) && (log_len>DATA_MAX_LENGTH)) 
+                goto DATA_RECV_FAILED;
+
+            memcpy(data,&recv_packet[LOG_DATA_POS],log_len);
+            *data_len = log_len;
+            ret=FLAG_OK;
+        }
+        break;
 
                 /* new add */
-                case RESPOND(START_PACKET_TRANSFER):      
-                {
-                    int pack_len=get_len(recv_packet);
-                    struct transfer_result *result = (struct transfer_result *)data;
-                    
-                    if(!data || !data_len) goto DATA_RECV_FAILED;
-                    if((pack_len-CMD_BASE_LEN)<=0)goto DATA_RECV_FAILED;
-                    
-                    result->order = recv_packet[TRANSFER_RESULT_POS];
-                    result->order <<= 8;
-                    result->order |= recv_packet[TRANSFER_RESULT_POS + 1];
-                    result->result = recv_packet[TRANSFER_RESULT_POS + 2];
-                    *data_len = 3;
-                    ret=FLAG_OK;            
-                }
-                break;
+        case RESPOND(START_PACKET_TRANSFER):      
+        {
+            int pack_len=get_len(recv_packet);
+            struct transfer_result *result = (struct transfer_result *)data;
 
-                case RESPOND(USE_NEW_FIRMWARE):
-                {
-                    int pack_len=get_len(recv_packet);
-                    if(!data || !data_len) goto DATA_RECV_FAILED;
-                    if((pack_len-CMD_BASE_LEN)<=0)goto DATA_RECV_FAILED;        
-                    *data = recv_packet[TRANSFER_RESULT_POS];
-                    *data_len = 1;
-                    ret=FLAG_OK;
-                }
-                break;
+            if(!data || !data_len) goto DATA_RECV_FAILED;
+            if((pack_len-CMD_BASE_LEN)<=0)goto DATA_RECV_FAILED;
 
-                case RESPOND(GET_MCU_DEV_INFOS):
-                {
-                    int pack_len=get_len(recv_packet);
-                    if(!data || !data_len) goto DATA_RECV_FAILED;
-                    if((pack_len-CMD_BASE_LEN)<=0)goto DATA_RECV_FAILED;    
-                    memcpy(data,&recv_packet[7],sizeof(struct mcu_dev_infos));
-                    *data_len = sizeof(struct mcu_dev_infos);
-                    ret=FLAG_OK;
-                }
-                break;
+            result->order = recv_packet[TRANSFER_RESULT_POS];
+            result->order <<= 8;
+            result->order |= recv_packet[TRANSFER_RESULT_POS + 1];
+            result->result = recv_packet[TRANSFER_RESULT_POS + 2];
+            *data_len = 3;
+            ret=FLAG_OK;            
+        }
+        break;
 
-                case RESPOND(GET_AI_CALIBRATION):
-                {
-                    int pack_len=get_len(recv_packet);
-                    struct ai_calibrate *ai_cals = (struct ai_calibrate *)data;
-                    if(!data || !data_len) goto DATA_RECV_FAILED;
-                    if((pack_len-CMD_BASE_LEN)<=0)goto DATA_RECV_FAILED;
+        case RESPOND(USE_NEW_FIRMWARE):
+        {
+            int pack_len=get_len(recv_packet);
+            if(!data || !data_len) goto DATA_RECV_FAILED;
+            if((pack_len-CMD_BASE_LEN)<=0)goto DATA_RECV_FAILED;        
+            *data = recv_packet[TRANSFER_RESULT_POS];
+            *data_len = 1;
+            ret=FLAG_OK;
+        }
+        break;
+
+        case RESPOND(GET_MCU_DEV_INFOS):
+        {
+            int pack_len=get_len(recv_packet);
+            if(!data || !data_len) goto DATA_RECV_FAILED;
+            if((pack_len-CMD_BASE_LEN)<=0)goto DATA_RECV_FAILED;    
+            memcpy(data,&recv_packet[7],sizeof(struct mcu_dev_infos));
+            *data_len = sizeof(struct mcu_dev_infos);
+            ret=FLAG_OK;
+        }
+        break;
+
+        case RESPOND(GET_AI_CALIBRATION):
+        {
+            int pack_len=get_len(recv_packet);
+            struct ai_calibrate *ai_cals = (struct ai_calibrate *)data;
+            if(!data || !data_len) goto DATA_RECV_FAILED;
+            if((pack_len-CMD_BASE_LEN)<=0)goto DATA_RECV_FAILED;
                     //vol_a
-                    ai_cals->vol_a.c_value[0] = recv_packet[AI_CALIBRATION_POS + 3];
-                    ai_cals->vol_a.c_value[1] = recv_packet[AI_CALIBRATION_POS + 2];
-                    ai_cals->vol_a.c_value[2] = recv_packet[AI_CALIBRATION_POS + 1];
-                    ai_cals->vol_a.c_value[3] = recv_packet[AI_CALIBRATION_POS];
+            ai_cals->vol_a.c_value[0] = recv_packet[AI_CALIBRATION_POS + 3];
+            ai_cals->vol_a.c_value[1] = recv_packet[AI_CALIBRATION_POS + 2];
+            ai_cals->vol_a.c_value[2] = recv_packet[AI_CALIBRATION_POS + 1];
+            ai_cals->vol_a.c_value[3] = recv_packet[AI_CALIBRATION_POS];
 
                     //vol_b
-                    ai_cals->vol_b.c_value[0] = recv_packet[AI_CALIBRATION_POS + 7];
-                    ai_cals->vol_b.c_value[1] = recv_packet[AI_CALIBRATION_POS + 6];
-                    ai_cals->vol_b.c_value[2] = recv_packet[AI_CALIBRATION_POS + 5];
-                    ai_cals->vol_b.c_value[3] = recv_packet[AI_CALIBRATION_POS + 4];
+            ai_cals->vol_b.c_value[0] = recv_packet[AI_CALIBRATION_POS + 7];
+            ai_cals->vol_b.c_value[1] = recv_packet[AI_CALIBRATION_POS + 6];
+            ai_cals->vol_b.c_value[2] = recv_packet[AI_CALIBRATION_POS + 5];
+            ai_cals->vol_b.c_value[3] = recv_packet[AI_CALIBRATION_POS + 4];
 
                     //curr_a
-                    ai_cals->cur_a.c_value[0] = recv_packet[AI_CALIBRATION_POS + 11];
-                    ai_cals->cur_a.c_value[1] = recv_packet[AI_CALIBRATION_POS + 10];
-                    ai_cals->cur_a.c_value[2] = recv_packet[AI_CALIBRATION_POS + 9];
-                    ai_cals->cur_a.c_value[3] = recv_packet[AI_CALIBRATION_POS + 8];
-                    
+            ai_cals->cur_a.c_value[0] = recv_packet[AI_CALIBRATION_POS + 11];
+            ai_cals->cur_a.c_value[1] = recv_packet[AI_CALIBRATION_POS + 10];
+            ai_cals->cur_a.c_value[2] = recv_packet[AI_CALIBRATION_POS + 9];
+            ai_cals->cur_a.c_value[3] = recv_packet[AI_CALIBRATION_POS + 8];
+
                     //curr_b
-                    ai_cals->cur_b.c_value[0] = recv_packet[AI_CALIBRATION_POS + 15];
-                    ai_cals->cur_b.c_value[1] = recv_packet[AI_CALIBRATION_POS + 14];
-                    ai_cals->cur_b.c_value[2] = recv_packet[AI_CALIBRATION_POS + 13];
-                    ai_cals->cur_b.c_value[3] = recv_packet[AI_CALIBRATION_POS + 12];
-                    ai_cals->CRC = recv_packet[AI_CALIBRATION_POS + 16];
-                    ai_cals->CRC <<= 8;
-                    ai_cals->CRC |= recv_packet[AI_CALIBRATION_POS + 17];
-                    
-                    *data_len = sizeof(struct ai_calibrate);
-                    ret=FLAG_OK;
-                }
-                break;
+            ai_cals->cur_b.c_value[0] = recv_packet[AI_CALIBRATION_POS + 15];
+            ai_cals->cur_b.c_value[1] = recv_packet[AI_CALIBRATION_POS + 14];
+            ai_cals->cur_b.c_value[2] = recv_packet[AI_CALIBRATION_POS + 13];
+            ai_cals->cur_b.c_value[3] = recv_packet[AI_CALIBRATION_POS + 12];
+            ai_cals->CRC = recv_packet[AI_CALIBRATION_POS + 16];
+            ai_cals->CRC <<= 8;
+            ai_cals->CRC |= recv_packet[AI_CALIBRATION_POS + 17];
 
-                case RESPOND(GET_BATTERY_VOLTAGE):
-                {
-                    int pack_len=get_len(recv_packet);
-                    struct battery_voltage *bat_vol = (struct battery_voltage *)data;
-                    if(!data || !data_len) goto DATA_RECV_FAILED;
-                    if((pack_len-CMD_BASE_LEN)<=0)goto DATA_RECV_FAILED;
+            *data_len = sizeof(struct ai_calibrate);
+            ret=FLAG_OK;
+        }
+        break;
 
-                    bat_vol->battery_vol.c_value[0] = recv_packet[BATTERY_CALIBRATION_POS + 3];
-                    bat_vol->battery_vol.c_value[1] = recv_packet[BATTERY_CALIBRATION_POS + 2];
-                    bat_vol->battery_vol.c_value[2] = recv_packet[BATTERY_CALIBRATION_POS + 1];
-                    bat_vol->battery_vol.c_value[3] = recv_packet[BATTERY_CALIBRATION_POS];
+        case RESPOND(GET_BATTERY_VOLTAGE):
+        {
+            int pack_len=get_len(recv_packet);
+            struct battery_voltage *bat_vol = (struct battery_voltage *)data;
+            if(!data || !data_len) goto DATA_RECV_FAILED;
+            if((pack_len-CMD_BASE_LEN)<=0)goto DATA_RECV_FAILED;
 
-                    *data_len = sizeof(struct battery_voltage);
-                    ret=FLAG_OK;
-                }
-                break;
+            bat_vol->battery_vol.c_value[0] = recv_packet[BATTERY_CALIBRATION_POS + 3];
+            bat_vol->battery_vol.c_value[1] = recv_packet[BATTERY_CALIBRATION_POS + 2];
+            bat_vol->battery_vol.c_value[2] = recv_packet[BATTERY_CALIBRATION_POS + 1];
+            bat_vol->battery_vol.c_value[3] = recv_packet[BATTERY_CALIBRATION_POS];
 
-                case RESPOND(GET_MCU_ANALOG_VALUE):
-                {
-                    int pack_len=get_len(recv_packet);
-                    struct analog_value *analog_vol = (struct analog_value *)data;
-                    if(!data || !data_len) goto DATA_RECV_FAILED;
-                    if((pack_len-CMD_BASE_LEN)<=0)goto DATA_RECV_FAILED;
+            *data_len = sizeof(struct battery_voltage);
+            ret=FLAG_OK;
+        }
+        break;
 
-                    analog_vol->analog_vol.c_value[0] = recv_packet[BATTERY_CALIBRATION_POS + 3];
-                    analog_vol->analog_vol.c_value[1] = recv_packet[BATTERY_CALIBRATION_POS + 2];
-                    analog_vol->analog_vol.c_value[2] = recv_packet[BATTERY_CALIBRATION_POS + 1];
-                    analog_vol->analog_vol.c_value[3] = recv_packet[BATTERY_CALIBRATION_POS];
+        case RESPOND(GET_MCU_ANALOG_VALUE):
+        {
+            int pack_len=get_len(recv_packet);
+            struct analog_value *analog_vol = (struct analog_value *)data;
+            if(!data || !data_len) goto DATA_RECV_FAILED;
+            if((pack_len-CMD_BASE_LEN)<=0)goto DATA_RECV_FAILED;
 
-                    *data_len = sizeof(struct analog_value);
-                    ret=FLAG_OK;
-                }
-                break;
+            analog_vol->analog_vol.c_value[0] = recv_packet[BATTERY_CALIBRATION_POS + 3];
+            analog_vol->analog_vol.c_value[1] = recv_packet[BATTERY_CALIBRATION_POS + 2];
+            analog_vol->analog_vol.c_value[2] = recv_packet[BATTERY_CALIBRATION_POS + 1];
+            analog_vol->analog_vol.c_value[3] = recv_packet[BATTERY_CALIBRATION_POS];
 
-                case RESPOND(GET_BATTERY_CALIBRATION):
-                {
-                    int pack_len=get_len(recv_packet);
-                    struct battery_calibrate *bat_cals = (struct battery_calibrate *)data;
-                    if(!data || !data_len) goto DATA_RECV_FAILED;
-                    if((pack_len-CMD_BASE_LEN)<=0)goto DATA_RECV_FAILED;
+            *data_len = sizeof(struct analog_value);
+            ret=FLAG_OK;
+        }
+        break;
+
+        case RESPOND(GET_BATTERY_CALIBRATION):
+        {
+            int pack_len=get_len(recv_packet);
+            struct battery_calibrate *bat_cals = (struct battery_calibrate *)data;
+            if(!data || !data_len) goto DATA_RECV_FAILED;
+            if((pack_len-CMD_BASE_LEN)<=0)goto DATA_RECV_FAILED;
                     //vol_a
-                    bat_cals->vol_a.c_value[0] = recv_packet[BATTERY_CALIBRATION_POS + 3];
-                    bat_cals->vol_a.c_value[1] = recv_packet[BATTERY_CALIBRATION_POS + 2];
-                    bat_cals->vol_a.c_value[2] = recv_packet[BATTERY_CALIBRATION_POS + 1];
-                    bat_cals->vol_a.c_value[3] = recv_packet[BATTERY_CALIBRATION_POS];
+            bat_cals->vol_a.c_value[0] = recv_packet[BATTERY_CALIBRATION_POS + 3];
+            bat_cals->vol_a.c_value[1] = recv_packet[BATTERY_CALIBRATION_POS + 2];
+            bat_cals->vol_a.c_value[2] = recv_packet[BATTERY_CALIBRATION_POS + 1];
+            bat_cals->vol_a.c_value[3] = recv_packet[BATTERY_CALIBRATION_POS];
 
                     //vol_b
-                    bat_cals->vol_b.c_value[0] = recv_packet[BATTERY_CALIBRATION_POS + 7];
-                    bat_cals->vol_b.c_value[1] = recv_packet[BATTERY_CALIBRATION_POS + 6];
-                    bat_cals->vol_b.c_value[2] = recv_packet[BATTERY_CALIBRATION_POS + 5];
-                    bat_cals->vol_b.c_value[3] = recv_packet[BATTERY_CALIBRATION_POS + 4];
-                    bat_cals->CRC = recv_packet[BATTERY_CALIBRATION_POS + 8];
-                    bat_cals->CRC <<= 8;
-                    bat_cals->CRC |= recv_packet[BATTERY_CALIBRATION_POS + 9];
-                    *data_len = sizeof(struct battery_calibrate);
-                    ret=FLAG_OK;
-                }
-                break;
+            bat_cals->vol_b.c_value[0] = recv_packet[BATTERY_CALIBRATION_POS + 7];
+            bat_cals->vol_b.c_value[1] = recv_packet[BATTERY_CALIBRATION_POS + 6];
+            bat_cals->vol_b.c_value[2] = recv_packet[BATTERY_CALIBRATION_POS + 5];
+            bat_cals->vol_b.c_value[3] = recv_packet[BATTERY_CALIBRATION_POS + 4];
+            bat_cals->CRC = recv_packet[BATTERY_CALIBRATION_POS + 8];
+            bat_cals->CRC <<= 8;
+            bat_cals->CRC |= recv_packet[BATTERY_CALIBRATION_POS + 9];
+            *data_len = sizeof(struct battery_calibrate);
+            ret=FLAG_OK;
+        }
+        break;
 
-                case RESPOND(GET_MCU_MEM_TEST_RESULT):
-                {
-                    int pack_len=get_len(recv_packet);
-                    struct memory_result *result = (struct memory_result *)data;
-                    if(!data || !data_len) goto DATA_RECV_FAILED;
-                    if((pack_len-CMD_BASE_LEN)<=0)goto DATA_RECV_FAILED;
+        case RESPOND(GET_MCU_MEM_TEST_RESULT):
+        {
+            int pack_len=get_len(recv_packet);
+            struct memory_result *result = (struct memory_result *)data;
+            if(!data || !data_len) goto DATA_RECV_FAILED;
+            if((pack_len-CMD_BASE_LEN)<=0)goto DATA_RECV_FAILED;
 
-                    result->memory_type = recv_packet[BATTERY_CALIBRATION_POS];
-                    result->result = recv_packet[BATTERY_CALIBRATION_POS + 1];
-                    *data_len = sizeof(struct memory_result);
-                    ret=FLAG_OK;
-                }
-                break;
+            result->memory_type = recv_packet[BATTERY_CALIBRATION_POS];
+            result->result = recv_packet[BATTERY_CALIBRATION_POS + 1];
+            *data_len = sizeof(struct memory_result);
+            ret=FLAG_OK;
+        }
+        break;
 
-                default : 
-                    DBG_ERR("command is not existed\n");
-                    printk("recv command %x is not existed\n",rcmd);
-                    ret=-1;
-                    if(data_len) *data_len=0;
-       }
-             
-       return ret;
-        
-DATA_RECV_FAILED:
-        if(data_len)  *data_len=0;
-        ret=-1;  
-        return ret;
+        default : 
+        DBG_ERR("command is not existed\n");
+        printk("recv command %x is not existed\n",rcmd);
+        ret=-1;
+        if(data_len) *data_len=0;
+    }
+
+    return ret;
+
+    DATA_RECV_FAILED:
+    if(data_len)  *data_len=0;
+    ret=-1;  
+    return ret;
 }
 
 static int protocol_engine(struct protocol_data *pro,pack_str_t * pack_str)
@@ -1418,17 +1405,17 @@ static int protocol_engine(struct protocol_data *pro,pack_str_t * pack_str)
         goto PROTOCOL_ENGINE_ERROR;
     }
     do{
-            time+=100;
-            msleep(100);
+        time+=100;
+        msleep(100);
 
-            recv_size = pro->pack_size;
-            memset(pro->rcv_pack,0,recv_size);
-            ret = protocol_recv_packet(pro,pro->rcv_pack,&recv_size,pack_str->timeout);
-            if(ret!=0)
-            {
+        recv_size = pro->pack_size;
+        memset(pro->rcv_pack,0,recv_size);
+        ret = protocol_recv_packet(pro,pro->rcv_pack,&recv_size,pack_str->timeout);
+        if(ret!=0)
+        {
                 //printk("host protocol recv packet error\n");
-                continue;
-            }
+            continue;
+        }
 #if 0
         printk("===========================PRINT AI===========================\n");
         printk("%s\n", (pro->rcv_pack)+7);
@@ -1436,14 +1423,14 @@ static int protocol_engine(struct protocol_data *pro,pack_str_t * pack_str)
 #endif
        //printk("recv_size=%d\n",recv_size);//receive emtpy rs232 serial packet when recv_size==12
             //if(recv_size==12)print_hex("host receive  packet : ",pro->rcv_pack,12);
-            ret=analyse_packet(pro,pro->snd_pack,size,pro->rcv_pack,recv_size,pack_str);
-            if(ret!=0)
-            {
+        ret=analyse_packet(pro,pro->snd_pack,size,pro->rcv_pack,recv_size,pack_str);
+        if(ret!=0)
+        {
                 //printk("analyse packet error\n");
                 //ret>0?printk("wait for ack error : %s\n",info_err[ret]):printk("wait for ack error,not NAK\n");
-                ret= -1;
-                continue;
-            }
+            ret= -1;
+            continue;
+        }
     }while(ret!=0 && time<pack_str->timeout);
     
     if(time>=pack_str->timeout)
@@ -1451,61 +1438,58 @@ static int protocol_engine(struct protocol_data *pro,pack_str_t * pack_str)
         ret=-1;
         DBG_ERR("host protocol receive packet error , timeout  error\n");
         goto PROTOCOL_ENGINE_ERROR;
-     }
+    }
     
     // add 50ms,modify: receive emtpy rs232 serial packet
     msleep(50);
     
     print_hex("host receive  packet : ",pro->rcv_pack,recv_size);
 
-PROTOCOL_ENGINE_ERROR:
-     up(&pro->sem);
+    PROTOCOL_ENGINE_ERROR:
+    up(&pro->sem);
     return ret;
-
 }
-
-
 
 static int protocol_spi_work(void *work_data)
 {
-        pack_str_t  pack_str;
-        struct protocol_data *pro = (struct protocol_data *)work_data;
-        char *data = pro->data;
-        int len = pro->data_len;
-        struct mcu_conf_t *mcu_conf = &pro->mcu_conf;      
-        int ret=0;
-        int i=0;
-        int cur_pos = 0;
-        unsigned short di_val = 0;  
-        unsigned short do_val = 0;
-        int act_led=0;//ACT-LED
-        
-        msleep(1000);
-        
-        while(1)
-        {
-            if (board_infos_ok == 1) {
-                memset(&pack_str,0,sizeof(pack_str_t));
-                pack_str.cmd=REQUEST(GET_DATA_CONF);
-                pack_str.data=data;
-                pack_str.data_len =&len;
-                pack_str.timeout = DATA_PERIOD;
-                ret=protocol_engine(pro,&pack_str);
-                
-               if((ret==0)&&(pack_str.data!=NULL) &&( pack_str.data_len !=NULL) )
-               {                     
-                    down(&mcu_conf->sem);
-                    mcu_conf->rw_flag = data[0];
+    pack_str_t  pack_str;
+    struct protocol_data *pro = (struct protocol_data *)work_data;
+    char *data = pro->data;
+    int len = pro->data_len;
+    struct mcu_conf_t *mcu_conf = &pro->mcu_conf;      
+    int ret=0;
+    int i=0;
+    int cur_pos = 0;
+    unsigned short di_val = 0;  
+    unsigned short do_val = 0;
+    int act_led=0;//ACT-LED
+
+    msleep(1000);
+
+    while(1)
+    {
+        if (board_infos_ok == 1) {
+            memset(&pack_str,0,sizeof(pack_str_t));
+            pack_str.cmd=REQUEST(GET_DATA_CONF);
+            pack_str.data=data;
+            pack_str.data_len =&len;
+            pack_str.timeout = DATA_PERIOD;
+            ret=protocol_engine(pro,&pack_str);
+
+            if((ret==0)&&(pack_str.data!=NULL) &&( pack_str.data_len !=NULL) )
+            {                     
+                down(&mcu_conf->sem);
+                mcu_conf->rw_flag = data[0];
                     //user information
-                    mcu_conf->user[0]=data[1];
-                    memcpy(&mcu_conf->user[1],&data[2],8);
+                mcu_conf->user[0]=data[1];
+                memcpy(&mcu_conf->user[1],&data[2],8);
                     //battery info
-                    mcu_conf->battery = data[10];
+                mcu_conf->battery = data[10];
                     //k37a door and locker
-                    mcu_conf->k37a_door = (data[11]>>4) & 0xf;
-                    mcu_conf->k37a_locker = data[11] & 0xf;
-                    cur_pos = 12;
-                    for(i=0;i<_g_mcu_describes.ai_num;i++)
+                mcu_conf->k37a_door = (data[11]>>4) & 0xf;
+                mcu_conf->k37a_locker = data[11] & 0xf;
+                cur_pos = 12;
+                for(i=0;i<_g_mcu_describes.ai_num;i++)
                     {//ai
                         mcu_conf->ai[i].c_value[0] = data[cur_pos + 4*i + 3];
                         mcu_conf->ai[i].c_value[1] = data[cur_pos + 4*i + 2];
@@ -1539,18 +1523,17 @@ static int protocol_spi_work(void *work_data)
             act_led = (act_led+1)%2;
             if(pro->run_gpio)
                 gpiod_set_value(pro->run_gpio, act_led);//RUN-LED//added by Max zhang for shining run-led
-                
+
             if( pro->reboot_count++  > 132 ) { /*复位在新内核暂无这个*/
                   //      extern void (*arch_reset)(char, const char *);
-                        printk("reboot system!!!!\n");
-                        msleep(2000);
+            printk("reboot system!!!!\n");
+            msleep(2000);
                   //      arch_reset('h',"vmlinux");                    
-            }
         }
-        
+    }
+
     return 0;
 }
-
 
 static struct platform_device mcu_do_dev = {
     .name   = "mcu-do",
@@ -1592,7 +1575,6 @@ static struct platform_device k37areboot_dev = {
     },
 };
 
-
 static int  spipro_probe(struct spi_device *spi)
 {
     struct protocol_data *pro = &protocol;
@@ -1600,14 +1582,12 @@ static int  spipro_probe(struct spi_device *spi)
     struct mcu_dev_infos tmp_dev_desc = {0};
     int i;
     
-
     memset(pro, 0, sizeof(struct protocol_data));
     spin_lock_init(&pro->spi_lock);
     mutex_init(&pro->spidev_lock);
     pro->spidev = spi;
 
-    pro->run_gpio = devm_gpiod_get_optional(&spi->dev, "run",
-                         GPIOD_OUT_LOW);
+    pro->run_gpio = devm_gpiod_get_optional(&spi->dev, "run", GPIOD_OUT_LOW);
     
     if (IS_ERR(pro->run_gpio)) {
         ret = PTR_ERR(pro->run_gpio);
@@ -1628,7 +1608,6 @@ static int  spipro_probe(struct spi_device *spi)
     pro->data_len = DATA_MAX_LENGTH;
 
     strcpy(pro->name, protocol_name);
-
 
     pro->task = kthread_create(protocol_spi_work, (void *)pro, protocol_name);
     if(IS_ERR(pro->task))
@@ -1683,12 +1662,8 @@ static int  spipro_probe(struct spi_device *spi)
     return 0;
 }
 
-
-
-
 static int  spipro_remove(struct spi_device *spi)
 {
-    
     platform_device_unregister(&mcu_do_dev);
     platform_device_unregister(&mcu_di_dev);
     platform_device_unregister(&mcu_ai_dev);
@@ -1698,15 +1673,12 @@ static int  spipro_remove(struct spi_device *spi)
     return 0;
 }
 
-
 static const struct of_device_id spipro_of_match[] = {
     { .compatible = "spi-mcu-protocol" },
     { /* sentinel */ },
 };
 
-
 MODULE_DEVICE_TABLE(of, spipro_of_match);
-
 
 static struct spi_driver spipro_driver = {
     .probe =  spipro_probe,
@@ -1718,26 +1690,19 @@ static struct spi_driver spipro_driver = {
     },
 };
 
-
 static int __init spipro_init(void)
 {
     return spi_register_driver(&spipro_driver);
 }
-
-module_init(spipro_init);
 
 static void __exit spipro_exit(void)
 {
     spi_unregister_driver(&spipro_driver);
 }
 
+module_init(spipro_init);
 module_exit(spipro_exit);
-
 
 MODULE_AUTHOR("Liyaolong: bocon");
 MODULE_LICENSE("GPL");
 MODULE_ALIAS("spidev:spi-protocol driver");
-
-
-
-

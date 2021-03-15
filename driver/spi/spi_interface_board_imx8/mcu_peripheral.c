@@ -29,33 +29,34 @@
 //#define DEBUG_PRT printk
 #define DEBUG_PRT(arg...)
 
-#define K37A_DEV_MAJOR 240
+#define K37A_DEV_MAJOR                     240
 
-#define CLR_K37A_MCU_LOG   _IOW('H',1,int)
-#define GET_K37A_POWER_SUPPLY   _IOW('H',2,int)
-#define GET_K37A_BATTERY_CHARGE   _IOW('H',3,int)
+#define CLR_K37A_MCU_LOG                   _IOW('H',1,int)
+#define GET_K37A_POWER_SUPPLY              _IOW('H',2,int)
+#define GET_K37A_BATTERY_CHARGE            _IOW('H',3,int)
 #define CUT_OFF_BATTERY_ALL_POWER_SUPPLY   _IOW('H',4,int)
-#define START_MCU_UPDATE            _IOW('H',5,int)
-#define USE_NEW_MCU_FIRMWARE        _IOW('H',6,int)
-#define BATTERY_GET_VOLT_VALUE    _IOW('k',7,int)
-#define BATTERY_SET_VOLT_CAL    _IOW('k',8,int)
-#define BATTERY_GET_VOLT_CAL    _IOW('k',9,int)
-#define MCU_MEMORY_TEST         _IOW('k',10,int)
-#define GET_MCU_MEMORY_TEST_RESULT    _IOW('k',11,int)
+#define START_MCU_UPDATE                   _IOW('H',5,int)
+#define USE_NEW_MCU_FIRMWARE               _IOW('H',6,int)
+#define BATTERY_GET_VOLT_VALUE             _IOW('k',7,int)
+#define BATTERY_SET_VOLT_CAL               _IOW('k',8,int)
+#define BATTERY_GET_VOLT_CAL               _IOW('k',9,int)
+#define MCU_MEMORY_TEST                    _IOW('k',10,int)
+#define GET_MCU_MEMORY_TEST_RESULT         _IOW('k',11,int)
 
-#define K37ADEV_NUM (ARRAY_SIZE(k37adev_str))
-static char *k37adev_str[]={
+#define K37ADEV_NUM                        (ARRAY_SIZE(k37adev_str))
+
+static char *k37adev_str[] = {
     "sync",
-     "ibutton",
-     "door",
-     "locker",
-     "user",
-     "log",
-     "time",
-     "temperature",
-     "battery",
-     "update",
-     "mtest",   // memory test
+    "ibutton",
+    "door",
+    "locker",
+    "user",
+    "log",
+    "time",
+    "temperature",
+    "battery",
+    "update",
+    "mtest",   // memory test
 };
 
 struct  k37adev {
@@ -68,7 +69,7 @@ struct  k37adev {
     struct protocol_data *pro;
 };
 
-struct mcu_log_t{
+struct mcu_log_t {
   char user;                //用户身份，0x03-上位机/远程，0x02-授权用户登陆K37A，0x01-未授权访问K37A，0x00-未登录
                             //用户身份，0x30-上位机/远程，0x20-授权访问站房，0x10-未授权访问站房，0x00-未登录
   char id[8];               //用户ID号
@@ -78,8 +79,7 @@ struct mcu_log_t{
   unsigned long time;       //数据产生的时间
 };
 
-
-static struct  k37adev * k37adev;
+static struct k37adev * k37adev;
 static struct class * k37adev_class;
 
 extern int sync_user_infomation(int user_count,struct user_info *user_info,struct protocol_data * pro);

@@ -86,40 +86,37 @@ struct  dev_reboot {
     struct protocol_data *pro;
 };
 
-
-struct ai_type{
+struct ai_type {
     char ai;
     char type;
 };
 
-struct ai_calibra{
+struct ai_calibra {
     char dev;
     struct ai_calibrate ai_cal;
 };
 
-struct ai_analog_value{
+struct ai_analog_value {
     char dev;
     struct analog_value analog_value;
 };
 
-struct ai_type_list{
+struct ai_type_list {
     char ai_count;
     struct ai_type ai_type[MCU_MAX_AI_NUM];
 };
 
-
-static struct  dodev * dodev;
+static struct dodev * dodev;
 static struct class * dodev_class;
 
-static struct  didev * didev;
+static struct didev * didev;
 static struct class * didev_class;
 
-static struct  aidev * aidev;
+static struct aidev * aidev;
 static struct class * aidev_class;
 
-static struct  dev_reboot * dev_reboot;
+static struct dev_reboot * dev_reboot;
 static struct class * class_dev_reboot;
-
 
 extern int  set_do_voltage(unsigned char dev, int val,struct protocol_data * pro);
 extern unsigned int get_do(int pos,struct protocol_data * pro);
@@ -141,14 +138,13 @@ dodev_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)
     struct  dodev *pdo=NULL;
     int val;
 
-    pdo=filp->private_data;
-    if(!pdo) 
-    {
+    pdo = filp->private_data;
+    if(!pdo) {
         printk("PDO NULL porinter\n");
         return -1;
     }
     down(&pdo->sem);
-    val=get_do(pdo->chan+1,pdo->pro);
+    val = get_do(pdo->chan+1, pdo->pro);
     up(&pdo->sem);
     
     //printk("chan=%d,val=%x\n",pdo->chan,val);
@@ -159,16 +155,15 @@ dodev_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)
     return sizeof(val);
 }
 
-
 static ssize_t
 dodev_write(struct file *filp,const char __user *buf, size_t count, loff_t *f_pos)
 {
-    struct  dodev *pdo=NULL;
+    struct  dodev *pdo = NULL;
     int val;
-    int ret=0;
+    int ret = 0;
     
     ret = copy_from_user(&val,buf,sizeof(int));
-    if(ret!=0) 
+    if(ret != 0) 
         printk("copy_from_user fail %s \n",__func__);
     
     pdo=filp->private_data;
@@ -187,27 +182,27 @@ dodev_write(struct file *filp,const char __user *buf, size_t count, loff_t *f_po
 
 static int  dodev_open(struct inode *inode, struct file *filp)
 {
-   struct  dodev *pdo=NULL;
-   int i=0;
+    struct  dodev *pdo = NULL;
+    int i = 0;
 
-   for(i=0;i<_g_mcu_describes.do_num;i++) {
-    if(dodev[i].devt == inode->i_rdev) {
-        pdo = &dodev[i];
-        break;
+    for(i=0; i<_g_mcu_describes.do_num; i++) {
+        if(dodev[i].devt == inode->i_rdev) {
+            pdo = &dodev[i];
+            break;
+        }
     }
-}
 
-if(pdo) {
-    pdo->users++;
-    filp->private_data =  pdo;
-}
-return 0;
+    if(pdo) {
+        pdo->users++;
+        filp->private_data = pdo;
+    }
+    return 0;
 }
 
 static long dodev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 {
-    struct  dodev *pdo=NULL;
-    int ret=0;
+    struct dodev *pdo = NULL;
+    int ret = 0;
     int residue = 0;
     
     pdo = filp->private_data;
@@ -220,17 +215,17 @@ static long dodev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
     switch(cmd) {
         case DO_CONF_PLUSE_PERIOD :
         {
-            unsigned short period=0;
-            int dev=pdo->chan+1;
-            residue = copy_from_user(&period,(unsigned short *)arg,sizeof(unsigned short));
-            ret = set_do_pulse(dev,period,pdo->pro);
+            unsigned short period = 0;
+            int dev = pdo->chan+1;
+            residue = copy_from_user(&period, (unsigned short *)arg, sizeof(unsigned short));
+            ret = set_do_pulse(dev, period, pdo->pro);
             if(ret != 0 || residue > 0) {
-                ret=-1;
+                ret = -1;
                 goto DODEV_IOCTL_ERROR;
             }
         }
         break;
-        default : ret=-1;    
+        default : ret = -1;
     }
     
     DODEV_IOCTL_ERROR:
@@ -238,46 +233,44 @@ static long dodev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
     return ret;
 }
 
-
 static int mcu_do_probe(struct platform_device *pdev)
 {
-    struct protocol_data * pro= dev_get_platdata(&pdev->dev);
+    struct protocol_data * pro = dev_get_platdata(&pdev->dev);
     struct  dodev *pdo;
-    char do_name[10]={0};
+    char do_name[10] = {0};
     int i,ret;
 
-    dodev=pdo=kmalloc(sizeof(struct  dodev)*_g_mcu_describes.do_num,GFP_KERNEL);
-    memset(pdo,0,sizeof(struct  dodev)*_g_mcu_describes.do_num);
+    dodev = pdo = kmalloc(sizeof(struct  dodev)*_g_mcu_describes.do_num, GFP_KERNEL);
+    memset(pdo, 0, sizeof(struct dodev)*_g_mcu_describes.do_num);
 
-    for(i=0;i<_g_mcu_describes.do_num;i++)
+    for(i=0; i<_g_mcu_describes.do_num; i++)
     {
-        pdo[i].pro=pro;
-        sema_init(&pdo[i].sem,1);
-        pdo[i].chan=i;
+        pdo[i].pro    = pro;
+        sema_init(&pdo[i].sem, 1);
+        pdo[i].chan   = i;
         pdo[i].parent = &pdev->dev;
-        pdo[i].devt = MKDEV(DODEV_MAJOR, i);
-        sprintf(do_name,"dodev%d",i);
-        pdo[i].dev = device_create(dodev_class, pdo[i].parent, pdo[i].devt,&pdo[i], do_name);
-        ret = IS_ERR(pdo[i].dev ) ? PTR_ERR(pdo[i].dev ) : 0;   
-        if(ret!=0) break;
+        pdo[i].devt   = MKDEV(DODEV_MAJOR, i);
+        sprintf(do_name, "dodev%d", i);
+        pdo[i].dev    = device_create(dodev_class, pdo[i].parent, pdo[i].devt,&pdo[i], do_name);
+        ret = IS_ERR(pdo[i].dev ) ? PTR_ERR(pdo[i].dev ) : 0;
+        if(ret != 0) break;
     }
-
     return ret;
 }
 
 static int mcu_di_probe(struct platform_device *pdev)
 {
-    struct protocol_data * pro= dev_get_platdata(&pdev->dev);
+    struct protocol_data * pro = dev_get_platdata(&pdev->dev);
     struct  didev *pdi;
-    char di_name[10]={0};
+    char di_name[10] = {0};
     int i,ret;
 
     //printk("============mcu_di_probe\n");
 
-    didev=pdi=kmalloc(sizeof(struct  didev)*_g_mcu_describes.di_num,GFP_KERNEL);
-    memset(pdi,0,sizeof(struct  didev)*_g_mcu_describes.di_num);
+    didev = pdi = kmalloc(sizeof(struct  didev)*_g_mcu_describes.di_num,GFP_KERNEL);
+    memset(pdi, 0, sizeof(struct  didev)*_g_mcu_describes.di_num);
 
-    for(i=0;i<_g_mcu_describes.di_num;i++)
+    for(i=0; i<_g_mcu_describes.di_num; i++)
     {
         pdi[i].pro=pro;
         sema_init(&pdi[i].sem,1);
@@ -294,8 +287,8 @@ static int mcu_di_probe(struct platform_device *pdev)
 
 static int  didev_open(struct inode *inode, struct file *filp)
 {
-    struct  didev *pdi=NULL;
-    int i=0;
+    struct  didev *pdi = NULL;
+    int i = 0;
 
     for(i=0;i<_g_mcu_describes.di_num;i++) {
         if(didev[i].devt == inode->i_rdev) {
@@ -315,20 +308,19 @@ static int  didev_open(struct inode *inode, struct file *filp)
 static ssize_t
 didev_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)
 {
-    struct  didev *pdi=NULL;
+    struct  didev *pdi = NULL;
     int val;
 
-    pdi=filp->private_data;
-    if(!pdi) 
-    {
+    pdi = filp->private_data;
+    if(!pdi) {
         printk("PDI NULL porinter\n");
         return -1;
     }
     down(&pdi->sem);  
-    val=get_di(pdi->chan+1,pdi->pro);
+    val = get_di(pdi->chan+1,pdi->pro);
     up(&pdi->sem);
 
-    if(copy_to_user(buf,&val,sizeof(int)))
+    if(copy_to_user(buf, &val, sizeof(int)))
         return -1;
 
     return sizeof(val);
@@ -336,8 +328,8 @@ didev_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)
 
 static long didev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 {
-    struct  didev *pdi=NULL;
-    int ret=0;
+    struct  didev *pdi = NULL;
+    int ret = 0;
     int residue = 0;
     
     pdi = filp->private_data;
@@ -351,18 +343,17 @@ static long didev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
     {
         case DI_GET_PLUSE_COUNT :
         {
-            unsigned long counter=0;
-            int dev=pdi->chan+1;
+            unsigned long counter = 0;
+            int dev = pdi->chan+1;
             ret = get_di_counters(dev,&counter,pdi->pro);
-            if(ret!=0)
-            {
-                ret=-1;
+            if(ret != 0) {
+                ret = -1;
                 goto DIDEV_IOCTL_ERROR;
             }
 
-            residue = copy_to_user((unsigned long *)arg,&counter,sizeof(unsigned long));
+            residue = copy_to_user((unsigned long *)arg, &counter,sizeof(unsigned long));
             if(residue) 
-                printk("%s %d copy_to_user FAIL \n",__func__,__LINE__);
+                printk("%s %d copy_to_user FAIL \n", __func__, __LINE__);
         }
         break;
         case DI_CLR_PLUSE_COUNT:
@@ -371,7 +362,7 @@ static long didev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
             ret = clear_di_counters(dev,pdi->pro);
             if(ret != 0)
             {
-                ret=-1;
+                ret = -1;
                 goto DIDEV_IOCTL_ERROR;
             }
         }
@@ -388,7 +379,7 @@ static long didev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 
 static int mcu_ai_probe(struct platform_device *pdev)
 {
-    struct protocol_data * pro= dev_get_platdata(&pdev->dev);
+    struct protocol_data *pro = dev_get_platdata(&pdev->dev);
     struct  aidev *pai;
     char ai_name[10]={0};
     int i,ret;
@@ -408,28 +399,26 @@ static int mcu_ai_probe(struct platform_device *pdev)
         sprintf(ai_name,"aidev%d",i);
         pai[i].dev = device_create(aidev_class, pai[i].parent, pai[i].devt,&pai[i], ai_name);
         ret = IS_ERR(pai[i].dev ) ? PTR_ERR(pai[i].dev ) : 0;   
-        if(ret!=0) break;
+        if(ret != 0) break;
     }
     return ret;
 }
 
 static int  aidev_open(struct inode *inode, struct file *filp)
 {
-    struct  aidev *pai=NULL;
-    int i=0;
+    struct aidev *pai = NULL;
+    int i = 0;
 
-    for(i=0;i<_g_mcu_describes.ai_num;i++){
-        if(aidev[i].devt == inode->i_rdev)
-        {
+    for(i=0; i<_g_mcu_describes.ai_num; i++) {
+        if(aidev[i].devt == inode->i_rdev) {
             pai = &aidev[i];
             break;
         }
     }
 
-    if(pai)
-    {
+    if(pai) {
         pai->users++;
-        filp->private_data =  pai;
+        filp->private_data = pai;
     }
     return 0;
 }
@@ -437,20 +426,20 @@ static int  aidev_open(struct inode *inode, struct file *filp)
 static ssize_t
 aidev_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)
 {
-    struct  aidev *pai=NULL;
+    struct aidev *pai = NULL;
     float  val;
 
-    pai=filp->private_data;
+    pai = filp->private_data;
     if(!pai) 
     {
         printk("PDI NULL porinter\n");
         return -1;
     }
     down(&pai->sem);  
-    val=get_ai(pai->chan+1,pai->pro);
+    val = get_ai(pai->chan+1, pai->pro);
     up(&pai->sem);
     
-    if(copy_to_user(buf,&val,sizeof(float)))
+    if(copy_to_user(buf, &val, sizeof(float)))
         return -1;
 
     return sizeof(val);
@@ -458,13 +447,12 @@ aidev_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)
 
 static long aidev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 {
-    struct  aidev *pai=NULL;
+    struct  aidev *pai = NULL;
     int ret = 0;
     int residue = 0;
 
-    pai=filp->private_data;
-    if(!pai) 
-    {
+    pai = filp->private_data;
+    if(!pai) {
         printk("PDI NULL porinter\n");
         return -1;
     }
@@ -474,7 +462,7 @@ static long aidev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
     {
         case AI_CONF_VOLT_CURR :
         {
-                /*
+            /*
                 struct ai_type ai_conf; 
            
                 memset(&ai_conf,0,sizeof(struct ai_type));
@@ -540,7 +528,7 @@ static long aidev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
         {
             struct ai_analog_value analog_value;
 
-                //printk("AI_GET_ANALOG_VALUE\n");
+            //printk("AI_GET_ANALOG_VALUE\n");
             memset(&analog_value,0,sizeof(struct ai_analog_value));
             residue = copy_from_user(&analog_value,(char *)arg,sizeof(struct ai_analog_value));
             ret=get_mcu_analog_value(analog_value.dev + 1,&analog_value.analog_value,pai->pro);
@@ -558,19 +546,19 @@ static long aidev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
     }
     
     if(residue)
-        printk("%s %d kernel user copy maybe fail \n",__func__,__LINE__);
+        printk("%s %d kernel user copy maybe fail \n", __func__, __LINE__);
 
-    AIDEV_IOCTL_ERROR:
+AIDEV_IOCTL_ERROR:
     up(&pai->sem);
     return ret;
 }
 
 static int  dev_reboot_open(struct inode *inode, struct file *filp)
 {
-    struct  dev_reboot *pdev_reboot=dev_reboot;
+    struct  dev_reboot *pdev_reboot = dev_reboot;
 
     pdev_reboot->users++;
-    filp->private_data =  pdev_reboot;
+    filp->private_data = pdev_reboot;
     
     return 0;
 }
@@ -578,7 +566,7 @@ static int  dev_reboot_open(struct inode *inode, struct file *filp)
 static ssize_t
 dev_reboot_write(struct file *filp, const char __user *buf, size_t count, loff_t *f_pos)
 {
-    struct  dev_reboot *pdev_reboot=NULL;
+    struct  dev_reboot *pdev_reboot = NULL;
 
     pdev_reboot = filp->private_data;
     if(!pdev_reboot) {
@@ -593,23 +581,23 @@ dev_reboot_write(struct file *filp, const char __user *buf, size_t count, loff_t
 
 static int dev_reboot_probe(struct platform_device *pdev)
 {
-    struct protocol_data * pro= dev_get_platdata(&pdev->dev);
+    struct protocol_data * pro = dev_get_platdata(&pdev->dev);
     struct  dev_reboot *pdev_reboot;
-    char dev_reboot_name[100]={0};
+    char dev_reboot_name[100] = {0};
     int ret;
 
     //printk("============dev_reboot_probe\n");
     
-    dev_reboot=pdev_reboot=kmalloc(sizeof(struct  dev_reboot),GFP_KERNEL);
-    memset(pdev_reboot,0,sizeof(struct  dev_reboot));
+    dev_reboot = pdev_reboot = kmalloc(sizeof(struct  dev_reboot),GFP_KERNEL);
+    memset(pdev_reboot, 0, sizeof(struct  dev_reboot));
     
-    pdev_reboot->pro=pro;
-    sema_init(&pdev_reboot->sem,1);
+    pdev_reboot->pro = pro;
+    sema_init(&pdev_reboot->sem, 1);
     pdev_reboot->parent = &pdev->dev;
     pdev_reboot->devt = MKDEV(DEV_REBOOT_MAJOR, 0);
     strcpy(dev_reboot_name,"dev_reboot");
     pdev_reboot->dev = device_create(class_dev_reboot, pdev_reboot->parent, pdev_reboot->devt,pdev_reboot, dev_reboot_name);
-    ret = IS_ERR(pdev_reboot->dev ) ? PTR_ERR(pdev_reboot->dev ) : 0;   
+    ret = IS_ERR(pdev_reboot->dev ) ? PTR_ERR(pdev_reboot->dev ) : 0;
     
     return ret;
 }
@@ -621,34 +609,37 @@ static const struct file_operations dodev_fops = {
     .open  =    dodev_open,
     .unlocked_ioctl = dodev_ioctl, 
 };
-static struct platform_driver mcu_do_driver={
- .probe = mcu_do_probe,
- .driver = {
-    .name = "mcu-do",
-    .owner = THIS_MODULE,
-},
+
+static struct platform_driver mcu_do_driver = {
+    .probe = mcu_do_probe,
+    .driver = {
+        .name = "mcu-do",
+        .owner = THIS_MODULE,
+    },
 };
 
 static const struct file_operations didev_fops = {
     .owner =    THIS_MODULE,
     .read  =    didev_read,
     .open  =    didev_open,
-    .unlocked_ioctl = didev_ioctl, 
+    .unlocked_ioctl = didev_ioctl,
 };
-static struct platform_driver mcu_di_driver={
- .probe = mcu_di_probe,
- .driver = {
-    .name = "mcu-di",
-    .owner = THIS_MODULE,
-},
+
+static struct platform_driver mcu_di_driver = {
+    .probe = mcu_di_probe,
+    .driver = {
+        .name = "mcu-di",
+        .owner = THIS_MODULE,
+    },
 };
 
 static const struct file_operations aidev_fops = {
     .owner =    THIS_MODULE,
     .read  =    aidev_read,
     .open  =    aidev_open,
-    .unlocked_ioctl = aidev_ioctl, 
+    .unlocked_ioctl = aidev_ioctl,
 };
+
 static struct platform_driver mcu_ai_driver = {
     .probe = mcu_ai_probe,
     .driver = {
@@ -660,7 +651,7 @@ static struct platform_driver mcu_ai_driver = {
 static const struct file_operations dev_reboot_fops = {
     .owner =    THIS_MODULE,
     .write =    dev_reboot_write,
-    .open  =    dev_reboot_open,           
+    .open  =    dev_reboot_open,
 };
 
 static struct platform_driver dev_reboot_driver = {

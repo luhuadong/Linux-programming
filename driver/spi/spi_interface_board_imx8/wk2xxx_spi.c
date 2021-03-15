@@ -34,14 +34,12 @@
 #include <linux/of_gpio.h>
 #include <linux/gpio.h>
 
-
 #include <linux/workqueue.h>
 #include <linux/platform_device.h>
 #include <asm/mach/map.h>
 #include <asm/irq.h>
 #include <asm/io.h>
 #include "wk2xxx_spi.h"
-
 
 
 MODULE_LICENSE("Dual BSD/GPL");
@@ -1176,9 +1174,7 @@ static void wk2xxx_shutdown(struct uart_port *port)
 }
 
 static void conf_wk2xxx_subport(struct uart_port *port)//i
-{   
-
-
+{
     struct wk2xxx_port *s = container_of(port,struct wk2xxx_port,port);
     uint8_t old_sier,fwcr,lcr,scr,scr_ss,dat[1],baud0_ss,baud1_ss,pres_ss;
 #ifdef _DEBUG_WK2XXX
@@ -1576,10 +1572,8 @@ static int wk2xxx_probe(struct spi_device *spi)
     return status;
 }
 
-
 static int wk2xxx_remove(struct spi_device *spi)
 {
-
     int i;
 #ifdef _DEBUG_WK2XXX
     printk( KERN_ERR"-wk2xxx_remove()------in---\n");
@@ -1606,9 +1600,6 @@ static int wk2xxx_resume(struct spi_device *spi)
     return 0;
 }
 
-
-
-
 static struct spi_driver wk2xxx_driver = {
     .driver = {
         .name           = "wk2xxxspi",
@@ -1621,11 +1612,8 @@ static struct spi_driver wk2xxx_driver = {
     .resume         = wk2xxx_resume,
 };
 
-
-
 static int __init wk2xxx_init(void)
 {
-
     int retval;
     retval = uart_register_driver(&wk2xxx_uart_driver);
     if (retval) {
@@ -1641,15 +1629,12 @@ static int __init wk2xxx_init(void)
     return retval;
 }
 
-
-
 static void __exit wk2xxx_exit(void)
 {
     printk(KERN_ERR "%s, TEST_REG:quit\n", __func__);
     spi_unregister_driver(&wk2xxx_driver); 
     return uart_unregister_driver(&wk2xxx_uart_driver);
 }
-
 
 module_init(wk2xxx_init);
 module_exit(wk2xxx_exit);
