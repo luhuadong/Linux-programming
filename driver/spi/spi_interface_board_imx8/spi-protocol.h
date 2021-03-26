@@ -1,21 +1,21 @@
 #ifndef __SPIPRO_COMMON__
 #define __SPIPRO_COMMON__
 
-#define CMD_BASE_LEN 9 //8 //mileszhang
-#define ACK_CMD  CMD_BASE_LEN
-#define NAK_CMD  (CMD_BASE_LEN+1)
-#define CMD_LENGTH 88
-#define DATA_MAX_LENGTH 1400
-#define PACK_MAX_LENGTH (CMD_LENGTH+DATA_MAX_LENGTH)
-#define RES_CMD_CONF_DATA_LEN 87//57
-#define RES_CMD_COUNTER_DATA_LEN 32
-#define SEND_MAX_LENGTH 512
-#define RECV_MAX_LENGTH 1488
+#define CMD_BASE_LEN               9 //8 //mileszhang
+#define ACK_CMD                    CMD_BASE_LEN
+#define NAK_CMD                    (CMD_BASE_LEN+1)
+#define CMD_LENGTH                 88
+#define DATA_MAX_LENGTH            1400
+#define PACK_MAX_LENGTH            (CMD_LENGTH+DATA_MAX_LENGTH)
+#define RES_CMD_CONF_DATA_LEN      87//57
+#define RES_CMD_COUNTER_DATA_LEN   32
+#define SEND_MAX_LENGTH            512
+#define RECV_MAX_LENGTH            1488
 
-#define GET_MAX_TRYS    3
-#define MCU_MAX_AI_NUM  32
-#define MCU_MAX_DI_NUM  16
-#define MCU_MAX_DO_NUM  16
+#define GET_MAX_TRYS               3
+#define MCU_MAX_AI_NUM             32
+#define MCU_MAX_DI_NUM             16
+#define MCU_MAX_DO_NUM             16
 
 typedef struct cmd_pack_struct {
     unsigned short cmd;
@@ -70,7 +70,7 @@ struct mcu_dev_infos {
     unsigned char ai_num;
 };
 
-struct user_info{
+struct user_info {
     char user;
     char code[8];
 };
@@ -124,41 +124,40 @@ struct memory_result {
     int result;
 };
 
-struct mcu_conf_t{
+struct mcu_conf_t {
     char rw_flag;
-    char user[9];//  1st byte: =1:known user,  =0: unknown user, others: user code 
-    char battery;// 1st bit ,1:power supply 0:power cut off. 2nd battery status,1:charge, 0:not charge , others:%power volumn
-    char k37a_door;// 1:open , 0:close
-    char k37a_locker;// 1:open , 0:close
-    unsigned char k37a_temperature;//0~200 for -100~+100   C
-    char room_door; // 1:open, 0:close
-    char air_conditioner; // 1:open, 0:close
-    char room_temperature;//0~200 for -100~+100   C
-    char room_humidity;// 0~100 for 0%~100%
-    char room_user[9];//  1st byte: =1:known user,  =0: unknown user, others: user code 
-    char room_battery;// 1st bit ,1:power supply 0:power cut off. 2nd battery status,1:charge, 0:not charge , others:%power volumn
+    char user[9];           // 1st byte: =1:known user,  =0: unknown user, others: user code 
+    char battery;           // 1st bit ,1:power supply 0:power cut off. 2nd battery status,1:charge, 0:not charge , others:%power volumn
+    char k37a_door;         // 1:open , 0:close
+    char k37a_locker;       // 1:open , 0:close
+    unsigned char k37a_temperature;  // 0~200 for -100~+100   C
+    char room_door;         // 1:open, 0:close
+    char air_conditioner;   // 1:open, 0:close
+    char room_temperature;  // 0~200 for -100~+100   C
+    char room_humidity;     // 0~100 for 0%~100%
+    char room_user[9];      // 1st byte: =1:known user,  =0: unknown user, others: user code 
+    char room_battery;      // 1st bit ,1:power supply 0:power cut off. 2nd battery status,1:charge, 0:not charge , others:%power volumn
     float2char ai[MCU_MAX_AI_NUM];
     int di[MCU_MAX_DI_NUM];
     int ddo[MCU_MAX_DO_NUM];
     struct semaphore sem;
 };
 
-struct protocol_data
-{
-    char name[10];
-    char * data;
-    int data_len;
-    char *snd_pack;
-    char *rcv_pack;
-    int pack_size;
-    struct semaphore sem;
-    struct spi_device   * spidev;
+struct protocol_data {
+    char                name[10];
+    char               *data;
+    int                 data_len;
+    char               *snd_pack;
+    char               *rcv_pack;
+    int                 pack_size;
+    struct semaphore    sem;
+    struct spi_device  *spidev;
     struct mutex        spidev_lock;
     spinlock_t          spi_lock;
     struct task_struct *task;
-    struct mcu_conf_t mcu_conf;
-    struct gpio_desc    *run_gpio;
-    int reboot_count;
+    struct mcu_conf_t   mcu_conf;
+    struct gpio_desc   *run_gpio;
+    int                 reboot_count;
 };
 
 //#define DEBUG_COMM
@@ -174,7 +173,7 @@ static void print_hex(char *info,unsigned char *data,int len)
     {
         printk("%.2x ",data[i]);
         if((i + 1)%40==0)
-            printk("\n");     
+            printk("\n");
     }
     printk("\n");
 }

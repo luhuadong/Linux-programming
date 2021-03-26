@@ -435,8 +435,12 @@ aidev_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)
         printk("PDI NULL porinter\n");
         return -1;
     }
-    down(&pai->sem);  
+    down(&pai->sem);
+
+    //kernel_fpu_begin();
     val = get_ai(pai->chan+1, pai->pro);
+    //kernel_fpu_end();
+
     up(&pai->sem);
     
     if(copy_to_user(buf, &val, sizeof(float)))
