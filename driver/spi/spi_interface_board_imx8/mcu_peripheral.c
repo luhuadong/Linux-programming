@@ -46,6 +46,7 @@
 #define K37ADEV_NUM                        (ARRAY_SIZE(k37adev_str))
 
 static char *k37adev_str[] = {
+    
     "sync",
     "ibutton",
     "door",
@@ -223,16 +224,11 @@ k37adev_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)
     if(residue) 
         printk("%s %d kernel user copy maybe fail \n",__func__,__LINE__);
 
-
 K37ADEV_READ_OUT:
 
     up(&k37a_dev->sem);
-   
     return ret;
-
-    
 }
-
 
 static ssize_t 
 k37adev_write(struct file *filp,const char __user *buf, size_t count, loff_t *f_pos)
@@ -525,52 +521,56 @@ static long k37adev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg
         ret=-1;
         break;
     }
-        if(residue) {
-            printk("kernel and user copy exist fail !!!!\n");
-        }
+
+    if(residue) 
+    {
+        printk("kernel and user copy exist fail !!!!\n");
+    }
+
 K37ADEV_IOCTL_ERROR:
-        up(&k37a_dev->sem);
-        return ret;
 
+    up(&k37a_dev->sem);
+    return ret;
 }
-
 
 static int k37a_dev_probe(struct platform_device *pdev)
 {
-            struct protocol_data * pro= dev_get_platdata(&pdev->dev);
-            struct  k37adev *k37a_dev;
-            char dev_name[100]={0};
-            int i,ret;
+    struct protocol_data * pro= dev_get_platdata(&pdev->dev);
+    struct  k37adev *k37a_dev;
+    char dev_name[100]={0};
+    int i,ret;
                     
-            k37adev=k37a_dev=kmalloc(sizeof(struct  k37adev)*K37ADEV_NUM,GFP_KERNEL);
-            memset(k37a_dev,0,sizeof(struct  k37adev)*K37ADEV_NUM);
+    k37adev=k37a_dev=kmalloc(sizeof(struct  k37adev)*K37ADEV_NUM,GFP_KERNEL);
+    memset(k37a_dev,0,sizeof(struct  k37adev)*K37ADEV_NUM);
             
-            for(i=0;i<K37ADEV_NUM;i++)
-            {
-                    k37a_dev[i].pro=pro;
-                    sema_init(&k37a_dev[i].sem,1);
-                    k37a_dev[i].chan=i;
-                    k37a_dev[i].parent = &pdev->dev;
-                    k37a_dev[i].devt = MKDEV(K37A_DEV_MAJOR, i);
-                    sprintf(dev_name,"k37adev_%s",k37adev_str[i]);
-                    k37a_dev[i].dev = device_create(k37adev_class, k37a_dev[i].parent, k37a_dev[i].devt,&k37a_dev[i], dev_name);
-                    ret = IS_ERR(k37a_dev[i].dev ) ? PTR_ERR(k37a_dev[i].dev ) : 0; 
-                    if(ret!=0) break;
-            }
-            
+    for(i=0;i<K37ADEV_NUM;i++)
+    {
+        k37a_dev[i].pro=pro;
+        sema_init(&k37a_dev[i].sem,1);
+        k37a_dev[i].chan=i;
+        k37a_dev[i].parent = &pdev->dev;
+        k37a_dev[i].devt = MKDEV(K37A_DEV_MAJOR, i);
+        sprintf(dev_name,"k37adev_%s",k37adev_str[i]);
+        k37a_dev[i].dev = device_create(k37adev_class, k37a_dev[i].parent, k37a_dev[i].devt,&k37a_dev[i], dev_name);
+        ret = IS_ERR(k37a_dev[i].dev ) ? PTR_ERR(k37a_dev[i].dev ) : 0; 
+        if(ret!=0) break;
+    }
     return ret;
 }
 
 static const struct file_operations k37adev_fops = {
+
     .owner =    THIS_MODULE,
     .read =     k37adev_read,
     .write =    k37adev_write,
     .open =     k37adev_open,
     .unlocked_ioctl =k37adev_ioctl, 
 };
-static struct platform_driver k37a_dev_driver={
-           .probe=k37a_dev_probe,
-    .driver={
+
+static struct platform_driver k37a_dev_driver = {
+
+    .probe=k37a_dev_probe,
+    .driver = {
         .name = "k37a-dev",
         .owner = THIS_MODULE,
     },
@@ -578,31 +578,35 @@ static struct platform_driver k37a_dev_driver={
 
 static int __init k37a_init(void)
 {
-        int status;
-        status = register_chrdev(K37A_DEV_MAJOR, "k37adev", &k37adev_fops);
-        if (status < 0)
-       {
-            printk("register k37a device  errror\n");
-            return status;
-        }
-        k37adev_class = class_create(THIS_MODULE, "k37adev");
-        if (IS_ERR(k37adev_class)) {
-                    unregister_chrdev(K37A_DEV_MAJOR," k37adev");
-                    return PTR_ERR(k37adev_class);
-        }
-        platform_driver_register(&k37a_dev_driver);
+    int status;
+    status = register_chrdev(K37A_DEV_MAJOR, "k37adev", &k37adev_fops);
 
-        return 0;
+    if (status < 0)
+    {
+        printk("register k37a device  errror\n");
+        return status;
+    }
+
+    k37adev_class = class_create(THIS_MODULE, "k37adev");
+
+    if (IS_ERR(k37adev_class)) 
+    {
+        unregister_chrdev(K37A_DEV_MAJOR," k37adev");
+        return PTR_ERR(k37adev_class);
+    }
+    platform_driver_register(&k37a_dev_driver);
+
+    return 0;
 }
-module_init(k37a_init);
 
 static void __exit k37a_exit(void)
 {
-        platform_driver_unregister(&k37a_dev_driver);
-        class_destroy(k37adev_class);
-        unregister_chrdev(K37A_DEV_MAJOR," k37adev");
+    platform_driver_unregister(&k37a_dev_driver);
+    class_destroy(k37adev_class);
+    unregister_chrdev(K37A_DEV_MAJOR," k37adev");
 }
+
+module_init(k37a_init);
 module_exit(k37a_exit);
 
 MODULE_LICENSE("GPL");
-

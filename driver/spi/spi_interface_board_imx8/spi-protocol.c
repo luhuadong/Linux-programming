@@ -287,9 +287,7 @@ int get_ai_calibrates(unsigned char dev,struct ai_calibrate *ai_calValue,struct 
     ret=protocol_engine(pro,&pack_str);
     
     return ret;
-
 }
-
 
 int sync_user_infomation(int user_count,struct user_info *user_info,struct protocol_data * pro)
 {
@@ -298,7 +296,6 @@ int sync_user_infomation(int user_count,struct user_info *user_info,struct proto
     unsigned char count;
     int i=0;
     int ret;
-    
     
     if(!user_info) return -1;
     
@@ -320,7 +317,6 @@ int sync_user_infomation(int user_count,struct user_info *user_info,struct proto
 
 }
 
-
 int get_current_user_info(struct user_info *user_info,struct protocol_data * pro)
 {
     struct mcu_conf_t *mcu_conf=&pro->mcu_conf;
@@ -331,8 +327,8 @@ int get_current_user_info(struct user_info *user_info,struct protocol_data * pro
     user_info->user= mcu_conf->user[0];//  1:known user,  0: unknown user
     memcpy(user_info->code,&mcu_conf->user[1],8);
     up(&mcu_conf->sem);
-    return  ret;
 
+    return  ret;
 }
 
 int get_ibutton_code(struct user_info *user_info,unsigned long timeout,struct protocol_data * pro)
@@ -353,9 +349,7 @@ int get_ibutton_code(struct user_info *user_info,unsigned long timeout,struct pr
     ret=protocol_engine(pro,&pack_str);
     
     return ret;
-
 }
-
 
 char read_k37a_door(struct protocol_data * pro)
 {
@@ -365,8 +359,8 @@ char read_k37a_door(struct protocol_data * pro)
     down(&mcu_conf->sem);
     k37a_door= mcu_conf->k37a_door;
     up(&mcu_conf->sem);
-    return  k37a_door;
 
+    return  k37a_door;
 }
 
 int sync_mcu_time(long seconds,struct protocol_data * pro)
@@ -400,8 +394,8 @@ char read_k37a_locker(struct protocol_data * pro)
     down(&mcu_conf->sem);
     k37a_locker= mcu_conf->k37a_locker;
     up(&mcu_conf->sem);
-    return  k37a_locker;
 
+    return  k37a_locker;
 }
 
 int set_k37a_locker(char locker,struct protocol_data * pro)
@@ -427,7 +421,6 @@ int set_k37a_locker(char locker,struct protocol_data * pro)
     return ret;
 }
 
-
 int read_k37a_temperature(struct protocol_data * pro)
 {
     struct mcu_conf_t *mcu_conf=&pro->mcu_conf;
@@ -438,6 +431,7 @@ int read_k37a_temperature(struct protocol_data * pro)
     temperature -= 100;
     up(&mcu_conf->sem);
     /*printk("temperature : %d,temp2:%d\n",temperature,mcu_conf->k37a_temperature);*/
+
     return  temperature;
 }
 
@@ -477,8 +471,11 @@ int clear_mcu_log(struct protocol_data * pro)
     return ret;
 }
 
+/*
+ * return %0~%100
+ */
 char read_battery_quantity(struct protocol_data * pro)
-{//return %0~%100
+{
     struct mcu_conf_t *mcu_conf=&pro->mcu_conf;
     char quantity;
 
@@ -512,8 +509,8 @@ char read_battry_charge(struct protocol_data * pro)
     down(&mcu_conf->sem);
     charge= mcu_conf->battery & 0x40;
     up(&mcu_conf->sem);
-    return  charge>0 ? 1 : 0;
 
+    return  charge>0 ? 1 : 0;
 }
 
 int cut_off_battery_supply_power_all(struct protocol_data * pro)
@@ -571,9 +568,7 @@ int transfer_mcu_firmwares(struct firmware_packet *datas,int datas_len,
     ret=protocol_engine(pro,&pack_str);
 
     return ret;
-
 }
-
 
 int set_mcu_use_new_firmware(char *data,int * data_len,struct protocol_data * pro)
 {
@@ -666,7 +661,6 @@ int get_battery_calibrates(struct battery_calibrate *bat_cal,struct protocol_dat
     ret=protocol_engine(pro,&pack_str);
     
     return ret;
-
 }
 
 int start_mcu_memory_test(int memory_type,struct protocol_data * pro)
@@ -747,7 +741,6 @@ int get_mcu_analog_value(unsigned char dev,struct analog_value *analog_vol,struc
 
     return ret;
 }
-
 
 //end
 
