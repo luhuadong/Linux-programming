@@ -17,7 +17,9 @@
 #define MCU_MAX_DI_NUM             16
 #define MCU_MAX_DO_NUM             16
 
+
 typedef struct cmd_pack_struct {
+
     unsigned short cmd;
     union {
         unsigned short dodi_dev;
@@ -26,6 +28,7 @@ typedef struct cmd_pack_struct {
         unsigned int ai_dev;
         unsigned char memory_type;
     } byte_8th;
+
     int  arg_len;
     char  *arg;
     int  *data_len;
@@ -35,15 +38,16 @@ typedef struct cmd_pack_struct {
     //if use dataout  , analyse_packet will be wrong for receiveing different packet while not enough data length.
 } pack_str_t;
 
-enum{
-    FLAG_OK=0,
+typedef enum {
+
+    FLAG_OK = 0,
     FLAG_IGNORE,
     FLAG_TIMEOUT,
     FLAG_NOT_READY,
     FLAG_ARG_INCOMPLETE,
     FLAG_ERROR,
     FLAG_MAX
-};
+} flat_t;
 
 #if 0
 static char * info_err[FLAG_MAX+1]={
@@ -193,11 +197,15 @@ static void err_hex(char *info,unsigned char *data,int len)
     if(!data || len==0) return ;
     
     printk("%s , data len = %d\n",info,len);
-    for(i=0;i<len;i++)
+
+    for(i=0; i<len; i++)
     {
-        if(i%40==0)printk("\n");
+        if(i%40 == 0) printk("\n");
+
         printk("%.2x ",data[i]);
-        if((data[i]==data[(i+1)%len]) &&(data[i]!=0)) printk("() ");
+
+        if((data[i] == data[(i+1)%len]) && (data[i]!=0))
+            printk("() ");
     }
     printk("\n");
 }
@@ -207,5 +215,49 @@ static void err_hex(char *info,unsigned char *data,int len)
 
 extern struct mcu_dev_infos _g_mcu_describes;
 
+int sync_user_infomation(int user_count,struct user_info *user_info,struct protocol_data * pro);
+int get_ibutton_code(struct user_info *user_info,unsigned long timeout,struct protocol_data * pro);
+//int set_k37a_door(char door,struct protocol_data * pro);
+int sync_mcu_time(long seconds,struct protocol_data * pro);
+
+char read_k37a_door(struct protocol_data * pro);
+int set_k37a_locker(char locker,struct protocol_data * pro);
+char read_k37a_locker(struct protocol_data * pro);
+int get_current_user_info(struct user_info *user_info,struct protocol_data * pro);
+//unsigned char read_k37a_temperature(struct protocol_data * pro);
+int read_k37a_temperature(struct protocol_data * pro);
+
+int get_mcu_log(char *order,char *log,int *log_len,unsigned long timeout,struct protocol_data * pro);
+int clear_mcu_log(struct protocol_data * pro);
+char read_battery_quantity(struct protocol_data * pro);
+char read_power_supply(struct protocol_data * pro);
+char read_battry_charge(struct protocol_data * pro);
+
+int cut_off_battery_supply_power_all(struct protocol_data * pro);
+int transfer_mcu_firmwares(struct firmware_packet *datas,int datas_len,
+                struct transfer_result *result,int *result_len,struct protocol_data * pro);
+int set_mcu_use_new_firmware(char *data,int * data_len,struct protocol_data * pro);
+int start_mcu_firmware_update(struct firmware_update *datas,struct protocol_data * pro);
+//new add
+int get_battery_voltage(struct battery_voltage *bat_vol,struct protocol_data * pro);
+int sync_battery_calibrates(struct battery_calibrate *bat_cal,struct protocol_data * pro);
+int get_battery_calibrates(struct battery_calibrate *bat_cal,struct protocol_data * pro);
+int start_mcu_memory_test(int memory_type,struct protocol_data * pro);
+int get_mcu_memory_test_result(int memory_type,struct memory_result *mem_res,struct protocol_data * pro);
+
+
+int  set_do_voltage(unsigned char dev, int val,struct protocol_data * pro);
+unsigned int get_do(int pos,struct protocol_data * pro);
+int set_do_pulse(unsigned char  dev,unsigned short millisecond,struct protocol_data * pro);
+unsigned int get_di(int pos,struct protocol_data * pro);
+float  get_ai(int pos,struct protocol_data * pro);
+int set_ai_type(unsigned int dev,unsigned short type,struct protocol_data * pro);
+int sync_ai_calibrates(unsigned char dev,struct ai_calibrate *ai_calValue,struct protocol_data * pro);
+int get_ai_calibrates(unsigned char dev,struct ai_calibrate *ai_calValue,struct protocol_data * pro);
+int get_di_counters(unsigned char dev,unsigned long *counter,struct protocol_data * pro);
+int clear_di_counters(unsigned char dev,struct protocol_data * pro);
+int reset_reboot_count(struct protocol_data * pro);
+int set_mcu_analog_mode(int analog_mode,struct protocol_data * pro);
+int get_mcu_analog_value(unsigned char dev,struct analog_value *analog_vol,struct protocol_data * pro);
 
 #endif

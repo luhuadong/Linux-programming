@@ -46,7 +46,7 @@
 #define K37ADEV_NUM                        (ARRAY_SIZE(k37adev_str))
 
 static char *k37adev_str[] = {
-    
+
     "sync",
     "ibutton",
     "door",
@@ -83,6 +83,7 @@ struct mcu_log_t {
 static struct k37adev * k37adev;
 static struct class * k37adev_class;
 
+#if 0
 extern int sync_user_infomation(int user_count,struct user_info *user_info,struct protocol_data * pro);
 extern int get_ibutton_code(struct user_info *user_info,unsigned long timeout,struct protocol_data * pro);
 //extern int set_k37a_door(char door,struct protocol_data * pro);
@@ -107,11 +108,12 @@ extern int transfer_mcu_firmwares(struct firmware_packet *datas,int datas_len,
 extern int set_mcu_use_new_firmware(char *data,int * data_len,struct protocol_data * pro);
 extern int start_mcu_firmware_update(struct firmware_update *datas,struct protocol_data * pro);
 //new add
-extern int get_battery_voltage(struct battery_voltage *bat_vol,struct protocol_data * pro);
+//extern int get_battery_voltage(struct battery_voltage *bat_vol,struct protocol_data * pro);
 extern int sync_battery_calibrates(struct battery_calibrate *bat_cal,struct protocol_data * pro);
 extern int get_battery_calibrates(struct battery_calibrate *bat_cal,struct protocol_data * pro);
 extern int start_mcu_memory_test(int memory_type,struct protocol_data * pro);
 extern int get_mcu_memory_test_result(int memory_type,struct memory_result *mem_res,struct protocol_data * pro);
+#endif
 
 static ssize_t
 k37adev_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)

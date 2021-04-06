@@ -107,13 +107,13 @@ static unsigned short CRC16_212(char* buf, int len)
 
         for(i=0; i<8; i++)
         {
-          flag = r & 0x0001;
-          r = r >> 1;
-          if(flag == 1) r ^= 0xa001;
-      }
-  }
-  
-  return r;
+            flag = r & 0x0001;
+            r = r >> 1;
+            if(flag == 1) r ^= 0xa001;
+        }
+    }
+
+    return r;
 }
 
 static int correct_packet(char *packet,int len)

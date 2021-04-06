@@ -23,6 +23,8 @@
 #include <linux/uaccess.h>
 #include <linux/delay.h>
 #include <linux/ioctl.h>
+#include <linux/types.h>
+#include <linux/cdev.h>
 
 #include "spi-protocol.h"
 
@@ -117,20 +119,6 @@ static struct class * aidev_class;
 
 static struct dev_reboot * dev_reboot;
 static struct class * class_dev_reboot;
-
-extern int  set_do_voltage(unsigned char dev, int val,struct protocol_data * pro);
-extern unsigned int get_do(int pos,struct protocol_data * pro);
-extern int set_do_pulse(unsigned char  dev,unsigned short millisecond,struct protocol_data * pro);
-extern unsigned int get_di(int pos,struct protocol_data * pro);
-extern float  get_ai(int pos,struct protocol_data * pro);
-extern int set_ai_type(unsigned int dev,unsigned short type,struct protocol_data * pro);
-extern int sync_ai_calibrates(unsigned char dev,struct ai_calibrate *ai_calValue,struct protocol_data * pro);
-extern int get_ai_calibrates(unsigned char dev,struct ai_calibrate *ai_calValue,struct protocol_data * pro);
-extern int get_di_counters(unsigned char dev,unsigned long *counter,struct protocol_data * pro);
-extern int clear_di_counters(unsigned char dev,struct protocol_data * pro);
-extern int reset_reboot_count(struct protocol_data * pro);
-extern int set_mcu_analog_mode(int analog_mode,struct protocol_data * pro);
-extern int get_mcu_analog_value(unsigned char dev,struct analog_value *analog_vol,struct protocol_data * pro);
 
 static ssize_t
 dodev_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)
