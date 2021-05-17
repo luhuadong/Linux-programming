@@ -1,12 +1,14 @@
-KERN_DIR=/lib/modules/$(shell uname -r)/build
-#KERN_DIR = /home/rudy/workspace/Projects/Bocon/bocon-linux-imx8
+PWD := $(shell pwd)
+KVER := $(shell uname -r)
+KDIR :=/lib/modules/$(KVER)/build/
 
-obj-m += hello.o
+# Kernel modules
+obj-m := hello.o
+
+# Specify flags for the module compilation
+#EXTRA_CFLAGS=-g -O0
 
 all:
-	make -C $(KERN_DIR) M=`pwd` modules
-
+	$(MAKE) -C $(KDIR) M=$(PWD) modules
 clean:
-	make -C $(KERN_DIR) M=`pwd` modules clean
-	rm -rf modules.order
-
+	$(MAKE) -C $(KDIR) M=$(PWD) clean
