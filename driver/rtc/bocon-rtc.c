@@ -3,7 +3,7 @@
 *   
 *   Filename：   bocon-rtc.c
 *   Author：     luhuadong
-*   Create Date：2021年03月08日
+*   Create Date：2021-03-08
 *   Description：Read or write file /dev/bocon-rtc to get or set rtc time
 *
 ========================================================================*/
@@ -42,24 +42,25 @@ static struct device *bocon_rtc_class_devs;
 static int bocon_rtc_open(struct inode *inode, struct file *filp)
 {
     filp->private_data = bocon_rtc_devp;
-    printk(KERN_INFO "bocon-rtc is opened\n");
+    pr_info("bocon-rtc is opened\n");
     return 0;
 }
 
 static int bocon_rtc_release(struct inode *inode, struct file *filp)
 {
-    printk(KERN_INFO "bocon-rtc is release\n");
+    pr_info("bocon-rtc is release\n");
     return 0;
 }
 
 static long bocon_rtc_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 {
     struct bocon_rtc_dev *dev = filp->private_data;
+    struct rtc_device    *rtc = rtc_class_open(DEFAULT_RTC_DEVICE);
 
     switch (cmd) {
     case MEM_CLEAR:
         memset(dev->data, 0, sizeof(dev->data));
-        printk(KERN_INFO "clear bocon rtc memory %lu bytes\n", sizeof(dev->data));
+        dev_dbg(rtc->dev.parent, "clear bocon rtc memory %lu bytes\n", sizeof(dev->data));
         break;
     default:
         return -EINVAL;
@@ -80,7 +81,7 @@ static ssize_t bocon_rtc_read(struct file *filp, char __user *buf, size_t size, 
     struct rtc_device    *rtc = rtc_class_open(DEFAULT_RTC_DEVICE);
 
     if (!rtc) {
-        pr_info("unable to open rtc device (%s)\n", DEFAULT_RTC_DEVICE);
+        pr_err("unable to open rtc device (%s)\n", DEFAULT_RTC_DEVICE);
         return err;
     }
 
@@ -105,7 +106,7 @@ static ssize_t bocon_rtc_read(struct file *filp, char __user *buf, size_t size, 
     if (copy_to_user(buf, dev->data, count))
         return -EFAULT;
 
-    printk(KERN_INFO "read %u bytes: %d-%d-%d, %02d:%02d:%02d, %d\n", count, 
+    dev_dbg(rtc->dev.parent, "read %u bytes: %d-%d-%d, %02d:%02d:%02d, %d\n", count, 
             dev->data[5], dev->data[4], dev->data[3], dev->data[2], 
             dev->data[1], dev->data[0], dev->data[6]);
 
@@ -124,7 +125,7 @@ static ssize_t bocon_rtc_write(struct file *filp, const char __user *buf, size_t
     struct rtc_device    *rtc = rtc_class_open(DEFAULT_RTC_DEVICE);
 
     if (!rtc) {
-        pr_info("unable to open rtc device (%s)\n", DEFAULT_RTC_DEVICE);
+        pr_err("unable to open rtc device (%s)\n", DEFAULT_RTC_DEVICE);
         return err;
     }
 
@@ -152,11 +153,11 @@ static ssize_t bocon_rtc_write(struct file *filp, const char __user *buf, size_t
     rtc_class_close(rtc);
 
     if (err < 0) {
-        printk(KERN_INFO "write %u bytes failed\n", count);
+        dev_dbg(rtc->dev.parent, "write %u bytes failed\n", count);
         return err;
     }
     else {
-        printk(KERN_INFO "write %u bytes\n", count);
+        dev_dbg(rtc->dev.parent, "write %u bytes\n", count);
         return count;
     }
 }
@@ -176,7 +177,7 @@ static int __init bocon_rtc_init(void)
 
     bocon_rtc_devp = kzalloc(sizeof(struct bocon_rtc_dev), GFP_KERNEL);
     if (!bocon_rtc_devp) {
-        printk(KERN_NOTICE "Error alloc bocon-rtc memory");
+        pr_err("Error alloc bocon-rtc memory");
         return -ENOMEM;
     }
 
@@ -189,7 +190,7 @@ static int __init bocon_rtc_init(void)
     }
     
     if (ret < 0) {
-        printk(KERN_NOTICE "Error register chrdev number for bocon-rtc");
+        pr_err("Error register chrdev number for bocon-rtc");
         return ret;
     }
     else if (ret > 0) {
@@ -202,7 +203,7 @@ static int __init bocon_rtc_init(void)
     /* 创建设备节点 /dev/bocon-rtc，就是根据上面的设备信息来的 */
     bocon_rtc_class_devs = device_create(bocon_rtc_class, NULL, MKDEV(bocon_rtc_major, 0), NULL, DEFAULT_DEVICENAME);
 
-    printk("bocon-rtc init, major = %d\n", bocon_rtc_major);
+    pr_info("bocon-rtc init, major = %d\n", bocon_rtc_major);
     return 0;
 }
 
@@ -219,7 +220,7 @@ static void __exit bocon_rtc_exit(void)
     if (bocon_rtc_devp)
         kfree(bocon_rtc_devp);
 
-    printk("bocon-rtc exit\n");
+    pr_info("bocon-rtc exit\n");
 }
 
 module_init(bocon_rtc_init);
